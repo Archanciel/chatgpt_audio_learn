@@ -1,19 +1,25 @@
+import 'package:chatgpt_audio_learn/viewmodels/audio_view_model.dart';
+import 'package:chatgpt_audio_learn/views/audio_list_view.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(MyApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AudioViewModel()),
+      ],
+      child: MaterialApp(
+        title: 'Youtube Audio Downloader',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
         ),
+        home: AudioListView(),
       ),
     );
   }
