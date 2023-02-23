@@ -24,12 +24,12 @@ class AudioViewModel extends ChangeNotifier {
       final streamManifest =
           await _yt.videos.streamsClient.getManifest(video.id);
       final audioStreamInfo =
-          streamManifest.audioOnly.first ?? streamManifest.audioOnly.last;
+          streamManifest.audioOnly.first;
 
       final audioTitle = video.title;
       final audioDuration = video.duration;
 
-      final filePath = '${_audioDownloadDir!.path}/${video.title}.mp3';
+      final filePath = '${_audioDownloadDir.path}/${video.title}.mp3';
 
 
       final audio = Audio(title: audioTitle, duration: audioDuration!, filePath: filePath);
