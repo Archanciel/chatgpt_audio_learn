@@ -16,9 +16,9 @@ class AudioViewModel extends ChangeNotifier {
     final playlist = await yt.playlists.get(playlistId);
 
     await for (var video in yt.playlists.getVideos(playlistId)) {
-      final manifest = await yt.videos.streamsClient.getManifest(video.id);
+      final streamManifest = await yt.videos.streamsClient.getManifest(video.id);
       final audioStreamInfo =
-          manifest.audioOnly.withHighestBitrate() ?? manifest.audioOnly.last;
+          streamManifest.audioOnly.first ?? streamManifest.audioOnly.last;
 
       final audioTitle = video.title;
       final audioDuration = video.duration;
@@ -27,22 +27,22 @@ class AudioViewModel extends ChangeNotifier {
       _audios.add(audio);
 
       // Download the audio file
-      final file = await _downloadAudioFile(video, audioStreamInfo);
+      await _downloadAudioFile(video, audioStreamInfo);
       // Do something with the downloaded file
     }
 
     notifyListeners();
   }
 
-  Future<File> _downloadAudioFile(Video video, AudioStreamInfo audioStreamInfo) async {
+  Future<void> _downloadAudioFile(Video video, AudioStreamInfo audioStreamInfo) async {
     final yt = YoutubeExplode();
-    final stream = yt.videos.streamsClient.get(audioStreamInfo);
 
-    final tempDir = await getTemporaryDirectory();
-    final filePath = '${tempDir.path}/${video.title}.mp3';
-    final file = File(filePath);
+    final directory = Directory('/storage/emulated/0/Download');
+    final filePath = '${directory!.path}/${video.title}.mp3';
 
-    await file.writeAsBytes(await stream.first);
-    return file;
+    final output = File(filePath).openWrite();
+    final stream = await yt.videos.streamsClient.get(audioStreamInfo);
+
+    await stream.pipe(output);
   }
 }
