@@ -15,8 +15,7 @@ class AudioViewModel extends ChangeNotifier {
     final playlistId = PlaylistId.parsePlaylistId(link);
     final playlist = await yt.playlists.get(playlistId);
 
-    final videos = playlist.videos;
-    for (final video in videos) {
+    await for (var video in yt.playlists.getVideos(playlistId)) {
       final manifest = await yt.videos.streamsClient.getManifest(video.id);
       final audioStreamInfo =
           manifest.audioOnly.withHighestBitrate() ?? manifest.audioOnly.last;
@@ -24,7 +23,7 @@ class AudioViewModel extends ChangeNotifier {
       final audioTitle = video.title;
       final audioDuration = video.duration;
 
-      final audio = Audio(title: audioTitle, duration: audioDuration);
+      final audio = Audio(title: audioTitle, duration: audioDuration!);
       _audios.add(audio);
 
       // Download the audio file
