@@ -9,36 +9,43 @@ import '../models/audio.dart';
 class AudioViewModel extends ChangeNotifier {
   final List<Audio> _audios = [];
   List<Audio> get audios => _audios;
+  YoutubeExplode _yt = YoutubeExplode();
+  final _audioDownloadDir = Directory('/storage/emulated/0/Download');
+
+
+  YoutubeExplode get yt => _yt;
+  set yt(YoutubeExplode yt) => _yt = yt;
 
   Future<void> fetchAudios(String link) async {
-    final yt = YoutubeExplode();
     final playlistId = PlaylistId.parsePlaylistId(link);
-    final playlist = await yt.playlists.get(playlistId);
+    final playlist = await _yt.playlists.get(playlistId);
 
-    await for (var video in yt.playlists.getVideos(playlistId)) {
-      final streamManifest = await yt.videos.streamsClient.getManifest(video.id);
+    await for (var video in _yt.playlists.getVideos(playlistId)) {
+      final streamManifest =
+          await _yt.videos.streamsClient.getManifest(video.id);
       final audioStreamInfo =
           streamManifest.audioOnly.first ?? streamManifest.audioOnly.last;
 
       final audioTitle = video.title;
       final audioDuration = video.duration;
 
-      final audio = Audio(title: audioTitle, duration: audioDuration!);
+      final filePath = '${_audioDownloadDir!.path}/${video.title}.mp3';
+
+
+      final audio = Audio(title: audioTitle, duration: audioDuration!, filePath: filePath);
       _audios.add(audio);
 
       // Download the audio file
-      await _downloadAudioFile(video, audioStreamInfo);
+      await _downloadAudioFile(video, audioStreamInfo, filePath);
       // Do something with the downloaded file
     }
 
     notifyListeners();
   }
 
-  Future<void> _downloadAudioFile(Video video, AudioStreamInfo audioStreamInfo) async {
+  Future<void> _downloadAudioFile(
+      Video video, AudioStreamInfo audioStreamInfo, String filePath) async {
     final yt = YoutubeExplode();
-
-    final directory = Directory('/storage/emulated/0/Download');
-    final filePath = '${directory!.path}/${video.title}.mp3';
 
     final output = File(filePath).openWrite();
     final stream = await yt.videos.streamsClient.get(audioStreamInfo);
