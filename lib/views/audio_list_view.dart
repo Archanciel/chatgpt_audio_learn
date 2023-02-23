@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:audioplayer/audioplayer.dart';
@@ -13,6 +14,8 @@ class AudioListView extends StatelessWidget {
           'https://youtube.com/playlist?list=PLzwWSJNcZTMSw4qRX5glEyrL_IBvWbiqk');
 
   final _audioPlayer = AudioPlayer();
+  late Audio _currentlyPlayingAudio;
+  bool _isPlaying = false;
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +57,26 @@ class AudioListView extends StatelessWidget {
                   leading: Icon(Icons.audiotrack),
                   title: Text(audio.title),
                   subtitle: Text(audio.duration.toString()),
-                  trailing: IconButton(
-                    icon: Icon(Icons.play_arrow),
-                    onPressed: () => _playAudio(audio),
-                  ),
+                  trailing: _isPlaying
+                      ? Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: _isPlaying
+                                  ? Icon(Icons.pause)
+                                  : Icon(Icons.play_arrow),
+                              onPressed: _togglePlayback,
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.stop),
+                              onPressed: _stopPlayback,
+                            ),
+                          ],
+                        )
+                      : IconButton(
+                          icon: Icon(Icons.play_arrow),
+                          onPressed: () => _startPlayback(audio),
+                        ),
                 );
               },
               // itemBuilder: (context, index) {
@@ -74,13 +93,31 @@ class AudioListView extends StatelessWidget {
     );
   }
 
-  Future<void> _playAudio(Audio audio) async {
+  Future<void> _startPlayback(Audio audio) async {
     final file = File(audio.filePath);
     if (!await file.exists()) {
       print('File not found: ${audio.filePath}');
       return;
     }
 
+    _audioPlayer.stop();
+    _currentlyPlayingAudio = audio;
     await _audioPlayer.play(file.path, isLocal: true);
+    _isPlaying = true;
+  }
+
+  void _togglePlayback() {
+    if (_isPlaying) {
+      _audioPlayer.pause();
+    } else {
+      _audioPlayer.play(_currentlyPlayingAudio.filePath);
+    }
+
+   _isPlaying = !_isPlaying;
+  }
+
+  void _stopPlayback() {
+    _audioPlayer.stop();
+    _isPlaying = false;
   }
 }
