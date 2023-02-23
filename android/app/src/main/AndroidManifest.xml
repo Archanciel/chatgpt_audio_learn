@@ -3,7 +3,10 @@
    <application
         android:label="chatgpt_audio_learn"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:requestLegacyExternalStorage="true"> 
+        <!-- Previous line enables giving storage access permission to the application 
+         on Galaxy S8 and S20 -->        
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -31,4 +34,10 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+    <!-- Next line solves the file access problem on Galaxy S20 -->
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <!-- Next line enables downloading info on Galaxy S8 and S20 -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 </manifest>
