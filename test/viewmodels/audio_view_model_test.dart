@@ -36,8 +36,14 @@ void main() {
       final videoDuration2 = Duration(minutes: 5, seconds: 21);
 
       final expectedAudios = [
-        Audio(title: videoTitle1, duration: videoDuration1, filePath: '/storage/emulated/0/Download/Video 1.mp3'),
-        Audio(title: videoTitle2, duration: videoDuration2, filePath: '/storage/emulated/0/Download/Video 2.mp3'),
+        Audio(
+            title: videoTitle1,
+            duration: videoDuration1,
+            filePath: '/storage/emulated/0/Download/Video 1.mp3'),
+        Audio(
+            title: videoTitle2,
+            duration: videoDuration2,
+            filePath: '/storage/emulated/0/Download/Video 2.mp3'),
       ];
 
       when(mockYoutubeExplode.playlists.get(any))
@@ -60,7 +66,7 @@ void main() {
 
       await viewModel.fetchAudios('http://example.com/playlist');
 
-      expect(viewModel.audios, expectedAudios);
+      expect(viewModel.audioLst, expectedAudios);
     });
   });
 }

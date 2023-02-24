@@ -6,33 +6,33 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import '../models/audio.dart';
 
 class AudioViewModel extends ChangeNotifier {
-  final List<Audio> _audios = [];
-  List<Audio> get audios => _audios;
+  final List<Audio> _audioLst = [];
+  List<Audio> get audioLst => _audioLst;
+
   YoutubeExplode _yt = YoutubeExplode();
-  final _audioDownloadDir = Directory('/storage/emulated/0/Download');
-
-
   YoutubeExplode get yt => _yt;
   set yt(YoutubeExplode yt) => _yt = yt;
 
+  final Directory _audioDownloadDir = Directory('/storage/emulated/0/Download');
+
   Future<void> fetchAudios(String link) async {
-    final playlistId = PlaylistId.parsePlaylistId(link);
-    final playlist = await _yt.playlists.get(playlistId);
+    final String? playlistId = PlaylistId.parsePlaylistId(link);
+    final Playlist playlist = await _yt.playlists.get(playlistId);
 
     await for (var video in _yt.playlists.getVideos(playlistId)) {
-      final streamManifest =
+      final StreamManifest streamManifest =
           await _yt.videos.streamsClient.getManifest(video.id);
-      final audioStreamInfo =
+      final AudioOnlyStreamInfo audioStreamInfo =
           streamManifest.audioOnly.first;
 
-      final audioTitle = video.title;
-      final audioDuration = video.duration;
+      final String audioTitle = video.title;
+      final Duration? audioDuration = video.duration;
 
-      final filePath = '${_audioDownloadDir.path}/${video.title}.mp3';
+      final String filePath = '${_audioDownloadDir.path}/${video.title}.mp3';
 
-
-      final audio = Audio(title: audioTitle, duration: audioDuration!, filePath: filePath);
-      _audios.add(audio);
+      final Audio audio = Audio(
+          title: audioTitle, duration: audioDuration!, filePath: filePath);
+      _audioLst.add(audio);
 
       // Download the audio file
       await _downloadAudioFile(video, audioStreamInfo, filePath);

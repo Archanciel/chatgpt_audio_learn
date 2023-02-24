@@ -1,14 +1,10 @@
-import 'dart:async';
-import 'dart:io';
-
-import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'audio_list_item_widget.dart';
 
 import '../models/audio.dart';
 import '../viewmodels/audio_view_model.dart';
 import '../viewmodels/audio_player_view_model.dart';
-import 'audio_list_item_widget.dart';
 
 class AudioListView extends StatelessWidget {
   final TextEditingController _textEditingController = TextEditingController(
@@ -18,7 +14,7 @@ class AudioListView extends StatelessWidget {
   final AudioPlayerViewModel _audioPlayerViwModel = AudioPlayerViewModel();
   @override
   Widget build(BuildContext context) {
-    final audioViewModel = Provider.of<AudioViewModel>(context);
+    final AudioViewModel audioViewModel = Provider.of<AudioViewModel>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -39,7 +35,7 @@ class AudioListView extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              final link = _textEditingController.text.trim();
+              final String link = _textEditingController.text.trim();
               if (link.isNotEmpty) {
                 audioViewModel.fetchAudios(link);
               }
@@ -48,10 +44,10 @@ class AudioListView extends StatelessWidget {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: audioViewModel.audios.length,
-              itemBuilder: (context, index) {
-                final audio = audioViewModel.audios[index];
-                return AudioListItem(
+              itemCount: audioViewModel.audioLst.length,
+              itemBuilder: (BuildContext context, int index) {
+                final audio = audioViewModel.audioLst[index];
+                return AudioListItemWidget(
                   audio: audio,
                   onPlayPressed: (Audio audio) {
                     _audioPlayerViwModel.play(audio);

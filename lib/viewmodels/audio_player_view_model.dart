@@ -1,7 +1,6 @@
-import 'dart:io';
-
-import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:audioplayer/audioplayer.dart';
 
 import '../models/audio.dart';
 
@@ -14,7 +13,8 @@ enum AudioPlayerState {
 class AudioPlayerViewModel extends ChangeNotifier {
   AudioPlayerState _state = AudioPlayerState.stopped;
   AudioPlayerState get state => _state;
-  final _audioPlayer = AudioPlayer();
+
+  final AudioPlayer _audioPlayer = AudioPlayer();
   late Audio _currentlyPlayingAudio;
   bool _isPlaying = false;
 
@@ -27,7 +27,7 @@ class AudioPlayerViewModel extends ChangeNotifier {
 
     _audioPlayer.stop();
     _currentlyPlayingAudio = audio;
-    await _audioPlayer.play(file.path, isLocal: true);
+    await _audioPlayer.play(audio.filePath);
     _isPlaying = true;
 
 

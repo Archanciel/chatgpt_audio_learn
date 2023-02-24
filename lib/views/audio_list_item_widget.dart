@@ -4,14 +4,13 @@ import 'package:provider/provider.dart';
 import '../models/audio.dart';
 import '../viewmodels/audio_player_view_model.dart';
 
-class AudioListItem extends StatelessWidget {
+class AudioListItemWidget extends StatelessWidget {
   final Audio audio;
-  final AudioPlayerViewModel audioPlayer = AudioPlayerViewModel();
   final void Function(Audio audio) onPlayPressed;
   final void Function(Audio audio) onStopPressed;
   final void Function(Audio audio) onPausePressed;
 
-  AudioListItem({
+  AudioListItemWidget({
     required this.audio,
     required this.onPlayPressed,
     required this.onStopPressed,
@@ -21,7 +20,7 @@ class AudioListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(Icons.music_note),
+      leading: const Icon(Icons.music_note),
       title: Text(audio.title),
       subtitle: Text(audio.duration.toString()),
       trailing: _buildPlayButton(),
@@ -30,36 +29,30 @@ class AudioListItem extends StatelessWidget {
 
   Widget _buildPlayButton() {
     return Consumer<AudioPlayerViewModel>(
-      builder: (context, audioPlayer, child) {
-        if (audioPlayer.state == AudioPlayerState.playing) {
-          // return IconButton(
-          //   icon: Icon(Icons.stop),
-          //   onPressed: () {
-          //     audioPlayer.stop();
-          //   },
-          // );
+      builder: (context, audioPlayerViewModel, child) {
+        if (audioPlayerViewModel.state == AudioPlayerState.playing) {
           return Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
-                icon: Icon(Icons.pause),
+                icon: const Icon(Icons.pause),
                 onPressed: () {
-                  audioPlayer.pause(audio);
+                  audioPlayerViewModel.pause(audio);
                 },
               ),
               IconButton(
-                icon: Icon(Icons.stop),
+                icon: const Icon(Icons.stop),
                 onPressed: () {
-                  audioPlayer.stop(audio);
+                  audioPlayerViewModel.stop(audio);
                 },
               ),
             ],
           );
         } else {
           return IconButton(
-            icon: Icon(Icons.play_arrow),
+            icon: const Icon(Icons.play_arrow),
             onPressed: () {
-              audioPlayer.play(audio);
+              audioPlayerViewModel.play(audio);
             },
           );
         }
