@@ -13,7 +13,7 @@ class AudioPlayerViewModel extends ChangeNotifier {
       print('File not found: ${audio.filePath}');
     }
 
-    _audioPlayer.stop();
+    await _audioPlayer.stop();
     await _audioPlayer.play(DeviceFileSource(audio.filePath));
     audio.isPlaying = true;
 
@@ -22,13 +22,13 @@ class AudioPlayerViewModel extends ChangeNotifier {
 
   Future<void> pause(Audio audio) async {
     // Stop the audio
-      if (audio.isPlaying) {
-      await _audioPlayer.pause();
+    if (audio.isPaused) {
+      await _audioPlayer.resume();
     } else {
-      await _audioPlayer.play(DeviceFileSource(audio.filePath));
+      await _audioPlayer.pause();
     }
 
-    audio.invertPlaying();
+    audio.invertPaused();
 
     notifyListeners();
   }

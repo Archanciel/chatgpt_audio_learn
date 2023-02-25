@@ -7,13 +7,16 @@ class Audio {
   bool get isPlaying => _isPlaying;
   set isPlaying(bool isPlaying) => _isPlaying = isPlaying;
 
+  bool _isPaused = false;
+  bool get isPaused => _isPaused;
+
   Audio({
     required this.title,
     required this.duration,
     required this.filePath,
   });
 
-  void invertPlaying() {
-    _isPlaying = !_isPlaying;
+  void invertPaused() {
+    _isPaused = !_isPaused;
   }
 }
