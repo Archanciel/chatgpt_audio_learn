@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:audioplayer/audioplayer.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 import '../models/audio.dart';
 
@@ -14,7 +14,7 @@ class AudioPlayerViewModel extends ChangeNotifier {
     }
 
     _audioPlayer.stop();
-    await _audioPlayer.play(audio.filePath);
+    await _audioPlayer.play(DeviceFileSource(audio.filePath));
     audio.isPlaying = true;
 
     notifyListeners();
@@ -25,7 +25,7 @@ class AudioPlayerViewModel extends ChangeNotifier {
       if (audio.isPlaying) {
       await _audioPlayer.pause();
     } else {
-      await _audioPlayer.play(audio.filePath);
+      await _audioPlayer.play(DeviceFileSource(audio.filePath));
     }
 
     audio.invertPlaying();

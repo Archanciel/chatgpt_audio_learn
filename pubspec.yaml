@@ -7,7 +7,7 @@ environment:
   sdk: '>=2.19.2 <3.0.0'
 
 dependencies:
-  audioplayer: ^0.8.1
+  audioplayers: ^3.0.1
   flutter:
     sdk: flutter
   mockito: ^5.3.2
