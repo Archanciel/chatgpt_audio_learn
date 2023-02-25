@@ -5,7 +5,10 @@ class Audio {
 
   bool _isPlaying = false;
   bool get isPlaying => _isPlaying;
-  set isPlaying(bool isPlaying) => _isPlaying = isPlaying;
+  set isPlaying(bool isPlaying) {
+    _isPlaying = isPlaying;
+    _isPaused = false;
+  }
 
   bool _isPaused = false;
   bool get isPaused => _isPaused;

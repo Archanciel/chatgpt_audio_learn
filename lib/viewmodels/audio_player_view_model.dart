@@ -5,7 +5,10 @@ import 'package:audioplayers/audioplayers.dart';
 import '../models/audio.dart';
 
 class AudioPlayerViewModel extends ChangeNotifier {
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  AudioPlayer _audioPlayer = AudioPlayer();
+
+  AudioPlayerViewModel({required AudioPlayer audioPlayer})
+      : _audioPlayer = audioPlayer;
 
   Future<void> play(Audio audio) async {
     final file = File(audio.filePath);

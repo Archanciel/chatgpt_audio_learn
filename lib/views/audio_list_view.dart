@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'audio_list_item_widget.dart';
@@ -11,7 +12,11 @@ class AudioListView extends StatelessWidget {
       text:
           'https://youtube.com/playlist?list=PLzwWSJNcZTMSw4qRX5glEyrL_IBvWbiqk');
 
-  final AudioPlayerViewModel _audioPlayerViwModel = AudioPlayerViewModel();
+  AudioPlayerViewModel _audioPlayerViwModel;
+
+  AudioListView({required AudioPlayer audioPlayer})
+      : _audioPlayerViwModel = AudioPlayerViewModel(audioPlayer: audioPlayer);
+
   @override
   Widget build(BuildContext context) {
     final AudioViewModel audioViewModel = Provider.of<AudioViewModel>(context);
