@@ -30,7 +30,7 @@ class AudioListItemWidget extends StatelessWidget {
   Widget _buildPlayButton() {
     return Consumer<AudioPlayerViewModel>(
       builder: (context, audioPlayerViewModel, child) {
-        if (audioPlayerViewModel.state == AudioPlayerState.playing) {
+        if (audio.isPlaying) {
           return Row(
             mainAxisSize: MainAxisSize.min,
             children: [

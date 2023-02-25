@@ -15,8 +15,6 @@ class AudioPlayerViewModel extends ChangeNotifier {
   AudioPlayerState get state => _state;
 
   final AudioPlayer _audioPlayer = AudioPlayer();
-  late Audio _currentlyPlayingAudio;
-  bool _isPlaying = false;
 
   Future<AudioPlayerState> play(Audio audio) async {
     final file = File(audio.filePath);
@@ -26,9 +24,8 @@ class AudioPlayerViewModel extends ChangeNotifier {
     }
 
     _audioPlayer.stop();
-    _currentlyPlayingAudio = audio;
     await _audioPlayer.play(audio.filePath);
-    _isPlaying = true;
+    audio.isPlaying = true;
 
 
 
@@ -40,13 +37,14 @@ class AudioPlayerViewModel extends ChangeNotifier {
 
   Future<AudioPlayerState> pause(Audio audio) async {
     // Stop the audio
-      if (_isPlaying) {
+      if (audio.isPlaying) {
       await _audioPlayer.pause();
     } else {
-      await _audioPlayer.play(_currentlyPlayingAudio.filePath);
+      await _audioPlayer.play(audio.filePath);
     }
 
-    _isPlaying = !_isPlaying;
+    audio.invertPlaying();
+
     _state = AudioPlayerState.paused;
     notifyListeners();
     return _state;
@@ -56,7 +54,7 @@ class AudioPlayerViewModel extends ChangeNotifier {
     // Stop the audio
     _state = AudioPlayerState.stopped;
     await _audioPlayer.stop();
-    _isPlaying = false;
+    audio.isPlaying = false;
     notifyListeners();
     return _state;
   }
