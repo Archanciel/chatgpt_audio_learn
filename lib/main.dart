@@ -15,23 +15,18 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final AudioPlayer audioPlayer = AudioPlayer();
-    print('******** created AudioPlayer $audioPlayer');
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AudioViewModel()),
         ChangeNotifierProvider(
-            create: (_) => AudioPlayerViewModel(audioPlayer: audioPlayer)),
+            create: (_) => AudioPlayerViewModel()),
       ],
       child: MaterialApp(
         title: 'Youtube Audio Downloader',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: AudioListView(
-          audioPlayer: audioPlayer,
-        ),
+        home: AudioListView(),
       ),
     );
   }

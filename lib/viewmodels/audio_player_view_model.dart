@@ -7,19 +7,14 @@ import 'package:audioplayers/audioplayers.dart';
 import '../models/audio.dart';
 
 class AudioPlayerViewModel extends ChangeNotifier {
-  AudioPlayer _audioPlayer = AudioPlayer();
-
-  AudioPlayerViewModel({required AudioPlayer audioPlayer})
-      : _audioPlayer = audioPlayer;
-
   Future<void> play(Audio audio) async {
     final file = File(audio.filePath);
     if (!await file.exists()) {
       print('File not found: ${audio.filePath}');
     }
 
-    await _audioPlayer.stop();
-    await _audioPlayer.play(DeviceFileSource(audio.filePath));
+    await audio.audioPlayer.stop();
+    await audio.audioPlayer.play(DeviceFileSource(audio.filePath));
     audio.isPlaying = true;
 
     notifyListeners();
@@ -28,9 +23,9 @@ class AudioPlayerViewModel extends ChangeNotifier {
   Future<void> pause(Audio audio) async {
     // Stop the audio
     if (audio.isPaused) {
-      await _audioPlayer.resume();
+      await audio.audioPlayer.resume();
     } else {
-      await _audioPlayer.pause();
+      await audio.audioPlayer.pause();
     }
 
     audio.invertPaused();
@@ -40,7 +35,7 @@ class AudioPlayerViewModel extends ChangeNotifier {
 
   Future<void> stop(Audio audio) async {
     // Stop the audio
-    await _audioPlayer.stop();
+    await audio.audioPlayer.stop();
     audio.isPlaying = false;
     notifyListeners();
   }

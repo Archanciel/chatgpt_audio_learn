@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
@@ -33,7 +34,11 @@ class AudioViewModel extends ChangeNotifier {
       final String filePath = '${_audioDownloadDir.path}/${video.title}.mp3';
 
       final Audio audio = Audio(
-          title: audioTitle, duration: audioDuration!, filePath: filePath);
+        title: audioTitle,
+        duration: audioDuration!,
+        filePath: filePath,
+        audioPlayer: AudioPlayer(),
+      );
       _audioLst.add(audio);
 
       // Download the audio file

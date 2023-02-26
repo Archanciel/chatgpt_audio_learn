@@ -14,10 +14,7 @@ class AudioListView extends StatelessWidget {
       text:
           'https://youtube.com/playlist?list=PLzwWSJNcZTMSw4qRX5glEyrL_IBvWbiqk');
 
-  AudioPlayerViewModel _audioPlayerViwModel;
-
-  AudioListView({required AudioPlayer audioPlayer})
-      : _audioPlayerViwModel = AudioPlayerViewModel(audioPlayer: audioPlayer);
+  final AudioPlayerViewModel _audioPlayerViwModel = AudioPlayerViewModel();
 
   @override
   Widget build(BuildContext context) {
