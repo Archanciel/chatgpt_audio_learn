@@ -13,7 +13,6 @@ class AudioPlayerViewModel extends ChangeNotifier {
       print('File not found: ${audio.filePath}');
     }
 
-    await audio.audioPlayer.stop();
     await audio.audioPlayer.play(DeviceFileSource(audio.filePath));
     audio.isPlaying = true;
 

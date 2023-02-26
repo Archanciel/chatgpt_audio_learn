@@ -1,7 +1,6 @@
 // dart file located in lib
 
-import 'package:audioplayers/audioplayers.dart';
-import 'package:chatgpt_audio_learn/viewmodels/audio_view_model.dart';
+import 'package:chatgpt_audio_learn/viewmodels/audio_download_view_model.dart';
 import 'package:chatgpt_audio_learn/views/audio_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,9 +16,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AudioViewModel()),
-        ChangeNotifierProvider(
-            create: (_) => AudioPlayerViewModel()),
+        ChangeNotifierProvider(create: (_) => AudioDownloadViewModel()),
+        ChangeNotifierProvider(create: (_) => AudioPlayerViewModel()),
       ],
       child: MaterialApp(
         title: 'Youtube Audio Downloader',

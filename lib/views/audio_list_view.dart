@@ -1,12 +1,11 @@
 // dart file located in lib\views
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'audio_list_item_widget.dart';
 
 import '../models/audio.dart';
-import '../viewmodels/audio_view_model.dart';
+import '../viewmodels/audio_download_view_model.dart';
 import '../viewmodels/audio_player_view_model.dart';
 
 class AudioListView extends StatelessWidget {
@@ -18,7 +17,8 @@ class AudioListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AudioViewModel audioViewModel = Provider.of<AudioViewModel>(context);
+    final AudioDownloadViewModel audioViewModel =
+        Provider.of<AudioDownloadViewModel>(context);
 
     return Scaffold(
       appBar: AppBar(

@@ -3,7 +3,7 @@ import 'package:mockito/mockito.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import 'package:chatgpt_audio_learn/models/audio.dart';
-import 'package:chatgpt_audio_learn/viewmodels/audio_view_model.dart';
+import 'package:chatgpt_audio_learn/viewmodels/audio_download_view_model.dart';
 
 class MockYoutubeExplode extends Mock implements YoutubeExplode {}
 
@@ -15,12 +15,12 @@ class MockAudioStreamInfo extends Mock implements AudioStreamInfo {}
 
 void main() {
   group('AudioViewModel', () {
-    late AudioViewModel viewModel;
+    late AudioDownloadViewModel viewModel;
     late MockYoutubeExplode mockYoutubeExplode;
 
     setUp(() {
       mockYoutubeExplode = MockYoutubeExplode();
-      viewModel = AudioViewModel();
+      viewModel = AudioDownloadViewModel();
       viewModel.yt = mockYoutubeExplode;
     });
 
