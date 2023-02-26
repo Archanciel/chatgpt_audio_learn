@@ -1,3 +1,5 @@
+// dart file located in lib
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:chatgpt_audio_learn/viewmodels/audio_view_model.dart';
 import 'package:chatgpt_audio_learn/views/audio_list_view.dart';
