@@ -11,7 +11,7 @@ import '../viewmodels/audio_player_view_model.dart';
 class AudioListView extends StatelessWidget {
   final TextEditingController _textEditingController = TextEditingController(
       text:
-          'https://youtube.com/playlist?list=PLzwWSJNcZTMSw4qRX5glEyrL_IBvWbiqk');
+          'https://youtube.com/playlist?list=PLzwWSJNcZTMTB9iwbu77FGokc3WsoxuV0');
 
   final AudioPlayerViewModel _audioPlayerViwModel = AudioPlayerViewModel();
 

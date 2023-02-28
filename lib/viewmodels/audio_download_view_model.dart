@@ -44,18 +44,19 @@ class AudioDownloadViewModel extends ChangeNotifier {
       // Download the audio file
       await _downloadAudioFile(video, audioStreamInfo, filePath);
       // Do something with the downloaded file
+    
+      notifyListeners();
     }
-
-    notifyListeners();
   }
 
   Future<void> _downloadAudioFile(
       Video video, AudioStreamInfo audioStreamInfo, String filePath) async {
-    final yt = YoutubeExplode();
+    final YoutubeExplode yt = YoutubeExplode();
 
-    final output = File(filePath).openWrite();
-    final stream = await yt.videos.streamsClient.get(audioStreamInfo);
+    final IOSink output = File(filePath).openWrite();
+    final Stream<List<int>> stream = yt.videos.streamsClient.get(audioStreamInfo);
 
     await stream.pipe(output);
+    print('********************* *******************');
   }
 }
