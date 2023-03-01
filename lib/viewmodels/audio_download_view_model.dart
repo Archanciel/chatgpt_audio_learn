@@ -18,8 +18,8 @@ class AudioDownloadViewModel extends ChangeNotifier {
 
   final Directory _audioDownloadDir = Directory('/storage/emulated/0/Download');
 
-  Future<void> fetchAudios(String link) async {
-    final String? playlistId = PlaylistId.parsePlaylistId(link);
+  Future<void> fetchAudios(String playlistUrl) async {
+    final String? playlistId = PlaylistId.parsePlaylistId(playlistUrl);
     final Playlist playlist = await _yt.playlists.get(playlistId);
 
     await for (var video in _yt.playlists.getVideos(playlistId)) {
