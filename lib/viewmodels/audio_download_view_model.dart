@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../models/audio.dart';
+import '../utils/dir_util.dart';
 
 class AudioDownloadViewModel extends ChangeNotifier {
   final List<Audio> _audioLst = [];
@@ -18,7 +19,12 @@ class AudioDownloadViewModel extends ChangeNotifier {
 
   Future<void> fetchAudios(String playlistUrl) async {
     final String? playlistId = PlaylistId.parsePlaylistId(playlistUrl);
-    final Playlist playlist = await _yt.playlists.get(playlistId);
+    final Playlist youtubePlaylist = await _yt.playlists.get(playlistId);
+    String playlistDownloadHomePath =
+        await DirUtil.getPlaylistDownloadHomePath();
+    final String playlistDownloadPath = 
+        '${playlistDownloadHomePath}${Platform.pathSeparator}${youtubePlaylist.title}';
+    await DirUtil.createDirIfNotExist(path: playlistDownloadPath);
 
     await for (var video in _yt.playlists.getVideos(playlistId)) {
       final StreamManifest streamManifest =
