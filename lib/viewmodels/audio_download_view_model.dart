@@ -12,9 +12,7 @@ class AudioDownloadViewModel extends ChangeNotifier {
   final List<Audio> _audioLst = [];
   List<Audio> get audioLst => _audioLst;
 
-  YoutubeExplode _yt = YoutubeExplode();
-  YoutubeExplode get yt => _yt;
-  set yt(YoutubeExplode yt) => _yt = yt;
+  final YoutubeExplode _yt = YoutubeExplode();
 
   final Directory _audioDownloadDir = Directory('/storage/emulated/0/Download');
 
@@ -54,12 +52,13 @@ class AudioDownloadViewModel extends ChangeNotifier {
   }
 
   Future<void> _downloadAudioFile(
-      Video video, AudioStreamInfo audioStreamInfo, String filePath) async {
-    final YoutubeExplode yt = YoutubeExplode();
-
+    Video video,
+    AudioStreamInfo audioStreamInfo,
+    String filePath,
+  ) async {
     final IOSink output = File(filePath).openWrite();
     final Stream<List<int>> stream =
-        yt.videos.streamsClient.get(audioStreamInfo);
+        _yt.videos.streamsClient.get(audioStreamInfo);
 
     await stream.pipe(output);
     print('********************* *******************');
