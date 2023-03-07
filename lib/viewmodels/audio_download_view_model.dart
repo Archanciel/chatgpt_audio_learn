@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../models/audio.dart';
+import '../models/download_playlist.dart';
 import '../utils/dir_util.dart';
 
 class AudioDownloadViewModel extends ChangeNotifier {
@@ -17,12 +18,12 @@ class AudioDownloadViewModel extends ChangeNotifier {
 
   final Directory _audioDownloadDir = Directory('/storage/emulated/0/Download');
 
-  Future<void> fetchAudios(String playlistUrl) async {
-    final String? playlistId = PlaylistId.parsePlaylistId(playlistUrl);
+  Future<void> downloadPlaylistAudioss(DownloadPlaylist playlistToDownload) async {
+    final String? playlistId = PlaylistId.parsePlaylistId(playlistToDownload.url);
     final Playlist youtubePlaylist = await _yt.playlists.get(playlistId);
     String playlistDownloadHomePath =
         await DirUtil.getPlaylistDownloadHomePath();
-    final String playlistDownloadPath = 
+    final String playlistDownloadPath =
         '${playlistDownloadHomePath}${Platform.pathSeparator}${youtubePlaylist.title}';
     await DirUtil.createDirIfNotExist(path: playlistDownloadPath);
 
@@ -43,8 +44,7 @@ class AudioDownloadViewModel extends ChangeNotifier {
           '${_audioDownloadDir.path}/${validAudioFileName}.mp3';
 
       // works on S20, fails om emulator !
-      audioFilePathName =
-          '${playlistDownloadPath}/${validAudioFileName}.mp3';
+      audioFilePathName = '${playlistDownloadPath}/${validAudioFileName}.mp3';
 
       final Audio audio = Audio(
         title: audioTitle,

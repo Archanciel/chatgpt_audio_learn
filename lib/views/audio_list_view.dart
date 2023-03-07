@@ -41,9 +41,12 @@ class AudioListView extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              final String link = _textEditingController.text.trim();
-              if (link.isNotEmpty) {
-                audioViewModel.fetchAudios(link);
+              final String playlistUrl = _textEditingController.text.trim();
+              DownloadPlaylist playlistToDownload =
+                  DownloadPlaylist(url: playlistUrl);
+
+              if (playlistUrl.isNotEmpty) {
+                audioViewModel.downloadPlaylistAudioss(playlistToDownload);
               }
             },
             child: const Text('Download Audio'),
