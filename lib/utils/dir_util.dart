@@ -12,8 +12,6 @@ class DirUtil {
     }
   }
 
-  /// Async main method which instanciates and loads the
-  /// TransferDataViewModel.
   static Future<void> createAppDirIfNotExist({
     bool isAppDirToBeDeleted = false,
   }) async {
@@ -23,7 +21,7 @@ class DirUtil {
 
     if (isAppDirToBeDeleted) {
       if (directoryExists) {
-        DirUtil.deleteFilesInDir(path);
+        DirUtil.deleteFilesInDirAndSubDirs(path);
       }
     }
 
@@ -33,9 +31,9 @@ class DirUtil {
   }
 
   static Future<void> createDirIfNotExist({
-    required String path,
+    required String pathStr,
   }) async {
-    final Directory directory = Directory(path);
+    final Directory directory = Directory(pathStr);
     bool directoryExists = await directory.exists();
 
     if (!directoryExists) {
@@ -43,12 +41,14 @@ class DirUtil {
     }
   }
 
-  static void deleteFilesInDir(String transferDataJsonPath) {
+  static void deleteFilesInDirAndSubDirs(String transferDataJsonPath) {
     final Directory directory = Directory(transferDataJsonPath);
-    final List<FileSystemEntity> contents = directory.listSync();
+    final List<FileSystemEntity> contents = directory.listSync(recursive: true);
 
     for (FileSystemEntity file in contents) {
-      file.deleteSync();
+      if (file is File) {
+        file.deleteSync();
+      }
     }
   }
 }

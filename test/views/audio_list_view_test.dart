@@ -13,7 +13,7 @@ class MockAudioViewModel extends ChangeNotifier
   List<Audio> audioLst = [];
 
   @override
-  Future<void> downloadPlaylistAudioss(String playlistUrl) async {
+  Future<void> downloadPlaylistAudios(String playlistUrl) async {
     audioLst = [
       Audio(
           title: 'Audio 1',

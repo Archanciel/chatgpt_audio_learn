@@ -18,33 +18,59 @@ class AudioDownloadViewModel extends ChangeNotifier {
 
   final Directory _audioDownloadDir = Directory('/storage/emulated/0/Download');
 
-  Future<void> downloadPlaylistAudioss(DownloadPlaylist playlistToDownload) async {
-    final String? playlistId = PlaylistId.parsePlaylistId(playlistToDownload.url);
-    final Playlist youtubePlaylist = await _yt.playlists.get(playlistId);
-    String playlistDownloadHomePath =
-        await DirUtil.getPlaylistDownloadHomePath();
-    final String playlistDownloadPath =
-        '${playlistDownloadHomePath}${Platform.pathSeparator}${youtubePlaylist.title}';
-    await DirUtil.createDirIfNotExist(path: playlistDownloadPath);
+  Future<void> downloadPlaylistAudios(
+      DownloadPlaylist playlistToDownload) async {
+    // get Youtube playlist
 
-    await for (var video in _yt.playlists.getVideos(playlistId)) {
+    final String? playlistId =
+        PlaylistId.parsePlaylistId(playlistToDownload.url);
+    final Playlist youtubePlaylist = await _yt.playlists.get(playlistId);
+
+    // determine playlist audio download dir
+
+    final String audioDownloadPath =
+        await DirUtil.getPlaylistDownloadHomePath();
+    final String playlistTitle = youtubePlaylist.title;
+    playlistToDownload.title = playlistTitle;
+    final String playlistDownloadPath =
+        '$audioDownloadPath${Platform.pathSeparator}$playlistTitle';
+
+    // ensure playlist audio download dir exists
+    await DirUtil.createDirIfNotExist(pathStr: playlistDownloadPath);
+
+    // get already downloaded audio file names
+    final List<String> downloadedAudioFileNameLst =
+        getDownloadedAudioNameLst(pathStr: playlistDownloadPath);
+
+    await for (Video video in _yt.playlists.getVideos(playlistId)) {
       final StreamManifest streamManifest =
           await _yt.videos.streamsClient.getManifest(video.id);
       final AudioOnlyStreamInfo audioStreamInfo =
           streamManifest.audioOnly.first;
 
       final String audioTitle = video.title;
-      final Duration? audioDuration = video.duration;
-
       String validAudioFileName =
           _replaceUnauthorizedDirOrFileNameChars(video.title);
+      final String audioFilePathName =
+          '$playlistDownloadPath/${validAudioFileName}.mp3';
 
-      // works
-      String audioFilePathName =
-          '${_audioDownloadDir.path}/${validAudioFileName}.mp3';
+      final bool alreadyDownloaded = downloadedAudioFileNameLst
+          .any((fileName) => fileName.contains(validAudioFileName));
 
-      // works on S20, fails om emulator !
-      audioFilePathName = '${playlistDownloadPath}/${validAudioFileName}.mp3';
+      if (alreadyDownloaded) {
+        print('$audioTitle already downloaded');
+        final Audio audio = Audio(
+          title: audioTitle,
+          filePath: audioFilePathName,
+          audioPlayer: AudioPlayer(),
+        );
+
+        _audioLst.add(audio);
+        notifyListeners();
+        continue;
+      }
+
+      final Duration? audioDuration = video.duration;
 
       final Audio audio = Audio(
         title: audioTitle,
@@ -52,6 +78,7 @@ class AudioDownloadViewModel extends ChangeNotifier {
         filePath: audioFilePathName,
         audioPlayer: AudioPlayer(),
       );
+
       _audioLst.add(audio);
 
       // Download the audio file
@@ -60,6 +87,23 @@ class AudioDownloadViewModel extends ChangeNotifier {
 
       notifyListeners();
     }
+  }
+
+  List<String> getDownloadedAudioNameLst({
+    required String pathStr,
+  }) {
+    Directory directory = Directory(pathStr);
+    List<FileSystemEntity> files = directory.listSync();
+
+    List<String> fileNames = [];
+
+    for (FileSystemEntity file in files) {
+      if (file is File) {
+        fileNames.add(file.path.split('/').last);
+      }
+    }
+
+    return fileNames;
   }
 
   Future<void> _downloadAudioFile(
@@ -72,7 +116,6 @@ class AudioDownloadViewModel extends ChangeNotifier {
         _yt.videos.streamsClient.get(audioStreamInfo);
 
     await stream.pipe(output);
-    print('********************* *******************');
   }
 
   String _replaceUnauthorizedDirOrFileNameChars(String rawFileName) {

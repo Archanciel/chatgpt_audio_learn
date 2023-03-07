@@ -4,7 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 
 class Audio {
   final String title;
-  final Duration duration;
+  final Duration? duration;
   final String filePath;
 
   bool _isPlaying = false;
@@ -21,9 +21,9 @@ class Audio {
 
   Audio({
     required this.title,
-    required this.duration,
     required this.filePath,
     required this.audioPlayer,
+    this.duration,
   });
 
   void invertPaused() {

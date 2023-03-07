@@ -22,12 +22,13 @@ class VideoDownloadViewModel extends ChangeNotifier {
     final Playlist youtubePlaylist =
         await _yt.playlists.get(playlistToDownload.id);
     playlistToDownload.title = youtubePlaylist.title;
-    String playlistDownloadHomePath = await DirUtil.getPlaylistDownloadHomePath();
+    String playlistDownloadHomePath =
+        await DirUtil.getPlaylistDownloadHomePath();
 
     // works on S20, fails om emulator !
     playlistToDownload.downloadPath =
         '$playlistDownloadHomePath${Platform.pathSeparator}${playlistToDownload.title}';
-    await DirUtil.createDirIfNotExist(path: playlistToDownload.downloadPath);
+    await DirUtil.createDirIfNotExist(pathStr: playlistToDownload.downloadPath);
 
     // does not solve the problem on emulator !
     // playlistToDownload.downloadPath =

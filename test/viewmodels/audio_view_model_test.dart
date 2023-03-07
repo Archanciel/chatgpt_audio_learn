@@ -64,7 +64,7 @@ void main() {
 
       when(mockAudioStreamInfo.url).thenReturn('http://example.com/audio.mp3');
 
-      await viewModel.downloadPlaylistAudioss('http://example.com/playlist');
+      await viewModel.downloadPlaylistAudios('http://example.com/playlist');
 
       expect(viewModel.audioLst, expectedAudios);
     });

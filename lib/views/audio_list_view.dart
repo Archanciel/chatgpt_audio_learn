@@ -46,7 +46,7 @@ class AudioListView extends StatelessWidget {
                   DownloadPlaylist(url: playlistUrl);
 
               if (playlistUrl.isNotEmpty) {
-                audioViewModel.downloadPlaylistAudioss(playlistToDownload);
+                audioViewModel.downloadPlaylistAudios(playlistToDownload);
               }
             },
             child: const Text('Download Audio'),

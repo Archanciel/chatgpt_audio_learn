@@ -24,7 +24,7 @@ class AudioListItemWidget extends StatelessWidget {
     return ListTile(
       leading: const Icon(Icons.music_note),
       title: Text(audio.title),
-      subtitle: Text(audio.duration.toString()),
+      subtitle: Text((audio.duration != null) ? audio.duration.toString() : ''),
       trailing: _buildPlayButton(),
     );
   }
