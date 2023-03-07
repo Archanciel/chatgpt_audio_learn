@@ -13,6 +13,7 @@ dependencies:
   mockito: ^5.3.2
   path_provider: ^2.0.13
   provider: ^6.0.5
+  intl: ^0.18.0
   youtube_explode_dart: ^1.12.3
 
 dev_dependencies:

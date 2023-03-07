@@ -1,7 +1,9 @@
 // dart file located in lib\views
 
+import 'package:chatgpt_audio_learn/viewmodels/video_download_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../models/download_playlist.dart';
 import 'audio_list_item_widget.dart';
 
 import '../models/audio.dart';
@@ -45,6 +47,23 @@ class AudioListView extends StatelessWidget {
               }
             },
             child: const Text('Download Audio'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              VideoDownloadViewModel videoDownloadViewModel =
+                  VideoDownloadViewModel();
+              final String link = _textEditingController.text.trim();
+              if (link.isNotEmpty) {
+                DownloadPlaylist playlistToDownload =
+                    DownloadPlaylist(url: link);
+                await videoDownloadViewModel
+                    .downloadPlaylistVideos(playlistToDownload);
+                print('***************** **************');
+                print(playlistToDownload.downloadedVideoLst);
+                print('***************** **************');
+              }
+            },
+            child: const Text('Download Video'),
           ),
           Expanded(
             child: ListView.builder(

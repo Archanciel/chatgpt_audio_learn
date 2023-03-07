@@ -2,61 +2,69 @@
 
 import 'dart:io';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
-import '../models/audio.dart';
+import '../models/download_playlist.dart';
+import '../models/downloaded_video.dart';
 import '../utils/dir_util.dart';
 
-class AudioDownloadViewModel extends ChangeNotifier {
-  final List<Audio> _audioLst = [];
-  List<Audio> get audioLst => _audioLst;
+class VideoDownloadViewModel extends ChangeNotifier {
+  final List<DownloadedVideo> _downloadedVideoLst = [];
+  List<DownloadedVideo> get downloadedVideoLst => _downloadedVideoLst;
 
   final YoutubeExplode _yt = YoutubeExplode();
 
-  final Directory _audioDownloadDir = Directory('/storage/emulated/0/Download');
+  Future<void> downloadPlaylistVideos(
+      DownloadPlaylist playlistToDownload) async {
+    playlistToDownload.id =
+        PlaylistId.parsePlaylistId(playlistToDownload.url) ?? '';
+    final Playlist youtubePlaylist =
+        await _yt.playlists.get(playlistToDownload.id);
+    playlistToDownload.title = youtubePlaylist.title;
+    String playlistDownloadHomePath = await DirUtil.getPlaylistDownloadHomePath();
 
-  Future<void> fetchAudios(String playlistUrl) async {
-    final String? playlistId = PlaylistId.parsePlaylistId(playlistUrl);
-    final Playlist youtubePlaylist = await _yt.playlists.get(playlistId);
-    String playlistDownloadHomePath =
-        await DirUtil.getPlaylistDownloadHomePath();
-    final String playlistDownloadPath = 
-        '${playlistDownloadHomePath}${Platform.pathSeparator}${youtubePlaylist.title}';
-    await DirUtil.createDirIfNotExist(path: playlistDownloadPath);
+    // works on S20, fails om emulator !
+    playlistToDownload.downloadPath =
+        '$playlistDownloadHomePath${Platform.pathSeparator}${playlistToDownload.title}';
+    await DirUtil.createDirIfNotExist(path: playlistToDownload.downloadPath);
 
-    await for (var video in _yt.playlists.getVideos(playlistId)) {
+    // does not solve the problem on emulator !
+    // playlistToDownload.downloadPath =
+    //     '${playlistDownloadHomePath}${Platform.pathSeparator}${playlistToDownload.title}';
+
+    await for (Video video in _yt.playlists.getVideos(playlistToDownload.id)) {
+      final bool alreadyDownloaded = _downloadedVideoLst
+          .any((downloadedVideo) => downloadedVideo.id == video.id.toString());
+
+      if (alreadyDownloaded) {
+        continue;
+      }
+
       final StreamManifest streamManifest =
           await _yt.videos.streamsClient.getManifest(video.id);
       final AudioOnlyStreamInfo audioStreamInfo =
           streamManifest.audioOnly.first;
 
-      final String audioTitle = video.title;
-      final Duration? audioDuration = video.duration;
-
       String validAudioFileName =
           _replaceUnauthorizedDirOrFileNameChars(video.title);
 
-      // works
-      String audioFilePathName =
-          '${_audioDownloadDir.path}/${validAudioFileName}.mp3';
+      final String downloadVideoFilePathName =
+          '${playlistToDownload.downloadPath}${Platform.pathSeparator}$validAudioFileName.mp3';
 
-      // works on S20, fails om emulator !
-      audioFilePathName =
-          '${playlistDownloadPath}/${validAudioFileName}.mp3';
+      // Download the DownloadedVideo file
+      await _downloadAudioFile(
+          video, audioStreamInfo, downloadVideoFilePathName);
 
-      final Audio audio = Audio(
-        title: audioTitle,
-        duration: audioDuration!,
-        filePath: audioFilePathName,
-        audioPlayer: AudioPlayer(),
+      final downloadedVideo = DownloadedVideo(
+        id: video.id.toString(),
+        title: video.title,
+        audioFilePath: downloadVideoFilePathName,
+        audioDuration: video.duration,
+        downloadDate: DateTime.now(),
       );
-      _audioLst.add(audio);
 
-      // Download the audio file
-      await _downloadAudioFile(video, audioStreamInfo, audioFilePathName);
-      // Do something with the downloaded file
+      playlistToDownload.addDownloadedVideo(downloadedVideo);
 
       notifyListeners();
     }
@@ -65,14 +73,13 @@ class AudioDownloadViewModel extends ChangeNotifier {
   Future<void> _downloadAudioFile(
     Video video,
     AudioStreamInfo audioStreamInfo,
-    String filePath,
+    String audioFilePathName,
   ) async {
-    final IOSink output = File(filePath).openWrite();
+    final IOSink audioFile = File(audioFilePathName).openWrite();
     final Stream<List<int>> stream =
         _yt.videos.streamsClient.get(audioStreamInfo);
 
-    await stream.pipe(output);
-    print('********************* *******************');
+    await stream.pipe(audioFile);
   }
 
   String _replaceUnauthorizedDirOrFileNameChars(String rawFileName) {
