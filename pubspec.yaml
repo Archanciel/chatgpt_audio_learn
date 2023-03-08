@@ -16,6 +16,8 @@ dependencies:
   intl: ^0.18.0
   youtube_explode_dart: ^1.12.3
   dio: ^5.0.1
+  just_audio: ^0.9.31
+  http: ^0.13.5
 
 dev_dependencies:
   flutter_test:
