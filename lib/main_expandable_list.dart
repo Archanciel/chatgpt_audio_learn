@@ -1,7 +1,8 @@
-import 'package:chatgpt_audio_learn/viewmodels/list_view_model.dart';
-import 'package:chatgpt_audio_learn/views/list_view_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'package:chatgpt_audio_learn/viewmodels/list_view_model.dart';
+import 'package:chatgpt_audio_learn/views/list_view_widget.dart';
 
 void main() {
   runApp(MyApp());
