@@ -109,13 +109,13 @@ class AudioDownloadViewModel extends ChangeNotifier {
   Future<void> _downloadAudioFile(
     Video video,
     AudioStreamInfo audioStreamInfo,
-    String filePath,
+    String audioFilePathName,
   ) async {
-    final IOSink output = File(filePath).openWrite();
+    final IOSink audioFile = File(audioFilePathName).openWrite();
     final Stream<List<int>> stream =
         _yt.videos.streamsClient.get(audioStreamInfo);
 
-    await stream.pipe(output);
+    await stream.pipe(audioFile);
   }
 
   String _replaceUnauthorizedDirOrFileNameChars(String rawFileName) {

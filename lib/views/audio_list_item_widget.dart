@@ -36,18 +36,19 @@ class AudioListItemWidget extends StatelessWidget {
           return Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              IconButton(
-                icon: const Icon(Icons.play_arrow),
-                onPressed: () {
-                  audioPlayerViewModel.pause(audio);
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.pause),
-                onPressed: () {
-                  audioPlayerViewModel.pause(audio);
-                },
-              ),
+              (audio.isPaused)
+                  ? IconButton(
+                      icon: const Icon(Icons.play_arrow),
+                      onPressed: () {
+                        audioPlayerViewModel.pause(audio);
+                      },
+                    )
+                  : IconButton(
+                      icon: const Icon(Icons.pause),
+                      onPressed: () {
+                        audioPlayerViewModel.pause(audio);
+                      },
+                    ),
               IconButton(
                 icon: const Icon(Icons.stop),
                 onPressed: () {
