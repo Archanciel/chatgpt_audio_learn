@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:chatgpt_audio_learn/viewmodels/audio_download_VM.dart';
 import 'package:flutter/material.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
@@ -10,7 +11,7 @@ import '../models/audio.dart';
 import '../models/download_playlist.dart';
 import '../utils/dir_util.dart';
 
-class AudioDownloadViewModel extends ChangeNotifier {
+class AudioDownloadViewModelYt extends ChangeNotifier implements AudioDownloadVM {
   final List<Audio> _audioLst = [];
   List<Audio> get audioLst => _audioLst;
 

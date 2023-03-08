@@ -9,8 +9,9 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import '../models/audio.dart';
 import '../models/download_playlist.dart';
 import '../utils/dir_util.dart';
+import 'audio_download_VM.dart';
 
-class AudioDownloadViewModelIo extends ChangeNotifier {
+class AudioDownloadViewModelIo extends ChangeNotifier implements AudioDownloadVM {
   final List<Audio> _audioLst = [];
   List<Audio> get audioLst => _audioLst;
 
