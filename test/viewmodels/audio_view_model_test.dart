@@ -38,16 +38,16 @@ void main() {
 
       final expectedAudios = [
         Audio(
-            title: videoTitle1,
-            filePath: '/storage/emulated/0/Download/Video 1.mp3',
-            audioPlayer: AudioPlayer(),
-            duration: videoDuration1,
-    ),       
+          title: videoTitle1,
+          filePathName: '/storage/emulated/0/Download/Video 1.mp3',
+          audioPlayer: AudioPlayer(),
+          duration: videoDuration1,
+        ),
         Audio(
-            title: videoTitle2,
-            filePath: '/storage/emulated/0/Download/Video 2.mp3',
-            audioPlayer: AudioPlayer(),
-            duration: videoDuration2,
+          title: videoTitle2,
+          filePathName: '/storage/emulated/0/Download/Video 2.mp3',
+          audioPlayer: AudioPlayer(),
+          duration: videoDuration2,
         )
       ];
 

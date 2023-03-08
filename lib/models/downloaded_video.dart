@@ -1,23 +1,23 @@
 import 'dart:io';
 
+import 'audio.dart';
+
 /// Video downloaded informations
 class DownloadedVideo {
   final String id;
   final String title;
-  final String audioFilePath;
   final DateTime downloadDate;
-  final Duration? audioDuration;
+  final Audio audio;
 
   DownloadedVideo({
     required this.id,
     required this.title,
-    required this.audioFilePath,
     required this.downloadDate,
-    required this.audioDuration,
+    required this.audio
   });
 
   @override
   String toString() {
-    return '$title $audioDuration';
+    return '$title ${audio.duration.toString()}';
   }
 }

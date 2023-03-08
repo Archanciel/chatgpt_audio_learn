@@ -10,7 +10,7 @@ import '../models/audio.dart';
 import '../models/download_playlist.dart';
 import '../utils/dir_util.dart';
 
-class AudioDownloadViewModel extends ChangeNotifier {
+class AudioDownloadViewModelIo extends ChangeNotifier {
   final List<Audio> _audioLst = [];
   List<Audio> get audioLst => _audioLst;
 

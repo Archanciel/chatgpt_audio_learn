@@ -5,7 +5,7 @@ import 'package:audioplayers/audioplayers.dart';
 class Audio {
   final String title;
   final Duration? duration;
-  final String filePath;
+  final String filePathName;
 
   bool _isPlaying = false;
   bool get isPlaying => _isPlaying;
@@ -21,7 +21,7 @@ class Audio {
 
   Audio({
     required this.title,
-    required this.filePath,
+    required this.filePathName,
     required this.audioPlayer,
     this.duration,
   });

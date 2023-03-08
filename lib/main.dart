@@ -1,5 +1,6 @@
 // dart file located in lib
 
+import 'package:chatgpt_audio_learn/viewmodels/audio_download_view_model_io.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +23,7 @@ void main(List<String> args) {
   // two methods which could not be declared async !
   //
   // Setting the TransferDataViewModel transfer data Map
-  bool deleteAppDir = false;
+  bool deleteAppDir = true;
 
   if (myArgs.isNotEmpty) {
     if (myArgs.contains("delAppDir")) {
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AudioDownloadViewModel()),
+        ChangeNotifierProvider(create: (_) => AudioDownloadViewModelIo()),
         ChangeNotifierProvider(create: (_) => AudioPlayerViewModel()),
       ],
       child: MaterialApp(

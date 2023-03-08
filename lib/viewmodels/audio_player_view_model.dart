@@ -8,12 +8,12 @@ import '../models/audio.dart';
 
 class AudioPlayerViewModel extends ChangeNotifier {
   Future<void> play(Audio audio) async {
-    final file = File(audio.filePath);
+    final file = File(audio.filePathName);
     if (!await file.exists()) {
-      print('File not found: ${audio.filePath}');
+      print('File not found: ${audio.filePathName}');
     }
 
-    await audio.audioPlayer.play(DeviceFileSource(audio.filePath));
+    await audio.audioPlayer.play(DeviceFileSource(audio.filePathName));
     audio.isPlaying = true;
 
     notifyListeners();
