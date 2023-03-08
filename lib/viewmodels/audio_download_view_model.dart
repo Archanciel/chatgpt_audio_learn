@@ -14,7 +14,10 @@ class AudioDownloadViewModel extends ChangeNotifier {
   final List<Audio> _audioLst = [];
   List<Audio> get audioLst => _audioLst;
 
-  final YoutubeExplode _yt = YoutubeExplode();
+  YoutubeExplode _yt = YoutubeExplode();
+
+  // setter used by test only !
+  set yt(YoutubeExplode yt) => _yt = yt;
 
   final Directory _audioDownloadDir = Directory('/storage/emulated/0/Download');
 

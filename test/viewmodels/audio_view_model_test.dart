@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
@@ -38,12 +39,16 @@ void main() {
       final expectedAudios = [
         Audio(
             title: videoTitle1,
+            filePath: '/storage/emulated/0/Download/Video 1.mp3',
+            audioPlayer: AudioPlayer(),
             duration: videoDuration1,
-            filePath: '/storage/emulated/0/Download/Video 1.mp3'),
+    ),       
         Audio(
             title: videoTitle2,
+            filePath: '/storage/emulated/0/Download/Video 2.mp3',
+            audioPlayer: AudioPlayer(),
             duration: videoDuration2,
-            filePath: '/storage/emulated/0/Download/Video 2.mp3'),
+        )
       ];
 
       when(mockYoutubeExplode.playlists.get(any))
