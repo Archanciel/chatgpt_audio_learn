@@ -26,7 +26,8 @@ class AudioListView extends StatelessWidget {
         Provider.of<AudioDownloadViewModelYt>(context);
     final AudioDownloadViewModelIo audioViewModelIo =
         Provider.of<AudioDownloadViewModelIo>(context);
-    AudioDownloadVM audioDownloadViewModel;
+    AudioDownloadVM audioDownloadViewModel =
+        Provider.of<AudioDownloadViewModelYt>(context);
 
     return Scaffold(
       appBar: AppBar(

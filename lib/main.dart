@@ -8,6 +8,7 @@ import 'package:chatgpt_audio_learn/constants.dart';
 import 'package:chatgpt_audio_learn/utils/dir_util.dart';
 import 'package:chatgpt_audio_learn/viewmodels/audio_download_view_model_yt.dart';
 import 'package:chatgpt_audio_learn/views/audio_list_view.dart';
+import 'viewmodels/audio_download_view_model_ja.dart';
 import 'viewmodels/audio_player_view_model.dart';
 
 void main(List<String> args) {
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AudioDownloadViewModelYt()),
         ChangeNotifierProvider(create: (_) => AudioDownloadViewModelIo()),
+        ChangeNotifierProvider(create: (_) => AudioDownloadViewModelJa()),
         ChangeNotifierProvider(create: (_) => AudioPlayerViewModel()),
       ],
       child: MaterialApp(

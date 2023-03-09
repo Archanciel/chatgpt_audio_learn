@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:just_audio/just_audio.dart';
 
+import '../models/audio.dart';
 import '../models/download_playlist.dart';
 import 'audio_download_VM.dart';
 
@@ -22,6 +23,10 @@ class Track {
 
 class AudioDownloadViewModelJa extends ChangeNotifier
     implements AudioDownloadVM {
+  @override
+  final List<Audio> audioLst = [];
+
+  @override
   Future<void> downloadPlaylistAudios(
       DownloadPlaylist playlistToDownload) async {
     final player = AudioPlayer();
@@ -48,6 +53,10 @@ class AudioDownloadViewModelJa extends ChangeNotifier
       final audioUrl = playlist[i].audio.toString();
       final audioResponse = await http.get(Uri.parse(audioUrl));
       await audioFile.writeAsBytes(audioResponse.bodyBytes);
+
+      print('$runtimeType $audioFile');
     }
+
+    notifyListeners();
   }
 }

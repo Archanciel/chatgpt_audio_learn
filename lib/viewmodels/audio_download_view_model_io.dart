@@ -11,10 +11,8 @@ import '../models/download_playlist.dart';
 import '../utils/dir_util.dart';
 import 'audio_download_VM.dart';
 
-class AudioDownloadViewModelIo extends ChangeNotifier implements AudioDownloadVM {
-  final List<Audio> _audioLst = [];
-  List<Audio> get audioLst => _audioLst;
-
+class AudioDownloadViewModelIo extends ChangeNotifier
+    implements AudioDownloadVM {
   YoutubeExplode _yt = YoutubeExplode();
 
   // setter used by test only !
@@ -22,6 +20,10 @@ class AudioDownloadViewModelIo extends ChangeNotifier implements AudioDownloadVM
 
   final Directory _audioDownloadDir = Directory('/storage/emulated/0/Download');
 
+  @override
+  final List<Audio> audioLst = [];
+
+  @override
   Future<void> downloadPlaylistAudios(
       DownloadPlaylist playlistToDownload) async {
     // get Youtube playlist
@@ -69,7 +71,7 @@ class AudioDownloadViewModelIo extends ChangeNotifier implements AudioDownloadVM
           audioPlayer: AudioPlayer(),
         );
 
-        _audioLst.add(audio);
+        audioLst.add(audio);
         notifyListeners();
         continue;
       }
@@ -83,10 +85,14 @@ class AudioDownloadViewModelIo extends ChangeNotifier implements AudioDownloadVM
         audioPlayer: AudioPlayer(),
       );
 
-      _audioLst.add(audio);
+      audioLst.add(audio);
 
       // Download the audio file
-      await _downloadAudioFile(video, audioStreamInfo, audioFilePathName);
+      await _downloadAudioFile(
+        video,
+        audioStreamInfo,
+        audioFilePathName,
+      );
       // Do something with the downloaded file
 
       notifyListeners();
@@ -118,6 +124,8 @@ class AudioDownloadViewModelIo extends ChangeNotifier implements AudioDownloadVM
     final IOSink audioFile = File(audioFilePathName).openWrite();
     final Stream<List<int>> stream =
         _yt.videos.streamsClient.get(audioStreamInfo);
+
+    print('$runtimeType $audioFilePathName');
 
     await stream.pipe(audioFile);
   }
