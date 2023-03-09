@@ -21,6 +21,8 @@ class AudioListView extends StatefulWidget {
 }
 
 class _AudioListViewState extends State<AudioListView> {
+  ViewModelType _currentViewModelType = ViewModelType.youtube;
+
   final TextEditingController _textEditingController = TextEditingController(
       text:
           'https://youtube.com/playlist?list=PLzwWSJNcZTMTB9iwbu77FGokc3WsoxuV0');
@@ -29,8 +31,28 @@ class _AudioListViewState extends State<AudioListView> {
 
   @override
   Widget build(BuildContext context) {
-    AudioDownloadVM audioDownloadViewModel =
-        Provider.of<AudioDownloadViewModelDio>(context);
+    AudioDownloadVM audioDownloadViewModel;
+
+    switch (_currentViewModelType) {
+      case ViewModelType.youtube:
+        {
+          audioDownloadViewModel =
+              Provider.of<AudioDownloadViewModelYt>(context);
+          break;
+        }
+      case ViewModelType.dio:
+        {
+          audioDownloadViewModel =
+              Provider.of<AudioDownloadViewModelDio>(context);
+          break;
+        }
+      case ViewModelType.justAudio:
+        {
+          audioDownloadViewModel =
+              Provider.of<AudioDownloadViewModelJa>(context);
+          break;
+        }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -51,6 +73,7 @@ class _AudioListViewState extends State<AudioListView> {
           ),
           ElevatedButton(
             onPressed: () {
+              _currentViewModelType = ViewModelType.youtube;
               audioDownloadViewModel = Provider.of<AudioDownloadViewModelYt>(
                 context,
                 listen: false,
@@ -68,6 +91,7 @@ class _AudioListViewState extends State<AudioListView> {
           ),
           ElevatedButton(
             onPressed: () {
+              _currentViewModelType = ViewModelType.dio;
               audioDownloadViewModel = Provider.of<AudioDownloadViewModelDio>(
                 context,
                 listen: false,
@@ -85,6 +109,7 @@ class _AudioListViewState extends State<AudioListView> {
           ),
           ElevatedButton(
             onPressed: () {
+              _currentViewModelType = ViewModelType.justAudio;
               audioDownloadViewModel = Provider.of<AudioDownloadViewModelJa>(
                 context,
                 listen: false,
