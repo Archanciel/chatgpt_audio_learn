@@ -3,16 +3,16 @@
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
-import 'package:chatgpt_audio_learn/viewmodels/audio_download_VM.dart';
 import 'package:flutter/material.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../models/audio.dart';
 import '../models/download_playlist.dart';
 import '../utils/dir_util.dart';
+import 'audio_download_view_model.dart';
 
 class AudioDownloadViewModelYt extends ChangeNotifier
-    implements AudioDownloadVM {
+    with AudioDownloadViewModel {
   YoutubeExplode _yt = YoutubeExplode();
 
   // setter used by test only !
@@ -56,7 +56,7 @@ class AudioDownloadViewModelYt extends ChangeNotifier
 
       final String audioTitle = video.title;
       String validAudioFileName =
-          _replaceUnauthorizedDirOrFileNameChars(video.title);
+          replaceUnauthorizedDirOrFileNameChars(video.title);
       final String audioFilePathName =
           '$playlistDownloadPath/${validAudioFileName}.mp3';
 
@@ -128,44 +128,5 @@ class AudioDownloadViewModelYt extends ChangeNotifier
     print('$runtimeType $audioFilePathName');
 
     await stream.pipe(audioFile);
-  }
-
-  String _replaceUnauthorizedDirOrFileNameChars(String rawFileName) {
-    // Replace '|' by ' if '|' is located at end of file name
-    if (rawFileName.endsWith('|')) {
-      rawFileName = rawFileName.substring(0, rawFileName.length - 1);
-    }
-
-    // Replace '||' by '_' since YoutubeDL replaces '||' by '_'
-    rawFileName = rawFileName.replaceAll('||', '|');
-
-    // Replace '//' by '_' since YoutubeDL replaces '//' by '_'
-    rawFileName = rawFileName.replaceAll('//', '/');
-
-    final charToReplace = {
-      '\\': '',
-      '/': '_', // since YoutubeDL replaces '/' by '_'
-      ':': ' -', // since YoutubeDL replaces ':' by ' -'
-      '*': ' ',
-      // '.': '', point is not illegal in file name
-      '?': '',
-      '"': "'", // since YoutubeDL replaces " by '
-      '<': '',
-      '>': '',
-      '|': '_', // since YoutubeDL replaces '|' by '_'
-      // "'": '_', apostrophe is not illegal in file name
-    };
-
-    // Replace all multiple characters in a string based on translation table created by dictionary
-    String validFileName = rawFileName;
-    charToReplace.forEach((key, value) {
-      validFileName = validFileName.replaceAll(key, value);
-    });
-
-    // Since YoutubeDL replaces '?' by ' ', determining if a video whose title
-    // ends with '?' has already been downloaded using
-    // replaceUnauthorizedDirOrFileNameChars(videoTitle) + '.mp3' can be executed
-    // if validFileName.trim() is NOT done.
-    return validFileName.trim();
   }
 }

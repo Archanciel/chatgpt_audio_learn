@@ -1,6 +1,5 @@
 // dart file located in lib
 
-import 'package:chatgpt_audio_learn/viewmodels/audio_download_view_model_io.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -8,6 +7,7 @@ import 'package:chatgpt_audio_learn/constants.dart';
 import 'package:chatgpt_audio_learn/utils/dir_util.dart';
 import 'package:chatgpt_audio_learn/viewmodels/audio_download_view_model_yt.dart';
 import 'package:chatgpt_audio_learn/views/audio_list_view.dart';
+import 'viewmodels/audio_download_view_model_dio.dart';
 import 'viewmodels/audio_download_view_model_ja.dart';
 import 'viewmodels/audio_player_view_model.dart';
 
@@ -34,7 +34,7 @@ void main(List<String> args) {
 
   if (deleteAppDir) {
     DirUtil.createAppDirIfNotExist(isAppDirToBeDeleted: true);
-    print('****** $kDownloadAppDir mp3 files deleted ******');
+    print('***** $kDownloadAppDir mp3 files deleted *****');
   }
 
   runApp(MyApp());
@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AudioDownloadViewModelYt()),
-        ChangeNotifierProvider(create: (_) => AudioDownloadViewModelIo()),
+        ChangeNotifierProvider(create: (_) => AudioDownloadViewModelDio()),
         ChangeNotifierProvider(create: (_) => AudioDownloadViewModelJa()),
         ChangeNotifierProvider(create: (_) => AudioPlayerViewModel()),
       ],

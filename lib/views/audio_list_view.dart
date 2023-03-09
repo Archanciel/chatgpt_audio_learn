@@ -4,13 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/download_playlist.dart';
-import '../viewmodels/audio_download_VM.dart';
-import '../viewmodels/audio_download_view_model_io.dart';
-import '../viewmodels/audio_download_view_model_ja.dart';
 import 'audio_list_item_widget.dart';
 
 import '../models/audio.dart';
 import '../viewmodels/audio_download_view_model_yt.dart';
+import '../viewmodels/audio_download_view_model_dio.dart';
+import '../viewmodels/audio_download_view_model_ja.dart';
 import '../viewmodels/audio_player_view_model.dart';
 
 class AudioListView extends StatelessWidget {
@@ -22,12 +21,12 @@ class AudioListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AudioDownloadViewModelYt audioViewModel =
+    final AudioDownloadViewModelYt audioDownloadViewModelYt =
         Provider.of<AudioDownloadViewModelYt>(context);
-    final AudioDownloadViewModelIo audioViewModelIo =
-        Provider.of<AudioDownloadViewModelIo>(context);
-    AudioDownloadVM audioDownloadViewModel =
-        Provider.of<AudioDownloadViewModelYt>(context);
+    final AudioDownloadViewModelDio audioDownloadViewModelDio =
+        Provider.of<AudioDownloadViewModelDio>(context);
+   final AudioDownloadViewModelJa audioDownloadViewModelJa =
+        Provider.of<AudioDownloadViewModelJa>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -48,16 +47,12 @@ class AudioListView extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              audioDownloadViewModel = Provider.of<AudioDownloadViewModelYt>(
-                context,
-                listen: false,
-              );
               final String playlistUrl = _textEditingController.text.trim();
               DownloadPlaylist playlistToDownload =
                   DownloadPlaylist(url: playlistUrl);
 
               if (playlistUrl.isNotEmpty) {
-                audioDownloadViewModel
+                audioDownloadViewModelYt
                     .downloadPlaylistAudios(playlistToDownload);
               }
             },
@@ -65,16 +60,12 @@ class AudioListView extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              audioDownloadViewModel = Provider.of<AudioDownloadViewModelIo>(
-                context,
-                listen: false,
-              );
               final String playlistUrl = _textEditingController.text.trim();
               DownloadPlaylist playlistToDownload =
                   DownloadPlaylist(url: playlistUrl);
 
               if (playlistUrl.isNotEmpty) {
-                audioDownloadViewModel
+                audioDownloadViewModelDio
                     .downloadPlaylistAudios(playlistToDownload);
               }
             },
@@ -82,16 +73,12 @@ class AudioListView extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              audioDownloadViewModel = Provider.of<AudioDownloadViewModelJa>(
-                context,
-                listen: false,
-              );
               final String playlistUrl = _textEditingController.text.trim();
               DownloadPlaylist playlistToDownload =
                   DownloadPlaylist(url: playlistUrl);
 
               if (playlistUrl.isNotEmpty) {
-                audioDownloadViewModel
+                audioDownloadViewModelJa
                     .downloadPlaylistAudios(playlistToDownload);
               }
             },
@@ -99,9 +86,49 @@ class AudioListView extends StatelessWidget {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: audioDownloadViewModel.audioLst.length,
+              itemCount: audioDownloadViewModelYt.audioLst.length,
               itemBuilder: (BuildContext context, int index) {
-                final audio = audioDownloadViewModel.audioLst[index];
+                final audio = audioDownloadViewModelYt.audioLst[index];
+                return AudioListItemWidget(
+                  audio: audio,
+                  onPlayPressed: (Audio audio) {
+                    _audioPlayerViwModel.play(audio);
+                  },
+                  onStopPressed: (Audio audio) {
+                    _audioPlayerViwModel.stop(audio);
+                  },
+                  onPausePressed: (Audio audio) {
+                    _audioPlayerViwModel.pause(audio);
+                  },
+                );
+              },
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: audioDownloadViewModelDio.audioLst.length,
+              itemBuilder: (BuildContext context, int index) {
+                final audio = audioDownloadViewModelDio.audioLst[index];
+                return AudioListItemWidget(
+                  audio: audio,
+                  onPlayPressed: (Audio audio) {
+                    _audioPlayerViwModel.play(audio);
+                  },
+                  onStopPressed: (Audio audio) {
+                    _audioPlayerViwModel.stop(audio);
+                  },
+                  onPausePressed: (Audio audio) {
+                    _audioPlayerViwModel.pause(audio);
+                  },
+                );
+              },
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: audioDownloadViewModelJa.audioLst.length,
+              itemBuilder: (BuildContext context, int index) {
+                final audio = audioDownloadViewModelJa.audioLst[index];
                 return AudioListItemWidget(
                   audio: audio,
                   onPlayPressed: (Audio audio) {

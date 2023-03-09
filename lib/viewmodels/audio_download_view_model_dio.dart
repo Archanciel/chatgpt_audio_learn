@@ -9,10 +9,9 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import '../models/audio.dart';
 import '../models/download_playlist.dart';
 import '../utils/dir_util.dart';
-import 'audio_download_VM.dart';
+import 'audio_download_view_model.dart';
 
-class AudioDownloadViewModelIo extends ChangeNotifier
-    implements AudioDownloadVM {
+class AudioDownloadViewModelDio extends ChangeNotifier with AudioDownloadViewModel {
   YoutubeExplode _yt = YoutubeExplode();
 
   // setter used by test only !
