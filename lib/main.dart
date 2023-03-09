@@ -34,7 +34,7 @@ void main(List<String> args) {
 
   if (deleteAppDir) {
     DirUtil.createAppDirIfNotExist(isAppDirToBeDeleted: true);
-    print('****** $kDownloadAppDir mp3 files deleted ******');
+    print('***** $kDownloadAppDir mp3 files deleted *****');
   }
 
   runApp(MyApp());
