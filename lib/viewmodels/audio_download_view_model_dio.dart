@@ -11,7 +11,7 @@ import '../models/download_playlist.dart';
 import '../utils/dir_util.dart';
 import 'audio_download_VM.dart';
 
-class AudioDownloadViewModelIo extends ChangeNotifier
+class AudioDownloadViewModelDio extends ChangeNotifier
     implements AudioDownloadVM {
   YoutubeExplode _yt = YoutubeExplode();
 

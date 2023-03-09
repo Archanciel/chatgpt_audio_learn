@@ -1,6 +1,6 @@
 // dart file located in lib
 
-import 'package:chatgpt_audio_learn/viewmodels/audio_download_view_model_io.dart';
+import 'package:chatgpt_audio_learn/viewmodels/audio_download_view_model_dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AudioDownloadViewModelYt()),
-        ChangeNotifierProvider(create: (_) => AudioDownloadViewModelIo()),
+        ChangeNotifierProvider(create: (_) => AudioDownloadViewModelDio()),
         ChangeNotifierProvider(create: (_) => AudioDownloadViewModelJa()),
         ChangeNotifierProvider(create: (_) => AudioPlayerViewModel()),
       ],

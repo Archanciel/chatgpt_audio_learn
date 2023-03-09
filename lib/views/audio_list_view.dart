@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../models/download_playlist.dart';
 import '../viewmodels/audio_download_VM.dart';
-import '../viewmodels/audio_download_view_model_io.dart';
+import '../viewmodels/audio_download_view_model_dio.dart';
 import '../viewmodels/audio_download_view_model_ja.dart';
 import 'audio_list_item_widget.dart';
 
@@ -13,7 +13,14 @@ import '../models/audio.dart';
 import '../viewmodels/audio_download_view_model_yt.dart';
 import '../viewmodels/audio_player_view_model.dart';
 
-class AudioListView extends StatelessWidget {
+enum ViewModelType { youtube, dio, justAudio }
+
+class AudioListView extends StatefulWidget {
+  @override
+  State<AudioListView> createState() => _AudioListViewState();
+}
+
+class _AudioListViewState extends State<AudioListView> {
   final TextEditingController _textEditingController = TextEditingController(
       text:
           'https://youtube.com/playlist?list=PLzwWSJNcZTMTB9iwbu77FGokc3WsoxuV0');
@@ -23,7 +30,7 @@ class AudioListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AudioDownloadVM audioDownloadViewModel =
-        Provider.of<AudioDownloadViewModelIo>(context);
+        Provider.of<AudioDownloadViewModelDio>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -61,7 +68,7 @@ class AudioListView extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              audioDownloadViewModel = Provider.of<AudioDownloadViewModelIo>(
+              audioDownloadViewModel = Provider.of<AudioDownloadViewModelDio>(
                 context,
                 listen: false,
               );
@@ -113,7 +120,7 @@ class AudioListView extends StatelessWidget {
               },
             ),
           ),
-          ],
+        ],
       ),
     );
   }
