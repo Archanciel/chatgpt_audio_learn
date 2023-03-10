@@ -1,5 +1,11 @@
 import 'package:intl/intl.dart';
 
+enum AudioDownloadViewModelType {
+  youtube,
+  dio,
+  justAudio,
+}
+
 const String kApplicationName = "ChatGPT Playlist Download";
 const String kApplicationVersion = '0.1';
 const String kDownloadAppDir = '/storage/emulated/0/Download/audio';
