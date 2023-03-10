@@ -1,5 +1,6 @@
 // dart file located in lib\views
 
+import 'package:chatgpt_audio_learn/views/custom_elevated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +22,7 @@ class AudioListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AudioDownloadViewModel audioDownloadViewModel =
-        Provider.of<AudioDownloadViewModel>(context);
+        Provider.of<AudioDownloadViewModel>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -40,21 +41,8 @@ class AudioListView extends StatelessWidget {
               ),
             ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              final String playlistUrl = _textEditingController.text.trim();
-              DownloadPlaylist playlistToDownload =
-                  DownloadPlaylist(url: playlistUrl);
-
-              if (playlistUrl.isNotEmpty) {
-                audioDownloadViewModel.downloadPlaylistAudios(
-                  playlistToDownload: playlistToDownload,
-                  audioDownloadViewModelType:
-                      AudioDownloadViewModelType.youtube,
-                );
-              }
-            },
-            child: const Text('Download Audio'),
+          CustomElevatedButton(
+            textEditingController: _textEditingController,
           ),
           ElevatedButton(
             onPressed: () {
@@ -87,25 +75,29 @@ class AudioListView extends StatelessWidget {
             },
             child: const Text('Download Audio Io'),
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: audioDownloadViewModel.audioLst.length,
-              itemBuilder: (BuildContext context, int index) {
-                final audio = audioDownloadViewModel.audioLst[index];
-                return AudioListItemWidget(
-                  audio: audio,
-                  onPlayPressed: (Audio audio) {
-                    _audioPlayerViwModel.play(audio);
+          Consumer<AudioDownloadViewModel>(
+            builder: (context, audioDownloadViewModel, child) {
+              return Expanded(
+                child: ListView.builder(
+                  itemCount: audioDownloadViewModel.audioLst.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final audio = audioDownloadViewModel.audioLst[index];
+                    return AudioListItemWidget(
+                      audio: audio,
+                      onPlayPressed: (Audio audio) {
+                        _audioPlayerViwModel.play(audio);
+                      },
+                      onStopPressed: (Audio audio) {
+                        _audioPlayerViwModel.stop(audio);
+                      },
+                      onPausePressed: (Audio audio) {
+                        _audioPlayerViwModel.pause(audio);
+                      },
+                    );
                   },
-                  onStopPressed: (Audio audio) {
-                    _audioPlayerViwModel.stop(audio);
-                  },
-                  onPausePressed: (Audio audio) {
-                    _audioPlayerViwModel.pause(audio);
-                  },
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
         ],
       ),
