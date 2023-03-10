@@ -2,9 +2,9 @@
 
 import 'dart:io';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 import '../constants.dart';
 import '../models/audio.dart';
@@ -144,6 +144,9 @@ class AudioDownloadViewModel extends ChangeNotifier {
     // get already downloaded audio file names
     final List<String> downloadedAudioFileNameLst =
         getDownloadedAudioNameLst(pathStr: playlistDownloadPath);
+
+    // Récupération de la liste des identifiants de vidéos de la playlist
+    final videoIds = youtubePlaylist.videos.map((v) => v.id.value).toList();
 
     await for (Video video in _yt.playlists.getVideos(playlistId)) {
       final StreamManifest streamManifest =
