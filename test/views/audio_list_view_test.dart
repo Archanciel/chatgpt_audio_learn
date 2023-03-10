@@ -4,11 +4,11 @@ import 'package:provider/provider.dart';
 
 import 'package:chatgpt_audio_learn/models/audio.dart';
 import 'package:chatgpt_audio_learn/views/audio_list_view.dart';
-import 'package:chatgpt_audio_learn/viewmodels/audio_download_view_model_yt.dart';
+import 'package:chatgpt_audio_learn/viewmodels/audio_download_view_model.dart';
 import 'package:youtube_explode_dart/src/youtube_explode_base.dart';
 
 class MockAudioViewModel extends ChangeNotifier
-    implements AudioDownloadViewModelYt {
+    implements AudioDownloadViewModel {
   @override
   List<Audio> audioLst = [];
 
@@ -46,7 +46,7 @@ void main() {
 
     testWidgets('displays list of audios', (WidgetTester tester) async {
       await tester.pumpWidget(
-        ChangeNotifierProvider<AudioDownloadViewModelYt>.value(
+        ChangeNotifierProvider<AudioDownloadViewModel>.value(
           value: mockAudioViewModel,
           child: MaterialApp(
             home: Scaffold(

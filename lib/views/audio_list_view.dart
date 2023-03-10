@@ -3,14 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../constants.dart';
 import '../models/download_playlist.dart';
-import '../viewmodels/audio_download_VM.dart';
-import '../viewmodels/audio_download_view_model_dio.dart';
-import '../viewmodels/audio_download_view_model_ja.dart';
 import 'audio_list_item_widget.dart';
 
 import '../models/audio.dart';
-import '../viewmodels/audio_download_view_model_yt.dart';
+import '../viewmodels/audio_download_view_model.dart';
 import '../viewmodels/audio_player_view_model.dart';
 
 enum ViewModelType { youtube, dio, justAudio }
@@ -31,28 +29,8 @@ class _AudioListViewState extends State<AudioListView> {
 
   @override
   Widget build(BuildContext context) {
-    AudioDownloadVM audioDownloadViewModel;
-
-    switch (_currentViewModelType) {
-      case ViewModelType.youtube:
-        {
-          audioDownloadViewModel =
-              Provider.of<AudioDownloadViewModelYt>(context);
-          break;
-        }
-      case ViewModelType.dio:
-        {
-          audioDownloadViewModel =
-              Provider.of<AudioDownloadViewModelDio>(context);
-          break;
-        }
-      case ViewModelType.justAudio:
-        {
-          audioDownloadViewModel =
-              Provider.of<AudioDownloadViewModelJa>(context);
-          break;
-        }
-    }
+    final AudioDownloadViewModel audioDownloadViewModel =
+        Provider.of<AudioDownloadViewModel>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -73,57 +51,50 @@ class _AudioListViewState extends State<AudioListView> {
           ),
           ElevatedButton(
             onPressed: () {
-              _currentViewModelType = ViewModelType.youtube;
-              audioDownloadViewModel = Provider.of<AudioDownloadViewModelYt>(
-                context,
-                listen: false,
-              );
               final String playlistUrl = _textEditingController.text.trim();
               DownloadPlaylist playlistToDownload =
                   DownloadPlaylist(url: playlistUrl);
 
               if (playlistUrl.isNotEmpty) {
-                audioDownloadViewModel
-                    .downloadPlaylistAudios(playlistToDownload);
+                audioDownloadViewModel.downloadPlaylistAudios(
+                  playlistToDownload: playlistToDownload,
+                  audioDownloadViewModelType:
+                      AudioDownloadViewModelType.youtube,
+                );
               }
             },
-            child: const Text('Download Audio'),
+            child: const Text('Download Audio Youtube'),
           ),
           ElevatedButton(
             onPressed: () {
-              _currentViewModelType = ViewModelType.dio;
-              audioDownloadViewModel = Provider.of<AudioDownloadViewModelDio>(
-                context,
-                listen: false,
-              );
               final String playlistUrl = _textEditingController.text.trim();
               DownloadPlaylist playlistToDownload =
                   DownloadPlaylist(url: playlistUrl);
 
               if (playlistUrl.isNotEmpty) {
-                audioDownloadViewModel
-                    .downloadPlaylistAudios(playlistToDownload);
+                audioDownloadViewModel.downloadPlaylistAudios(
+                  playlistToDownload: playlistToDownload,
+                  audioDownloadViewModelType: AudioDownloadViewModelType.dio,
+                );
               }
             },
-            child: const Text('Download Audio Io'),
+            child: const Text('Download Audio Dio'),
           ),
           ElevatedButton(
             onPressed: () {
-              _currentViewModelType = ViewModelType.justAudio;
-              audioDownloadViewModel = Provider.of<AudioDownloadViewModelJa>(
-                context,
-                listen: false,
-              );
               final String playlistUrl = _textEditingController.text.trim();
               DownloadPlaylist playlistToDownload =
                   DownloadPlaylist(url: playlistUrl);
 
               if (playlistUrl.isNotEmpty) {
-                audioDownloadViewModel
-                    .downloadPlaylistAudios(playlistToDownload);
+                audioDownloadViewModel.downloadPlaylistAudios(
+                  playlistToDownload: playlistToDownload,
+                  audioDownloadViewModelType:
+                      AudioDownloadViewModelType.justAudio,
+                );
               }
             },
-            child: const Text('Download Audio Io'),
+            child: const Text('Download Audio just_audio'),
           ),
           Expanded(
             child: ListView.builder(
