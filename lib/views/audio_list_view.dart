@@ -54,7 +54,7 @@ class AudioListView extends StatelessWidget {
                 );
               }
             },
-            child: const Text('Download Audio'),
+            child: const Text('Download Audio Youtube'),
           ),
           ElevatedButton(
             onPressed: () {
@@ -69,7 +69,7 @@ class AudioListView extends StatelessWidget {
                 );
               }
             },
-            child: const Text('Download Audio Io'),
+            child: const Text('Download Audio Dio'),
           ),
           ElevatedButton(
             onPressed: () {
@@ -85,7 +85,7 @@ class AudioListView extends StatelessWidget {
                 );
               }
             },
-            child: const Text('Download Audio Io'),
+            child: const Text('Download Audio just_audio'),
           ),
           Expanded(
             child: ListView.builder(

@@ -29,7 +29,176 @@ class AudioDownloadViewModel extends ChangeNotifier {
   }) async {
     // get Youtube playlist
 
-    print('************** $audioDownloadViewModelType');
+    switch (audioDownloadViewModelType) {
+      case AudioDownloadViewModelType.youtube:
+        {
+          await downloadPlaylistAudioWithYoutube(playlistToDownload);
+          break;
+        }
+      case AudioDownloadViewModelType.dio:
+        {
+          await downloadPlaylistAudioWithDio(playlistToDownload);
+          break;
+        }
+      case AudioDownloadViewModelType.justAudio:
+        {
+          await downloadPlaylistAudioWithJustAudio(playlistToDownload);
+          break;
+        }
+    }
+  }
+
+  Future<void> downloadPlaylistAudioWithYoutube(DownloadPlaylist playlistToDownload) async {
+    // get Youtube playlist
+
+    final String? playlistId =
+        PlaylistId.parsePlaylistId(playlistToDownload.url);
+    final Playlist youtubePlaylist = await _yt.playlists.get(playlistId);
+
+    // define playlist audio download dir
+
+    final String audioDownloadPath =
+        await DirUtil.getPlaylistDownloadHomePath();
+    final String playlistTitle = youtubePlaylist.title;
+    playlistToDownload.title = playlistTitle;
+    final String playlistDownloadPath =
+        '$audioDownloadPath${Platform.pathSeparator}$playlistTitle';
+
+    // ensure playlist audio download dir exists
+    await DirUtil.createDirIfNotExist(pathStr: playlistDownloadPath);
+
+    // get already downloaded audio file names
+    final List<String> downloadedAudioFileNameLst =
+        getDownloadedAudioNameLst(pathStr: playlistDownloadPath);
+
+    await for (Video video in _yt.playlists.getVideos(playlistId)) {
+      final StreamManifest streamManifest =
+          await _yt.videos.streamsClient.getManifest(video.id);
+      final AudioOnlyStreamInfo audioStreamInfo =
+          streamManifest.audioOnly.first;
+
+      final String audioTitle = video.title;
+      String validAudioFileName =
+          replaceUnauthorizedDirOrFileNameChars(video.title);
+      final String audioFilePathName =
+          '$playlistDownloadPath/${validAudioFileName}.mp3';
+
+      final bool alreadyDownloaded = downloadedAudioFileNameLst
+          .any((fileName) => fileName.contains(validAudioFileName));
+
+      if (alreadyDownloaded) {
+        print('$audioTitle already downloaded **********');
+        final Audio audio = Audio(
+          title: audioTitle,
+          filePathName: audioFilePathName,
+          audioPlayer: AudioPlayer(),
+        );
+
+        audioLst.add(audio);
+        notifyListeners();
+        continue;
+      }
+
+      final Duration? audioDuration = video.duration;
+
+      final Audio audio = Audio(
+        title: audioTitle,
+        duration: audioDuration!,
+        filePathName: audioFilePathName,
+        audioPlayer: AudioPlayer(),
+      );
+
+      audioLst.add(audio);
+
+      // Download the audio file
+      await _downloadAudioFile(
+        video,
+        audioStreamInfo,
+        audioFilePathName,
+      );
+      // Do something with the downloaded file
+
+      notifyListeners();
+    }
+  }
+
+  Future<void> downloadPlaylistAudioWithDio(DownloadPlaylist playlistToDownload) async {
+    // get Youtube playlist
+
+    final String? playlistId =
+        PlaylistId.parsePlaylistId(playlistToDownload.url);
+    final Playlist youtubePlaylist = await _yt.playlists.get(playlistId);
+
+    // define playlist audio download dir
+
+    final String audioDownloadPath =
+        await DirUtil.getPlaylistDownloadHomePath();
+    final String playlistTitle = youtubePlaylist.title;
+    playlistToDownload.title = playlistTitle;
+    final String playlistDownloadPath =
+        '$audioDownloadPath${Platform.pathSeparator}$playlistTitle';
+
+    // ensure playlist audio download dir exists
+    await DirUtil.createDirIfNotExist(pathStr: playlistDownloadPath);
+
+    // get already downloaded audio file names
+    final List<String> downloadedAudioFileNameLst =
+        getDownloadedAudioNameLst(pathStr: playlistDownloadPath);
+
+    await for (Video video in _yt.playlists.getVideos(playlistId)) {
+      final StreamManifest streamManifest =
+          await _yt.videos.streamsClient.getManifest(video.id);
+      final AudioOnlyStreamInfo audioStreamInfo =
+          streamManifest.audioOnly.first;
+
+      final String audioTitle = video.title;
+      String validAudioFileName =
+          replaceUnauthorizedDirOrFileNameChars(video.title);
+      final String audioFilePathName =
+          '$playlistDownloadPath/${validAudioFileName}.mp3';
+
+      final bool alreadyDownloaded = downloadedAudioFileNameLst
+          .any((fileName) => fileName.contains(validAudioFileName));
+
+      if (alreadyDownloaded) {
+        print('$audioTitle already downloaded **********');
+        final Audio audio = Audio(
+          title: audioTitle,
+          filePathName: audioFilePathName,
+          audioPlayer: AudioPlayer(),
+        );
+
+        audioLst.add(audio);
+        notifyListeners();
+        continue;
+      }
+
+      final Duration? audioDuration = video.duration;
+
+      final Audio audio = Audio(
+        title: audioTitle,
+        duration: audioDuration!,
+        filePathName: audioFilePathName,
+        audioPlayer: AudioPlayer(),
+      );
+
+      audioLst.add(audio);
+
+      // Download the audio file
+      await _downloadAudioFile(
+        video,
+        audioStreamInfo,
+        audioFilePathName,
+      );
+      // Do something with the downloaded file
+
+      notifyListeners();
+    }
+  }
+
+  Future<void> downloadPlaylistAudioWithJustAudio(DownloadPlaylist playlistToDownload) async {
+    // get Youtube playlist
+
     final String? playlistId =
         PlaylistId.parsePlaylistId(playlistToDownload.url);
     final Playlist youtubePlaylist = await _yt.playlists.get(playlistId);
