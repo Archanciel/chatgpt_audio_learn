@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:chatgpt_audio_learn/viewmodels/list_view_model.dart';
-import 'package:chatgpt_audio_learn/views/list_view_widget.dart';
+import 'package:chatgpt_audio_learn/views/expandable_list_view.dart';
 
 void main() {
   runApp(MyApp());
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
           appBar: AppBar(
             title: const Text('MVVM Example'),
           ),
-          body: ListViewWidget(),
+          body: ExpandableListView(),
         ),
       ),
     );

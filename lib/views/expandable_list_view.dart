@@ -4,13 +4,12 @@ import 'package:provider/provider.dart';
 import '../models/list_model.dart';
 import '../viewmodels/list_view_model.dart';
 
-/// Named ListViewWidget since ListView is a Flutter class !
-class ListViewWidget extends StatefulWidget {
+class ExpandableListView extends StatefulWidget {
   @override
-  State<ListViewWidget> createState() => _ListViewWidgetState();
+  State<ExpandableListView> createState() => _ExpandableListViewState();
 }
 
-class _ListViewWidgetState extends State<ListViewWidget> {
+class _ExpandableListViewState extends State<ExpandableListView> {
   @override
   Widget build(BuildContext context) {
     return Column(

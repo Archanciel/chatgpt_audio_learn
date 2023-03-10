@@ -1,12 +1,12 @@
 import 'package:chatgpt_audio_learn/main_expandable_list.dart';
 import 'package:chatgpt_audio_learn/viewmodels/list_view_model.dart';
-import 'package:chatgpt_audio_learn/views/list_view_widget.dart';
+import 'package:chatgpt_audio_learn/views/expandable_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  group('ListViewWidget', () {
+  group('ExpandableListView', () {
     testWidgets(
         'should render ListViewWidget, not using MyApp but ListViewWidget',
         (WidgetTester tester) async {
@@ -21,13 +21,13 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ListViewWidget(),
+              body: ExpandableListView(),
             ),
           ),
         ),
       );
 
-      expect(find.byType(ListViewWidget), findsOneWidget);
+      expect(find.byType(ExpandableListView), findsOneWidget);
     });
 
     testWidgets('should render ListViewWidget using MyApp',
@@ -40,7 +40,7 @@ void main() {
         ),
       );
 
-      expect(find.byType(ListViewWidget), findsOneWidget);
+      expect(find.byType(ExpandableListView), findsOneWidget);
     });
 
     testWidgets('should toggle list on press', (WidgetTester tester) async {
@@ -55,7 +55,7 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ListViewWidget(),
+              body: ExpandableListView(),
             ),
           ),
         ),
@@ -93,7 +93,7 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ListViewWidget(),
+              body: ExpandableListView(),
             ),
           ),
         ),
@@ -182,7 +182,7 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ListViewWidget(),
+              body: ExpandableListView(),
             ),
           ),
         ),
@@ -279,7 +279,7 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ListViewWidget(),
+              body: ExpandableListView(),
             ),
           ),
         ),
@@ -383,7 +383,7 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ListViewWidget(),
+              body: ExpandableListView(),
             ),
           ),
         ),
@@ -451,7 +451,7 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ListViewWidget(),
+              body: ExpandableListView(),
             ),
           ),
         ),
@@ -462,7 +462,7 @@ void main() {
       await tester.tap(toggleButtonFinder);
       await tester.pump();
 
-      Finder listViewFinder = find.byType(ListViewWidget);
+      Finder listViewFinder = find.byType(ExpandableListView);
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
@@ -504,7 +504,7 @@ void main() {
       // length is 10 minus 1 and secondly verify that
       // the deleted ListTile is no longer displayed.
 
-      listViewFinder = find.byType(ListViewWidget);
+      listViewFinder = find.byType(ExpandableListView);
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
@@ -527,7 +527,7 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ListViewWidget(),
+              body: ExpandableListView(),
             ),
           ),
         ),
@@ -538,7 +538,7 @@ void main() {
       await tester.tap(toggleButtonFinder);
       await tester.pump();
 
-      Finder listViewFinder = find.byType(ListViewWidget);
+      Finder listViewFinder = find.byType(ExpandableListView);
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
@@ -560,16 +560,16 @@ void main() {
           find.widgetWithIcon(IconButton, Icons.arrow_drop_up));
       expect(upButton.onPressed, isNotNull);
 
-      Finder iconButtonFinder = find.widgetWithIcon(IconButton, Icons.arrow_drop_down);
-      IconButton downButton = tester.widget<IconButton>(
-          iconButtonFinder);
+      Finder iconButtonFinder =
+          find.widgetWithIcon(IconButton, Icons.arrow_drop_down);
+      IconButton downButton = tester.widget<IconButton>(iconButtonFinder);
       expect(downButton.onPressed, isNotNull);
 
       // Tap the move down button
       await tester.tap(iconButtonFinder);
       await tester.pump();
 
-      listViewFinder = find.byType(ListViewWidget);
+      listViewFinder = find.byType(ExpandableListView);
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
@@ -592,7 +592,7 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ListViewWidget(),
+              body: ExpandableListView(),
             ),
           ),
         ),
@@ -603,7 +603,7 @@ void main() {
       await tester.tap(toggleButtonFinder);
       await tester.pump();
 
-      Finder listViewFinder = find.byType(ListViewWidget);
+      Finder listViewFinder = find.byType(ExpandableListView);
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
@@ -625,9 +625,9 @@ void main() {
           find.widgetWithIcon(IconButton, Icons.arrow_drop_up));
       expect(upButton.onPressed, isNotNull);
 
-      Finder iconButtonFinder = find.widgetWithIcon(IconButton, Icons.arrow_drop_down);
-      IconButton downButton = tester.widget<IconButton>(
-          iconButtonFinder);
+      Finder iconButtonFinder =
+          find.widgetWithIcon(IconButton, Icons.arrow_drop_down);
+      IconButton downButton = tester.widget<IconButton>(iconButtonFinder);
       expect(downButton.onPressed, isNotNull);
 
       // Tap the move down button twice
@@ -636,7 +636,7 @@ void main() {
       await tester.tap(iconButtonFinder);
       await tester.pump();
 
-      listViewFinder = find.byType(ListViewWidget);
+      listViewFinder = find.byType(ExpandableListView);
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
@@ -658,7 +658,7 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ListViewWidget(),
+              body: ExpandableListView(),
             ),
           ),
         ),
@@ -669,7 +669,7 @@ void main() {
       await tester.tap(toggleButtonFinder);
       await tester.pump();
 
-      Finder listViewFinder = find.byType(ListViewWidget);
+      Finder listViewFinder = find.byType(ExpandableListView);
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
@@ -687,9 +687,9 @@ void main() {
       );
 
       // Verify that the move buttons are enabled
-      Finder iconButtonFinder = find.widgetWithIcon(IconButton, Icons.arrow_drop_up);
-      IconButton upButton = tester.widget<IconButton>(
-          iconButtonFinder);
+      Finder iconButtonFinder =
+          find.widgetWithIcon(IconButton, Icons.arrow_drop_up);
+      IconButton upButton = tester.widget<IconButton>(iconButtonFinder);
       expect(upButton.onPressed, isNotNull);
 
       IconButton downButton = tester.widget<IconButton>(
@@ -700,7 +700,7 @@ void main() {
       await tester.tap(iconButtonFinder);
       await tester.pump();
 
-      listViewFinder = find.byType(ListViewWidget);
+      listViewFinder = find.byType(ExpandableListView);
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
@@ -723,7 +723,7 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ListViewWidget(),
+              body: ExpandableListView(),
             ),
           ),
         ),
@@ -734,7 +734,7 @@ void main() {
       await tester.tap(toggleButtonFinder);
       await tester.pump();
 
-      Finder listViewFinder = find.byType(ListViewWidget);
+      Finder listViewFinder = find.byType(ExpandableListView);
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
@@ -752,9 +752,9 @@ void main() {
       );
 
       // Verify that the move buttons are enabled
-      Finder iconButtonFinder = find.widgetWithIcon(IconButton, Icons.arrow_drop_up);
-      IconButton upButton = tester.widget<IconButton>(
-          iconButtonFinder);
+      Finder iconButtonFinder =
+          find.widgetWithIcon(IconButton, Icons.arrow_drop_up);
+      IconButton upButton = tester.widget<IconButton>(iconButtonFinder);
       expect(upButton.onPressed, isNotNull);
 
       IconButton downButton = tester.widget<IconButton>(
@@ -767,7 +767,7 @@ void main() {
       await tester.tap(iconButtonFinder);
       await tester.pump();
 
-      listViewFinder = find.byType(ListViewWidget);
+      listViewFinder = find.byType(ExpandableListView);
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
