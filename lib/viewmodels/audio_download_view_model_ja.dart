@@ -7,7 +7,7 @@ import 'package:just_audio/just_audio.dart';
 
 import '../models/audio.dart';
 import '../models/download_playlist.dart';
-import 'audio_download_view_model.dart';
+import 'audio_download_view_model_mixin.dart';
 
 class Track {
   final String title;
@@ -21,7 +21,8 @@ class Track {
   });
 }
 
-class AudioDownloadViewModelJa extends ChangeNotifier with AudioDownloadViewModel {
+class AudioDownloadViewModelJa extends ChangeNotifier
+    with AudioDownloadViewModelMixin {
   @override
   final List<Audio> audioLst = [];
 

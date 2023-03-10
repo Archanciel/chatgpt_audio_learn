@@ -1,4 +1,4 @@
-mixin AudioDownloadViewModel {
+mixin AudioDownloadViewModelMixin {
   String replaceUnauthorizedDirOrFileNameChars(String rawFileName) {
     // Replace '|' by ' if '|' is located at end of file name
     if (rawFileName.endsWith('|')) {
