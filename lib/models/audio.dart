@@ -4,8 +4,11 @@ import 'package:audioplayers/audioplayers.dart';
 
 class Audio {
   final String title;
-  final Duration? duration;
+  final Duration? audioDuration;
+  final Duration? downloadDuration;
   final String filePathName;
+  final int? audioFileSize;
+  final double downloadSpeed;
 
   bool _isPlaying = false;
   bool get isPlaying => _isPlaying;
@@ -22,9 +25,13 @@ class Audio {
   Audio({
     required this.title,
     required this.filePathName,
+    this.downloadDuration,
+    this.audioDuration,
+    this.audioFileSize,
     required this.audioPlayer,
-    this.duration,
-  });
+  }) : downloadSpeed = (audioFileSize == null)
+            ? 0.0
+            : audioFileSize / downloadDuration!.inSeconds;
 
   void invertPaused() {
     _isPaused = !_isPaused;

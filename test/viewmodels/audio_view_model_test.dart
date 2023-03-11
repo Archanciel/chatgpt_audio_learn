@@ -41,13 +41,13 @@ void main() {
           title: videoTitle1,
           filePathName: '/storage/emulated/0/Download/Video 1.mp3',
           audioPlayer: AudioPlayer(),
-          duration: videoDuration1,
+          audioDuration: videoDuration1,
         ),
         Audio(
           title: videoTitle2,
           filePathName: '/storage/emulated/0/Download/Video 2.mp3',
           audioPlayer: AudioPlayer(),
-          duration: videoDuration2,
+          audioDuration: videoDuration2,
         )
       ];
 

@@ -116,14 +116,7 @@ class AudioDownloadViewModel extends ChangeNotifier {
 
       final Duration? audioDuration = youtubeVideo.duration;
 
-      final Audio audio = Audio(
-        title: audioTitle,
-        duration: audioDuration!,
-        filePathName: audioFilePathName,
-        audioPlayer: AudioPlayer(),
-      );
-
-      audioLst.add(audio);
+      Stopwatch stopwatch = Stopwatch()..start();
 
       // Download the audio file
       await downloadAudioFileFunction(
@@ -131,7 +124,19 @@ class AudioDownloadViewModel extends ChangeNotifier {
         audioStreamInfo,
         audioFilePathName,
       );
-      // Do something with the downloaded file
+
+      stopwatch.stop();
+
+      final Audio audio = Audio(
+        title: audioTitle,
+        filePathName: audioFilePathName,
+        downloadDuration: stopwatch.elapsed,
+        audioDuration: audioDuration!,
+        audioFileSize: await File(audioFilePathName).length(),
+        audioPlayer: AudioPlayer(),
+      );
+
+      audioLst.add(audio);
 
       notifyListeners();
     }
@@ -194,7 +199,7 @@ class AudioDownloadViewModel extends ChangeNotifier {
 
       final Audio audio = Audio(
         title: audioTitle,
-        duration: audioDuration!,
+        audioDuration: audioDuration!,
         filePathName: audioFilePathName,
         audioPlayer: AudioPlayer(),
       );
@@ -238,8 +243,6 @@ class AudioDownloadViewModel extends ChangeNotifier {
     final IOSink audioFile = File(audioFilePathName).openWrite();
     final Stream<List<int>> stream =
         _yt.videos.streamsClient.get(audioStreamInfo);
-
-    print('$runtimeType $audioFilePathName');
 
     await stream.pipe(audioFile);
   }

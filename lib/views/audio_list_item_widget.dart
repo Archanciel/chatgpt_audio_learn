@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../models/audio.dart';
 import '../viewmodels/audio_player_view_model.dart';
+import '../utils/time_util.dart';
 
 class AudioListItemWidget extends StatelessWidget {
   final Audio audio;
@@ -21,10 +22,12 @@ class AudioListItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String subTitleStr =
+        'Duration ${(audio.audioDuration == null) ? '?' : audio.audioDuration!.HHmm()}. Size ${(audio.audioFileSize == null) ? '?' : audio.audioFileSize} bytes. Downloaded at ${(audio.downloadSpeed.isFinite) ? audio.downloadSpeed.toInt() : 'infinite '} bytes/sec';
     return ListTile(
       leading: const Icon(Icons.music_note),
       title: Text(audio.title),
-      subtitle: Text((audio.duration != null) ? audio.duration.toString() : ''),
+      subtitle: Text(subTitleStr),
       trailing: _buildPlayButton(),
     );
   }

@@ -78,7 +78,7 @@ class AudioDownloadViewModelDio extends ChangeNotifier {
 
       final Audio audio = Audio(
         title: audioTitle,
-        duration: audioDuration!,
+        audioDuration: audioDuration!,
         filePathName: audioFilePathName,
         audioPlayer: AudioPlayer(),
       );

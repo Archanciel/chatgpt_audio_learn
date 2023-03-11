@@ -17,15 +17,15 @@ class MockAudioViewModel extends ChangeNotifier
     audioLst = [
       Audio(
           title: 'Audio 1',
-          duration: Duration(minutes: 3, seconds: 42),
+          audioDuration: Duration(minutes: 3, seconds: 42),
           filePathName: '/storage/emulated/0/Download/Audio 1.mp3'),
       Audio(
           title: 'Audio 2',
-          duration: Duration(minutes: 5, seconds: 21),
+          audioDuration: Duration(minutes: 5, seconds: 21),
           filePathName: '/storage/emulated/0/Download/Audio 2.mp3'),
       Audio(
           title: 'Audio 3',
-          duration: Duration(minutes: 2, seconds: 15),
+          audioDuration: Duration(minutes: 2, seconds: 15),
           filePathName: '/storage/emulated/0/Download/Audio 3.mp3'),
     ];
 

@@ -9,15 +9,14 @@ class DownloadedVideo {
   final DateTime downloadDate;
   final Audio audio;
 
-  DownloadedVideo({
-    required this.id,
-    required this.title,
-    required this.downloadDate,
-    required this.audio
-  });
+  DownloadedVideo(
+      {required this.id,
+      required this.title,
+      required this.downloadDate,
+      required this.audio});
 
   @override
   String toString() {
-    return '$title ${audio.duration.toString()}';
+    return '$title ${audio.audioDuration.toString()}';
   }
 }
