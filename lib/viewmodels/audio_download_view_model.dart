@@ -33,12 +33,18 @@ class AudioDownloadViewModel extends ChangeNotifier {
     switch (audioDownloadViewModelType) {
       case AudioDownloadViewModelType.youtube:
         {
-          await downloadPlaylistAudioWithYoutube(playlistToDownload);
+          await downloadPlaylistAudio(
+            playlistToDownload,
+            _downloadAudioFileYoutube,
+          );
           break;
         }
       case AudioDownloadViewModelType.dio:
         {
-          await downloadPlaylistAudioWithDio(playlistToDownload);
+          await downloadPlaylistAudio(
+            playlistToDownload,
+            _downloadAudioFileDio,
+          );
           break;
         }
       case AudioDownloadViewModelType.justAudio:
@@ -49,7 +55,15 @@ class AudioDownloadViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> downloadPlaylistAudioWithYoutube(DownloadPlaylist playlistToDownload) async {
+  Future<void> downloadPlaylistAudio(
+    DownloadPlaylist playlistToDownload,
+    Future<void> Function(
+      Video youtubeVideo,
+      AudioStreamInfo audioStreamInfo,
+      String audioFilePathName,
+    )
+        downloadAudioFileFunction,
+  ) async {
     // get Youtube playlist
 
     final String? playlistId =
@@ -112,7 +126,7 @@ class AudioDownloadViewModel extends ChangeNotifier {
       audioLst.add(audio);
 
       // Download the audio file
-      await _downloadAudioFile(
+      await downloadAudioFileFunction(
         youtubeVideo,
         audioStreamInfo,
         audioFilePathName,
@@ -123,81 +137,9 @@ class AudioDownloadViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> downloadPlaylistAudioWithDio(DownloadPlaylist playlistToDownload) async {
-    // get Youtube playlist
-
-    final String? playlistId =
-        PlaylistId.parsePlaylistId(playlistToDownload.url);
-    final Playlist youtubePlaylist = await _yt.playlists.get(playlistId);
-
-    // define playlist audio download dir
-
-    final String audioDownloadPath =
-        await DirUtil.getPlaylistDownloadHomePath();
-    final String playlistTitle = youtubePlaylist.title;
-    playlistToDownload.title = playlistTitle;
-    final String playlistDownloadPath =
-        '$audioDownloadPath${Platform.pathSeparator}$playlistTitle';
-
-    // ensure playlist audio download dir exists
-    await DirUtil.createDirIfNotExist(pathStr: playlistDownloadPath);
-
-    // get already downloaded audio file names
-    final List<String> downloadedAudioFileNameLst =
-        getDownloadedAudioNameLst(pathStr: playlistDownloadPath);
-
-    await for (Video youtubeVideo in _yt.playlists.getVideos(playlistId)) {
-      final StreamManifest streamManifest =
-          await _yt.videos.streamsClient.getManifest(youtubeVideo.id);
-      final AudioOnlyStreamInfo audioStreamInfo =
-          streamManifest.audioOnly.first;
-
-      final String audioTitle = youtubeVideo.title;
-      String validAudioFileName =
-          replaceUnauthorizedDirOrFileNameChars(youtubeVideo.title);
-      final String audioFilePathName =
-          '$playlistDownloadPath/$validAudioFileName.mp3';
-
-      final bool alreadyDownloaded = downloadedAudioFileNameLst
-          .any((fileName) => fileName.contains(validAudioFileName));
-
-      if (alreadyDownloaded) {
-        print('$audioTitle already downloaded **********');
-        final Audio audio = Audio(
-          title: audioTitle,
-          filePathName: audioFilePathName,
-          audioPlayer: AudioPlayer(),
-        );
-
-        audioLst.add(audio);
-        notifyListeners();
-        continue;
-      }
-
-      final Duration? audioDuration = youtubeVideo.duration;
-
-      final Audio audio = Audio(
-        title: audioTitle,
-        duration: audioDuration!,
-        filePathName: audioFilePathName,
-        audioPlayer: AudioPlayer(),
-      );
-
-      audioLst.add(audio);
-
-      // Download the audio file
-      await _downloadAudioFileDio(
-        youtubeVideo,
-        audioStreamInfo,
-        audioFilePathName,
-      );
-      // Do something with the downloaded file
-
-      notifyListeners();
-    }
-  }
-
-  Future<void> downloadPlaylistAudioWithJustAudio(DownloadPlaylist playlistToDownload) async {
+  Future<void> downloadPlaylistAudioWithJustAudio(
+    DownloadPlaylist playlistToDownload,
+  ) async {
     // get Youtube playlist
 
     final String? playlistId =
@@ -260,7 +202,7 @@ class AudioDownloadViewModel extends ChangeNotifier {
       audioLst.add(audio);
 
       // Download the audio file
-      await _downloadAudioFile(
+      await _downloadAudioFileYoutube(
         youtubeVideo,
         audioStreamInfo,
         audioFilePathName,
@@ -288,7 +230,7 @@ class AudioDownloadViewModel extends ChangeNotifier {
     return fileNames;
   }
 
-  Future<void> _downloadAudioFile(
+  Future<void> _downloadAudioFileYoutube(
     Video youtubeVideo,
     AudioStreamInfo audioStreamInfo,
     String audioFilePathName,
@@ -310,7 +252,7 @@ class AudioDownloadViewModel extends ChangeNotifier {
     // Création d'un objet `Dio` pour télécharger le fichier audio
     final dio = Dio();
 
-     // Téléchargement du fichier audio
+    // Téléchargement du fichier audio
     await dio.download(audioStreamInfo.url.toString(), audioFilePathName);
   }
 
