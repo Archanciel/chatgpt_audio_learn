@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -71,17 +72,17 @@ class AudioDownloadViewModel extends ChangeNotifier {
     final List<String> downloadedAudioFileNameLst =
         getDownloadedAudioNameLst(pathStr: playlistDownloadPath);
 
-    await for (Video video in _yt.playlists.getVideos(playlistId)) {
+    await for (Video youtubeVideo in _yt.playlists.getVideos(playlistId)) {
       final StreamManifest streamManifest =
-          await _yt.videos.streamsClient.getManifest(video.id);
+          await _yt.videos.streamsClient.getManifest(youtubeVideo.id);
       final AudioOnlyStreamInfo audioStreamInfo =
           streamManifest.audioOnly.first;
 
-      final String audioTitle = video.title;
+      final String audioTitle = youtubeVideo.title;
       String validAudioFileName =
-          replaceUnauthorizedDirOrFileNameChars(video.title);
+          replaceUnauthorizedDirOrFileNameChars(youtubeVideo.title);
       final String audioFilePathName =
-          '$playlistDownloadPath/${validAudioFileName}.mp3';
+          '$playlistDownloadPath/$validAudioFileName.mp3';
 
       final bool alreadyDownloaded = downloadedAudioFileNameLst
           .any((fileName) => fileName.contains(validAudioFileName));
@@ -99,7 +100,7 @@ class AudioDownloadViewModel extends ChangeNotifier {
         continue;
       }
 
-      final Duration? audioDuration = video.duration;
+      final Duration? audioDuration = youtubeVideo.duration;
 
       final Audio audio = Audio(
         title: audioTitle,
@@ -112,7 +113,7 @@ class AudioDownloadViewModel extends ChangeNotifier {
 
       // Download the audio file
       await _downloadAudioFile(
-        video,
+        youtubeVideo,
         audioStreamInfo,
         audioFilePathName,
       );
@@ -145,20 +146,17 @@ class AudioDownloadViewModel extends ChangeNotifier {
     final List<String> downloadedAudioFileNameLst =
         getDownloadedAudioNameLst(pathStr: playlistDownloadPath);
 
-    // Récupération de la liste des identifiants de vidéos de la playlist
-    final videoIds = youtubePlaylist.videos.map((v) => v.id.value).toList();
-
-    await for (Video video in _yt.playlists.getVideos(playlistId)) {
+    await for (Video youtubeVideo in _yt.playlists.getVideos(playlistId)) {
       final StreamManifest streamManifest =
-          await _yt.videos.streamsClient.getManifest(video.id);
+          await _yt.videos.streamsClient.getManifest(youtubeVideo.id);
       final AudioOnlyStreamInfo audioStreamInfo =
           streamManifest.audioOnly.first;
 
-      final String audioTitle = video.title;
+      final String audioTitle = youtubeVideo.title;
       String validAudioFileName =
-          replaceUnauthorizedDirOrFileNameChars(video.title);
+          replaceUnauthorizedDirOrFileNameChars(youtubeVideo.title);
       final String audioFilePathName =
-          '$playlistDownloadPath/${validAudioFileName}.mp3';
+          '$playlistDownloadPath/$validAudioFileName.mp3';
 
       final bool alreadyDownloaded = downloadedAudioFileNameLst
           .any((fileName) => fileName.contains(validAudioFileName));
@@ -176,7 +174,7 @@ class AudioDownloadViewModel extends ChangeNotifier {
         continue;
       }
 
-      final Duration? audioDuration = video.duration;
+      final Duration? audioDuration = youtubeVideo.duration;
 
       final Audio audio = Audio(
         title: audioTitle,
@@ -188,8 +186,8 @@ class AudioDownloadViewModel extends ChangeNotifier {
       audioLst.add(audio);
 
       // Download the audio file
-      await _downloadAudioFile(
-        video,
+      await _downloadAudioFileDio(
+        youtubeVideo,
         audioStreamInfo,
         audioFilePathName,
       );
@@ -222,15 +220,15 @@ class AudioDownloadViewModel extends ChangeNotifier {
     final List<String> downloadedAudioFileNameLst =
         getDownloadedAudioNameLst(pathStr: playlistDownloadPath);
 
-    await for (Video video in _yt.playlists.getVideos(playlistId)) {
+    await for (Video youtubeVideo in _yt.playlists.getVideos(playlistId)) {
       final StreamManifest streamManifest =
-          await _yt.videos.streamsClient.getManifest(video.id);
+          await _yt.videos.streamsClient.getManifest(youtubeVideo.id);
       final AudioOnlyStreamInfo audioStreamInfo =
           streamManifest.audioOnly.first;
 
-      final String audioTitle = video.title;
+      final String audioTitle = youtubeVideo.title;
       String validAudioFileName =
-          replaceUnauthorizedDirOrFileNameChars(video.title);
+          replaceUnauthorizedDirOrFileNameChars(youtubeVideo.title);
       final String audioFilePathName =
           '$playlistDownloadPath/${validAudioFileName}.mp3';
 
@@ -250,7 +248,7 @@ class AudioDownloadViewModel extends ChangeNotifier {
         continue;
       }
 
-      final Duration? audioDuration = video.duration;
+      final Duration? audioDuration = youtubeVideo.duration;
 
       final Audio audio = Audio(
         title: audioTitle,
@@ -263,7 +261,7 @@ class AudioDownloadViewModel extends ChangeNotifier {
 
       // Download the audio file
       await _downloadAudioFile(
-        video,
+        youtubeVideo,
         audioStreamInfo,
         audioFilePathName,
       );
@@ -291,7 +289,7 @@ class AudioDownloadViewModel extends ChangeNotifier {
   }
 
   Future<void> _downloadAudioFile(
-    Video video,
+    Video youtubeVideo,
     AudioStreamInfo audioStreamInfo,
     String audioFilePathName,
   ) async {
@@ -302,6 +300,18 @@ class AudioDownloadViewModel extends ChangeNotifier {
     print('$runtimeType $audioFilePathName');
 
     await stream.pipe(audioFile);
+  }
+
+  Future<void> _downloadAudioFileDio(
+    Video youtubeVideo,
+    AudioStreamInfo audioStreamInfo,
+    String audioFilePathName,
+  ) async {
+    // Création d'un objet `Dio` pour télécharger le fichier audio
+    final dio = Dio();
+
+     // Téléchargement du fichier audio
+    await dio.download(audioStreamInfo.url.toString(), audioFilePathName);
   }
 
   String replaceUnauthorizedDirOrFileNameChars(String rawFileName) {
