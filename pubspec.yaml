@@ -18,6 +18,7 @@ dependencies:
   dio: ^5.0.1
   just_audio: ^0.9.31
   http: ^0.13.5
+  ffmpeg_kit_flutter_full_gpl: ^5.1.0
 
 dev_dependencies:
   flutter_test:
