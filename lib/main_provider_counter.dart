@@ -34,6 +34,11 @@ class Counter with ChangeNotifier {
     value += 1;
     notifyListeners();
   }
+
+  void decrement() {
+    value -= 1;
+    notifyListeners();
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -76,71 +81,60 @@ class MyHomePage extends StatelessWidget {
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
             ),
+            CustomFloatingActionButton(isMinus: false,),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // You can access your providers anywhere you have access
-          // to the context. One way is to use Provider.of<Counter>(context).
-          //
-          // The provider package also defines extension methods on context
-          // itself. You can call context.watch<Counter>() in a build method
-          // of any widget to access the current state of Counter, and to ask
-          // Flutter to rebuild your widget anytime Counter changes.
-          //
-          // You can't use context.watch() outside build methods, because that
-          // often leads to subtle bugs. Instead, you should use
-          // context.read<Counter>(), which gets the current state
-          // but doesn't ask Flutter for future rebuilds.
-          //
-          // Since we're in a callback that will be called whenever the user
-          // taps the FloatingActionButton, we are not in the build method here.
-          // We should use context.read().
-          var counter = context.read<Counter>();
-          counter.increment();
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: CustomFloatingActionButton(isMinus: true,),
     );
   }
-      
 }
 
 class CustomFloatingActionButton extends StatefulWidget {
+  bool isMinus;
+  CustomFloatingActionButton({
+    required this.isMinus,
+  });
   @override
-  State<CustomFloatingActionButton> createState() => _CustomFloatingActionButtonState();
+  State<CustomFloatingActionButton> createState() =>
+      _CustomFloatingActionButtonState();
 }
 
-class _CustomFloatingActionButtonState extends State<CustomFloatingActionButton> {
+class _CustomFloatingActionButtonState
+    extends State<CustomFloatingActionButton> {
   @override
   Widget build(BuildContext context) {
-    print('+++++++++++++ CustomElevatedButton rebuilt !');
+    print(
+        '+++++++ CustomFloatingActionButton ${(widget.isMinus) ? 'minus' : 'plus'} rebuilt !');
 
     return FloatingActionButton(
-        onPressed: () {
-          // You can access your providers anywhere you have access
-          // to the context. One way is to use Provider.of<Counter>(context).
-          //
-          // The provider package also defines extension methods on context
-          // itself. You can call context.watch<Counter>() in a build method
-          // of any widget to access the current state of Counter, and to ask
-          // Flutter to rebuild your widget anytime Counter changes.
-          //
-          // You can't use context.watch() outside build methods, because that
-          // often leads to subtle bugs. Instead, you should use
-          // context.read<Counter>(), which gets the current state
-          // but doesn't ask Flutter for future rebuilds.
-          //
-          // Since we're in a callback that will be called whenever the user
-          // taps the FloatingActionButton, we are not in the build method here.
-          // We should use context.read().
-          var counter = context.read<Counter>();
+      onPressed: () {
+        // You can access your providers anywhere you have access
+        // to the context. One way is to use Provider.of<Counter>(context).
+        //
+        // The provider package also defines extension methods on context
+        // itself. You can call context.watch<Counter>() in a build method
+        // of any widget to access the current state of Counter, and to ask
+        // Flutter to rebuild your widget anytime Counter changes.
+        //
+        // You can't use context.watch() outside build methods, because that
+        // often leads to subtle bugs. Instead, you should use
+        // context.read<Counter>(), which gets the current state
+        // but doesn't ask Flutter for future rebuilds.
+        //
+        // Since we're in a callback that will be called whenever the user
+        // taps the FloatingActionButton, we are not in the build method here.
+        // We should use context.read().
+        var counter = context.read<Counter>();
+
+        if (widget.isMinus) {
+          counter.decrement();
+        } else {
           counter.increment();
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      );
+        }
+      },
+      tooltip: (widget.isMinus) ? 'Decrement' : 'Increment',
+      child: Icon((widget.isMinus) ? Icons.remove : Icons.add),
+    );
   }
 }
