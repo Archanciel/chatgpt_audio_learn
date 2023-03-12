@@ -76,29 +76,55 @@ class MyHomePage extends StatelessWidget {
             // Then it uses that model to build widgets, and will trigger
             // rebuilds if the model is updated.
             Consumer<Counter>(
-              builder: (context, counter, child) => Text(
-                '${counter.value}',
-                style: Theme.of(context).textTheme.headlineMedium,
+              builder: (context, counter, child) => Column(
+                children: [
+                  Text(
+                    '${counter.value}',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                  // Since this custom button is inside
+                  // Consumer, it is rebuilt each time th
+                  // Counter model calls notifyListeners()
+                  CustomFloatingActionButton(
+                    isMinus: false,
+                    isInsideConsumer: true,
+                  ),
+                ],
               ),
             ),
-            CustomFloatingActionButton(isMinus: false,),
+            // Since this custom button is not inside
+            // Consumer, it is not rebuilt each time the
+            // Counter model calls notifyListeners()
+            CustomFloatingActionButton(
+              isMinus: false,
+              isInsideConsumer: false,
+            ),
           ],
         ),
       ),
-      floatingActionButton: CustomFloatingActionButton(isMinus: true,),
+      // Since this custom button is not inside Consumer, it
+      // is not rebuilt each time the Counter model calls
+      // notifyListeners()
+      floatingActionButton: CustomFloatingActionButton(
+        isMinus: true,
+        isInsideConsumer: false,
+      ),
     );
   }
 }
 
 class CustomFloatingActionButton extends StatelessWidget {
   bool isMinus;
+  bool isInsideConsumer;
   CustomFloatingActionButton({
     required this.isMinus,
+    this.isInsideConsumer = false,
   });
+
   @override
   Widget build(BuildContext context) {
     print(
-        '+++++++ CustomFloatingActionButton ${(isMinus) ? 'minus' : 'plus'} rebuilt !');
+        'CustomFloatingActionButton ${(isInsideConsumer) ? 'inside' : 'outside'} ${(isMinus) ? 'minus' : 'plus'} rebuilt !');
 
     return FloatingActionButton(
       onPressed: () {
