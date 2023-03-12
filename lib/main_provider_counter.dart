@@ -90,22 +90,15 @@ class MyHomePage extends StatelessWidget {
   }
 }
 
-class CustomFloatingActionButton extends StatefulWidget {
+class CustomFloatingActionButton extends StatelessWidget {
   bool isMinus;
   CustomFloatingActionButton({
     required this.isMinus,
   });
   @override
-  State<CustomFloatingActionButton> createState() =>
-      _CustomFloatingActionButtonState();
-}
-
-class _CustomFloatingActionButtonState
-    extends State<CustomFloatingActionButton> {
-  @override
   Widget build(BuildContext context) {
     print(
-        '+++++++ CustomFloatingActionButton ${(widget.isMinus) ? 'minus' : 'plus'} rebuilt !');
+        '+++++++ CustomFloatingActionButton ${(isMinus) ? 'minus' : 'plus'} rebuilt !');
 
     return FloatingActionButton(
       onPressed: () {
@@ -127,14 +120,14 @@ class _CustomFloatingActionButtonState
         // We should use context.read().
         var counter = context.read<Counter>();
 
-        if (widget.isMinus) {
+        if (isMinus) {
           counter.decrement();
         } else {
           counter.increment();
         }
       },
-      tooltip: (widget.isMinus) ? 'Decrement' : 'Increment',
-      child: Icon((widget.isMinus) ? Icons.remove : Icons.add),
+      tooltip: (isMinus) ? 'Decrement' : 'Increment',
+      child: Icon((isMinus) ? Icons.remove : Icons.add),
     );
   }
 }
