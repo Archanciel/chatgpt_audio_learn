@@ -23,7 +23,7 @@ class _AudioListViewState extends State<AudioListView> {
 
   final TextEditingController _textEditingController = TextEditingController(
       text:
-          'https://youtube.com/playlist?list=PLzwWSJNcZTMTB9iwbu77FGokc3WsoxuV0');
+          'https://youtube.com/playlist?list=PLzwWSJNcZTMQL091OKgsyHnyvjSajDVpC');
 
   final AudioPlayerViewModel _audioPlayerViwModel = AudioPlayerViewModel();
 
