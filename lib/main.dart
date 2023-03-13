@@ -22,7 +22,7 @@ void main(List<String> args) {
   // two methods which could not be declared async !
   //
   // Setting the TransferDataViewModel transfer data Map
-  bool deleteAppDir = true;
+  bool deleteAppDir = false;
 
   if (myArgs.isNotEmpty) {
     if (myArgs.contains("delAppDir")) {

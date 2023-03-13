@@ -74,21 +74,6 @@ class _AudioListViewState extends State<AudioListView> {
               if (playlistUrl.isNotEmpty) {
                 audioDownloadViewModel.downloadPlaylistAudios(
                   playlistToDownload: playlistToDownload,
-                  audioDownloadViewModelType: AudioDownloadViewModelType.dio,
-                );
-              }
-            },
-            child: const Text('Download Audio Dio'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              final String playlistUrl = _textEditingController.text.trim();
-              DownloadPlaylist playlistToDownload =
-                  DownloadPlaylist(url: playlistUrl);
-
-              if (playlistUrl.isNotEmpty) {
-                audioDownloadViewModel.downloadPlaylistAudios(
-                  playlistToDownload: playlistToDownload,
                   audioDownloadViewModelType:
                       AudioDownloadViewModelType.justAudio,
                 );

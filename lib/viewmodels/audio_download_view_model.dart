@@ -39,14 +39,6 @@ class AudioDownloadViewModel extends ChangeNotifier {
           );
           break;
         }
-      case AudioDownloadViewModelType.dio:
-        {
-          await downloadPlaylistAudio(
-            playlistToDownload,
-            _downloadAudioFileDio,
-          );
-          break;
-        }
       case AudioDownloadViewModelType.justAudio:
         {
           await downloadPlaylistAudioWithJustAudio(playlistToDownload);

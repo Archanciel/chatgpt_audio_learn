@@ -5,17 +5,21 @@ import '../constants.dart';
 class DirUtil {
   static Future<String> getPlaylistDownloadHomePath(
       {bool isTest = false}) async {
-    if (isTest) {
-      return kDownloadAppTestDir;
+    if (Platform.isWindows) {
+      return kDownloadAppDirWindows;
     } else {
-      return kDownloadAppDir;
+      if (isTest) {
+        return kDownloadAppTestDir;
+      } else {
+        return kDownloadAppDir;
+      }
     }
   }
 
   static Future<void> createAppDirIfNotExist({
     bool isAppDirToBeDeleted = false,
   }) async {
-    String path = kDownloadAppDir;
+    String path = await DirUtil.getPlaylistDownloadHomePath();
     final Directory directory = Directory(path);
     bool directoryExists = await directory.exists();
 
