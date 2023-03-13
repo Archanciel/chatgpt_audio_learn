@@ -3,13 +3,14 @@ import 'dart:io';
 import 'audio.dart';
 
 /// Video downloaded informations
-class DownloadedVideo {
+/// Class not used
+class DownloadedVideoToDelete {
   final String id;
   final String title;
   final DateTime downloadDate;
   final Audio audio;
 
-  DownloadedVideo(
+  DownloadedVideoToDelete(
       {required this.id,
       required this.title,
       required this.downloadDate,

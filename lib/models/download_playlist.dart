@@ -7,13 +7,13 @@ class DownloadPlaylist {
   final String url;
   String downloadPath = '';
   final List<PlaylistVideo> playlistVideoLst = [];
-  final List<DownloadedVideo> downloadedVideoLst = [];
+  final List<DownloadedVideoToDelete> downloadedVideoLst = [];
 
   DownloadPlaylist({
     required this.url,
   });
 
-  void addDownloadedVideo(DownloadedVideo downloadedVideo) {
+  void addDownloadedVideo(DownloadedVideoToDelete downloadedVideo) {
     downloadedVideoLst.add(downloadedVideo);
   }
 

@@ -21,9 +21,8 @@ class AudioListView extends StatefulWidget {
 class _AudioListViewState extends State<AudioListView> {
   ViewModelType _currentViewModelType = ViewModelType.youtube;
 
-  final TextEditingController _textEditingController = TextEditingController(
-      text:
-          'https://youtube.com/playlist?list=PLzwWSJNcZTMQL091OKgsyHnyvjSajDVpC');
+  final TextEditingController _textEditingController =
+      TextEditingController(text: kPlaylistUrl);
 
   final AudioPlayerViewModel _audioPlayerViwModel = AudioPlayerViewModel();
 
