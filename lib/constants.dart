@@ -7,7 +7,7 @@ enum AudioDownloadViewModelType {
 
 const String kApplicationName = "ChatGPT Playlist Download";
 const String kApplicationVersion = '0.1';
-const String kDownloadAppDir = '/storage/emulated/0/Download/audio';
+const String kDownloadAppDir = '/storage/9016-4EF8/Audio';
 const String kDownloadAppDirWindows = 'C:\\Users\\Jean-Pierre\\Downloads\\Audio';
 
 // files in this local test dir are stored in project test_data dir updated
