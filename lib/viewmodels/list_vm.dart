@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../models/list_model.dart';
 
-class ListViewModel extends ChangeNotifier {
+/// List view model used in ExpandableListView
+class ListVM extends ChangeNotifier {
   bool _isListExpanded = false;
   bool _isButton1Enabled = false;
   bool _isButton2Enabled = false;

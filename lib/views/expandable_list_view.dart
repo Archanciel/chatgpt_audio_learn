@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/list_model.dart';
-import '../viewmodels/list_view_model.dart';
+import '../viewmodels/list_vm.dart';
 
 class ExpandableListView extends StatefulWidget {
   @override
@@ -20,8 +20,7 @@ class _ExpandableListViewState extends State<ExpandableListView> {
               child: ElevatedButton(
                 key: Key('toggle_button'),
                 onPressed: () {
-                  Provider.of<ListViewModel>(context, listen: false)
-                      .toggleList();
+                  Provider.of<ListVM>(context, listen: false).toggleList();
                 },
                 child: const Text('Toggle List'),
               ),
@@ -29,9 +28,9 @@ class _ExpandableListViewState extends State<ExpandableListView> {
             Expanded(
               child: ElevatedButton(
                 key: Key('delete_button'),
-                onPressed: Provider.of<ListViewModel>(context).isButton1Enabled
+                onPressed: Provider.of<ListVM>(context).isButton1Enabled
                     ? () {
-                        Provider.of<ListViewModel>(context, listen: false)
+                        Provider.of<ListVM>(context, listen: false)
                             .deleteSelectedItem(context);
                       }
                     : null,
@@ -41,9 +40,9 @@ class _ExpandableListViewState extends State<ExpandableListView> {
             Expanded(
               child: IconButton(
                 key: Key('move_up_button'),
-                onPressed: Provider.of<ListViewModel>(context).isButton2Enabled
+                onPressed: Provider.of<ListVM>(context).isButton2Enabled
                     ? () {
-                        Provider.of<ListViewModel>(context, listen: false)
+                        Provider.of<ListVM>(context, listen: false)
                             .moveSelectedItemUp();
                       }
                     : null,
@@ -57,9 +56,9 @@ class _ExpandableListViewState extends State<ExpandableListView> {
             Expanded(
               child: IconButton(
                 key: Key('move_down_button'),
-                onPressed: Provider.of<ListViewModel>(context).isButton3Enabled
+                onPressed: Provider.of<ListVM>(context).isButton3Enabled
                     ? () {
-                        Provider.of<ListViewModel>(context, listen: false)
+                        Provider.of<ListVM>(context, listen: false)
                             .moveSelectedItemDown();
                       }
                     : null,
@@ -72,7 +71,7 @@ class _ExpandableListViewState extends State<ExpandableListView> {
             ),
           ],
         ),
-        Consumer<ListViewModel>(
+        Consumer<ListVM>(
           builder: (context, listViewModel, child) {
             if (listViewModel.isListExpanded) {
               return Expanded(

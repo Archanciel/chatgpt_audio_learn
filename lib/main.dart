@@ -5,9 +5,9 @@ import 'package:provider/provider.dart';
 
 import 'package:chatgpt_audio_learn/constants.dart';
 import 'package:chatgpt_audio_learn/utils/dir_util.dart';
-import 'package:chatgpt_audio_learn/viewmodels/audio_download_view_model.dart';
+import 'package:chatgpt_audio_learn/viewmodels/audio_download_vm.dart';
 import 'package:chatgpt_audio_learn/views/audio_list_view.dart';
-import 'viewmodels/audio_player_view_model.dart';
+import 'viewmodels/audio_player_vm.dart';
 
 void main(List<String> args) {
   List<String> myArgs = [];
@@ -43,8 +43,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AudioDownloadViewModel()),
-        ChangeNotifierProvider(create: (_) => AudioPlayerViewModel()),
+        ChangeNotifierProvider(create: (_) => AudioDownloadVM()),
+        ChangeNotifierProvider(create: (_) => AudioPlayerVM()),
       ],
       child: MaterialApp(
         title: 'Youtube Audio Downloader',

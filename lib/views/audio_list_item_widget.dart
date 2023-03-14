@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/audio.dart';
-import '../viewmodels/audio_player_view_model.dart';
+import '../viewmodels/audio_player_vm.dart';
 import '../utils/time_util.dart';
 
 class AudioListItemWidget extends StatelessWidget {
@@ -33,7 +33,7 @@ class AudioListItemWidget extends StatelessWidget {
   }
 
   Widget _buildPlayButton() {
-    return Consumer<AudioPlayerViewModel>(
+    return Consumer<AudioPlayerVM>(
       builder: (context, audioPlayerViewModel, child) {
         if (audio.isPlaying) {
           return Row(

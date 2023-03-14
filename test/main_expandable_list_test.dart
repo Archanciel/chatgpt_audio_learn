@@ -1,5 +1,5 @@
 import 'package:chatgpt_audio_learn/main_expandable_list.dart';
-import 'package:chatgpt_audio_learn/viewmodels/list_view_model.dart';
+import 'package:chatgpt_audio_learn/viewmodels/list_vm.dart';
 import 'package:chatgpt_audio_learn/views/expandable_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,7 +13,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ListViewModel()),
+            ChangeNotifierProvider(create: (_) => ListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -47,7 +47,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ListViewModel()),
+            ChangeNotifierProvider(create: (_) => ListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -85,7 +85,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ListViewModel()),
+            ChangeNotifierProvider(create: (_) => ListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -174,7 +174,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ListViewModel()),
+            ChangeNotifierProvider(create: (_) => ListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -271,7 +271,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ListViewModel()),
+            ChangeNotifierProvider(create: (_) => ListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -375,7 +375,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ListViewModel()),
+            ChangeNotifierProvider(create: (_) => ListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -443,7 +443,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ListViewModel()),
+            ChangeNotifierProvider(create: (_) => ListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -466,9 +466,8 @@ void main() {
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
-      ListViewModel listViewModel = Provider.of<ListViewModel>(
-          tester.element(listViewFinder),
-          listen: false);
+      ListVM listViewModel =
+          Provider.of<ListVM>(tester.element(listViewFinder), listen: false);
       expect(listViewModel.items.length, 10);
 
       // Verify that the Delete button is disabled
@@ -508,8 +507,8 @@ void main() {
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
-      listViewModel = Provider.of<ListViewModel>(tester.element(listViewFinder),
-          listen: false);
+      listViewModel =
+          Provider.of<ListVM>(tester.element(listViewFinder), listen: false);
       expect(listViewModel.items.length, 9);
 
       expect(find.widgetWithText(ListTile, itemToDeleteTextStr), findsNothing);
@@ -519,7 +518,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ListViewModel()),
+            ChangeNotifierProvider(create: (_) => ListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -542,9 +541,8 @@ void main() {
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
-      ListViewModel listViewModel = Provider.of<ListViewModel>(
-          tester.element(listViewFinder),
-          listen: false);
+      ListVM listViewModel =
+          Provider.of<ListVM>(tester.element(listViewFinder), listen: false);
       expect(listViewModel.items.length, 10);
 
       // Find and select the ListTile to move'
@@ -573,8 +571,8 @@ void main() {
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
-      listViewModel = Provider.of<ListViewModel>(tester.element(listViewFinder),
-          listen: false);
+      listViewModel =
+          Provider.of<ListVM>(tester.element(listViewFinder), listen: false);
       expect(listViewModel.items[1].name, 'Item 3');
       expect(listViewModel.items[2].name, 'Item 2');
     });
@@ -584,7 +582,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ListViewModel()),
+            ChangeNotifierProvider(create: (_) => ListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -607,9 +605,8 @@ void main() {
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
-      ListViewModel listViewModel = Provider.of<ListViewModel>(
-          tester.element(listViewFinder),
-          listen: false);
+      ListVM listViewModel =
+          Provider.of<ListVM>(tester.element(listViewFinder), listen: false);
       expect(listViewModel.items.length, 10);
 
       // Find and select the ListTile to move'
@@ -640,8 +637,8 @@ void main() {
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
-      listViewModel = Provider.of<ListViewModel>(tester.element(listViewFinder),
-          listen: false);
+      listViewModel =
+          Provider.of<ListVM>(tester.element(listViewFinder), listen: false);
       expect(listViewModel.items[0].name, 'Item 9');
       expect(listViewModel.items[9].name, 'Item 10');
     });
@@ -650,7 +647,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ListViewModel()),
+            ChangeNotifierProvider(create: (_) => ListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -673,9 +670,8 @@ void main() {
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
-      ListViewModel listViewModel = Provider.of<ListViewModel>(
-          tester.element(listViewFinder),
-          listen: false);
+      ListVM listViewModel =
+          Provider.of<ListVM>(tester.element(listViewFinder), listen: false);
       expect(listViewModel.items.length, 10);
 
       // Find and select the ListTile to move'
@@ -704,8 +700,8 @@ void main() {
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
-      listViewModel = Provider.of<ListViewModel>(tester.element(listViewFinder),
-          listen: false);
+      listViewModel =
+          Provider.of<ListVM>(tester.element(listViewFinder), listen: false);
       expect(listViewModel.items[3].name, 'Item 5');
       expect(listViewModel.items[4].name, 'Item 4');
     });
@@ -715,7 +711,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ListViewModel()),
+            ChangeNotifierProvider(create: (_) => ListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -738,9 +734,8 @@ void main() {
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
-      ListViewModel listViewModel = Provider.of<ListViewModel>(
-          tester.element(listViewFinder),
-          listen: false);
+      ListVM listViewModel =
+          Provider.of<ListVM>(tester.element(listViewFinder), listen: false);
       expect(listViewModel.items.length, 10);
 
       // Find and select the ListTile to move'
@@ -771,8 +766,8 @@ void main() {
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
-      listViewModel = Provider.of<ListViewModel>(tester.element(listViewFinder),
-          listen: false);
+      listViewModel =
+          Provider.of<ListVM>(tester.element(listViewFinder), listen: false);
       expect(listViewModel.items[0].name, 'Item 2');
       expect(listViewModel.items[8].name, 'Item 1');
     });

@@ -6,7 +6,7 @@ import 'package:audioplayers/audioplayers.dart';
 
 import '../models/audio.dart';
 
-class AudioPlayerViewModel extends ChangeNotifier {
+class AudioPlayerVM extends ChangeNotifier {
   Future<void> play(Audio audio) async {
     final file = File(audio.filePathName);
     if (!await file.exists()) {

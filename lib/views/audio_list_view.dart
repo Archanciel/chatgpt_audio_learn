@@ -8,8 +8,8 @@ import '../models/download_playlist.dart';
 import 'audio_list_item_widget.dart';
 
 import '../models/audio.dart';
-import '../viewmodels/audio_download_view_model.dart';
-import '../viewmodels/audio_player_view_model.dart';
+import '../viewmodels/audio_download_vm.dart';
+import '../viewmodels/audio_player_vm.dart';
 
 enum ViewModelType { youtube, dio, justAudio }
 
@@ -24,12 +24,12 @@ class _AudioListViewState extends State<AudioListView> {
   final TextEditingController _textEditingController =
       TextEditingController(text: kPlaylistUrl);
 
-  final AudioPlayerViewModel _audioPlayerViwModel = AudioPlayerViewModel();
+  final AudioPlayerVM _audioPlayerViwModel = AudioPlayerVM();
 
   @override
   Widget build(BuildContext context) {
-    final AudioDownloadViewModel audioDownloadViewModel =
-        Provider.of<AudioDownloadViewModel>(context);
+    final AudioDownloadVM audioDownloadViewModel =
+        Provider.of<AudioDownloadVM>(context);
 
     return Scaffold(
       appBar: AppBar(

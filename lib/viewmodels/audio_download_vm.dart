@@ -11,7 +11,7 @@ import '../models/audio.dart';
 import '../models/download_playlist.dart';
 import '../utils/dir_util.dart';
 
-class AudioDownloadViewModel extends ChangeNotifier {
+class AudioDownloadVM extends ChangeNotifier {
   YoutubeExplode _yt = YoutubeExplode();
 
   // setter used by test only !
