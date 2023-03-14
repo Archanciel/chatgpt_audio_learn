@@ -22,14 +22,51 @@ class AudioListItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String subTitleStr =
-        'Duration ${(audio.audioDuration == null) ? '?' : audio.audioDuration!.HHmm()}. Size ${(audio.audioFileSize == null) ? '?' : audio.audioFileSize} bytes. Downloaded at ${(audio.downloadSpeed.isFinite) ? audio.downloadSpeed.toInt() : 'infinite '} bytes/sec';
+    String subTitleStr = buildSubTitle();
     return ListTile(
       leading: const Icon(Icons.music_note),
       title: Text(audio.originalVideoTitle),
       subtitle: Text(subTitleStr),
       trailing: _buildPlayButton(),
     );
+  }
+
+  String buildSubTitle() {
+    String subTitle;
+
+    Duration? audioDuration = audio.audioDuration;
+    int audioFileSize = audio.audioFileSize;
+    String audioFileSizeStr;
+
+    audioFileSizeStr = formatLargeIntValue(audioFileSize.toDouble());
+
+    double audioDownloadSpeed = audio.downloadSpeed;
+    String audioDownloadSpeedStr;
+
+    if (audioDownloadSpeed.isInfinite) {
+      audioDownloadSpeedStr = 'infinite o/sec';
+    } else {
+      audioDownloadSpeedStr = '${formatLargeIntValue(audioDownloadSpeed)}/sec';
+    }
+
+    if (audioDuration == null) {
+      subTitle = '?';
+    } else {
+      subTitle =
+          '${audioDuration.HHmm()}. Size $audioFileSizeStr. Downloaded at $audioDownloadSpeedStr';
+    }
+    return subTitle;
+  }
+
+  String formatLargeIntValue(double value) {
+    String formattedValueStr;
+
+    if (value < 1000000) {
+      formattedValueStr = '${value ~/ 1000} Ko';
+    } else {
+      formattedValueStr = '${(value / 1000000).toStringAsFixed(2)} Mo';
+    }
+    return formattedValueStr;
   }
 
   Widget _buildPlayButton() {
