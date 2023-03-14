@@ -26,7 +26,7 @@ class AudioListItemWidget extends StatelessWidget {
         'Duration ${(audio.audioDuration == null) ? '?' : audio.audioDuration!.HHmm()}. Size ${(audio.audioFileSize == null) ? '?' : audio.audioFileSize} bytes. Downloaded at ${(audio.downloadSpeed.isFinite) ? audio.downloadSpeed.toInt() : 'infinite '} bytes/sec';
     return ListTile(
       leading: const Icon(Icons.music_note),
-      title: Text(audio.title),
+      title: Text(audio.originalVideoTitle),
       subtitle: Text(subTitleStr),
       trailing: _buildPlayButton(),
     );

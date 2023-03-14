@@ -92,16 +92,17 @@ class AudioDownloadViewModel extends ChangeNotifier {
       audioUploadDate ??= DateTime(00, 1, 1);
 
       final Audio audio = Audio(
-        playlist: playlistToDownload,
-        title: youtubeVideo.title,
-        downloadDate: DateTime.now(),
-        uploadDate: audioUploadDate,
+        enclosingPlaylist: playlistToDownload,
+        originalVideoTitle: youtubeVideo.title,
+        videoUrl: youtubeVideo.url,
+        audioDownloadDate: DateTime.now(),
+        videoUploadDate: audioUploadDate,
         audioDuration: audioDuration!,
         audioPlayer: AudioPlayer(),
       );
 
       final bool alreadyDownloaded = downloadedAudioFileNameLst
-          .any((fileName) => fileName.contains(audio.fileName));
+          .any((fileName) => fileName.contains(audio.validVideoTitle));
 
       if (alreadyDownloaded) {
         print('${audio.fileName} already downloaded');

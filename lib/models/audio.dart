@@ -6,18 +6,44 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:chatgpt_audio_learn/models/download_playlist.dart';
 import 'package:intl/intl.dart';
 
+/// Contains informations of the audio extracted from the video
+/// referenced in the enclosing playlist. In fact, the audio is
+/// directly downloaded from Youtube.
 class Audio {
   static DateFormat downloadDatePrefixFormatter = DateFormat('yyMMdd');
-  static DateFormat uploadDateSuffixFormatter = DateFormat(' y-MM-dd');
+  static DateFormat uploadDateSuffixFormatter = DateFormat('yy-MM-dd');
 
-  final DownloadPlaylist playlist;
-  final String title;
-  final DateTime downloadDate;
-  final DateTime uploadDate;
+  // Playlist in which the video is referenced
+  final DownloadPlaylist enclosingPlaylist;
+
+  // Video title displayed on Youtube
+  final String originalVideoTitle;
+
+  // Video title which does not contain invalid characters which
+  // would cause the audio file name to genertate an file creation
+  // exception
+  final String validVideoTitle;
+
+  // Url referencing the video from which rhe audio was extracted
+  final String videoUrl;
+
+  // Audio download date
+  final DateTime audioDownloadDate;
+
+  // Date at which the video containing the audio was added on
+  // Youtube
+  final DateTime videoUploadDate;
+  
+  // Stored audio file name
   final String fileName;
+
+  // Duration of downloaded audio
   final Duration? audioDuration;
+
+  // Audio file size in bytes
   int audioFileSize = 0;
 
+  // Duration in which the audio was downloaded
   late Duration _downloadDuration;
   Duration get downloadDuration => _downloadDuration;
   set downloadDuration(Duration downloadDuration) {
@@ -27,7 +53,10 @@ class Audio {
         : audioFileSize / _downloadDuration.inSeconds;
   }
 
+  // Speed at which the audio was downloaded in bytes per second
   late double downloadSpeed;
+
+  // State of the audio
 
   bool _isPlaying = false;
   bool get isPlaying => _isPlaying;
@@ -39,24 +68,28 @@ class Audio {
   bool _isPaused = false;
   bool get isPaused => _isPaused;
 
+  // AudioPlayer of the current audio
   AudioPlayer audioPlayer;
 
   Audio({
-    required this.playlist,
-    required this.title,
-    required this.downloadDate,
-    required this.uploadDate,
+    required this.enclosingPlaylist,
+    required this.originalVideoTitle,
+    required this.videoUrl,
+    required this.audioDownloadDate,
+    required this.videoUploadDate,
     this.audioDuration,
     required this.audioPlayer,
-  }) : fileName =
-            '${buildDownloadDatePrefix(downloadDate)}${replaceUnauthorizedDirOrFileNameChars(title)}${buildUploadDateSuffix(uploadDate)}.mp3';
+  })  : validVideoTitle =
+            replaceUnauthorizedDirOrFileNameChars(originalVideoTitle),
+        fileName =
+            '${buildDownloadDatePrefix(audioDownloadDate)}${replaceUnauthorizedDirOrFileNameChars(originalVideoTitle)} ${buildUploadDateSuffix(videoUploadDate)}.mp3';
 
   void invertPaused() {
     _isPaused = !_isPaused;
   }
 
   String get filePathName {
-    return '${playlist.downloadPath}${Platform.pathSeparator}$fileName';
+    return '${enclosingPlaylist.downloadPath}${Platform.pathSeparator}$fileName';
   }
 
   static String buildDownloadDatePrefix(DateTime downloadDate) {

@@ -16,15 +16,15 @@ class MockAudioViewModel extends ChangeNotifier
   Future<void> downloadPlaylistAudios(String playlistUrl) async {
     audioLst = [
       Audio(
-          title: 'Audio 1',
+          originalVideoTitle: 'Audio 1',
           audioDuration: Duration(minutes: 3, seconds: 42),
           filePathName: '/storage/emulated/0/Download/Audio 1.mp3'),
       Audio(
-          title: 'Audio 2',
+          originalVideoTitle: 'Audio 2',
           audioDuration: Duration(minutes: 5, seconds: 21),
           filePathName: '/storage/emulated/0/Download/Audio 2.mp3'),
       Audio(
-          title: 'Audio 3',
+          originalVideoTitle: 'Audio 3',
           audioDuration: Duration(minutes: 2, seconds: 15),
           filePathName: '/storage/emulated/0/Download/Audio 3.mp3'),
     ];
