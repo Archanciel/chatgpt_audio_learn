@@ -9,15 +9,15 @@ import '../utils/time_util.dart';
 
 class AudioListItemWidget extends StatelessWidget {
   final Audio audio;
-  final void Function(Audio audio) onPlayPressed;
-  final void Function(Audio audio) onStopPressed;
-  final void Function(Audio audio) onPausePressed;
+  final void Function(Audio audio) onPlayPressedFunction;
+  final void Function(Audio audio) onStopPressedFunction;
+  final void Function(Audio audio) onPausePressedFunction;
 
   AudioListItemWidget({
     required this.audio,
-    required this.onPlayPressed,
-    required this.onStopPressed,
-    required this.onPausePressed,
+    required this.onPlayPressedFunction,
+    required this.onStopPressedFunction,
+    required this.onPausePressedFunction,
   });
 
   @override

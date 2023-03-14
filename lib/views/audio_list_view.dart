@@ -87,13 +87,13 @@ class _AudioListViewState extends State<AudioListView> {
                 final audio = audioDownloadViewModel.audioLst[index];
                 return AudioListItemWidget(
                   audio: audio,
-                  onPlayPressed: (Audio audio) {
+                  onPlayPressedFunction: (Audio audio) {
                     _audioPlayerViwModel.play(audio);
                   },
-                  onStopPressed: (Audio audio) {
+                  onStopPressedFunction: (Audio audio) {
                     _audioPlayerViwModel.stop(audio);
                   },
-                  onPausePressed: (Audio audio) {
+                  onPausePressedFunction: (Audio audio) {
                     _audioPlayerViwModel.pause(audio);
                   },
                 );
