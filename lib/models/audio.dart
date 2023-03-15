@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:chatgpt_audio_learn/constants.dart';
 import 'package:chatgpt_audio_learn/models/download_playlist.dart';
 import 'package:intl/intl.dart';
 
@@ -33,7 +34,7 @@ class Audio {
   // Date at which the video containing the audio was added on
   // Youtube
   final DateTime videoUploadDate;
-  
+
   // Stored audio file name
   final String fileName;
 
@@ -70,6 +71,8 @@ class Audio {
 
   // AudioPlayer of the current audio
   AudioPlayer audioPlayer;
+
+  double playSpeed = kAudioDefaultSpeed;
 
   Audio({
     required this.enclosingPlaylist,

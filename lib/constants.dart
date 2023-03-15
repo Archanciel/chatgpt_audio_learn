@@ -27,9 +27,11 @@ DateFormat frenchDateTimeFormat = DateFormat("dd-MM-yyyy HH:mm");
 
 const bool kDeleteAppDir = false;
 // to_delete playlist url
-// const String kPlaylistUrl =
-//     'https://youtube.com/playlist?list=PLzwWSJNcZTMTB9iwbu77FGokc3WsoxuV0';
+const String kPlaylistUrl =
+    'https://youtube.com/playlist?list=PLzwWSJNcZTMTB9iwbu77FGokc3WsoxuV0';
 
 // audio_learn playlist url
-const String kPlaylistUrl =
-    'https://youtube.com/playlist?list=PLzwWSJNcZTMQL091OKgsyHnyvjSajDVpC';
+// const String kPlaylistUrl =
+//     'https://youtube.com/playlist?list=PLzwWSJNcZTMQL091OKgsyHnyvjSajDVpC';
+
+const double kAudioDefaultSpeed = 1.25;

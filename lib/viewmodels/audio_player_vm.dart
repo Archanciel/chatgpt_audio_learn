@@ -13,7 +13,9 @@ class AudioPlayerVM extends ChangeNotifier {
       print('File not found: ${audio.filePathName}');
     }
 
-    await audio.audioPlayer.play(DeviceFileSource(audio.filePathName));
+    AudioPlayer audioPlayer = audio.audioPlayer;
+    await audioPlayer.play(DeviceFileSource(audio.filePathName));
+    await audioPlayer.setPlaybackRate(audio.playSpeed);
     audio.isPlaying = true;
 
     notifyListeners();
