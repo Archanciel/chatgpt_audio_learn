@@ -35,3 +35,7 @@ const String kPlaylistUrl =
 //     'https://youtube.com/playlist?list=PLzwWSJNcZTMQL091OKgsyHnyvjSajDVpC';
 
 const double kAudioDefaultSpeed = 1.25;
+const String kSecretClientCodeJsonFileName =
+    'code_secret_client_923487935936-po8d733kjvrnee3l3ik3r5mebe8ebhr7.apps.googleusercontent.com.json';
+
+const kGoogleApiKey = 'AIzaSyDhywmh5EKopsNsaszzMkLJ719aQa2NHBw';

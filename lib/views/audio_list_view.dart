@@ -1,5 +1,6 @@
 // dart file located in lib\views
 
+import 'package:chatgpt_audio_learn/viewmodels/playlist_edit_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -79,6 +80,14 @@ class _AudioListViewState extends State<AudioListView> {
               }
             },
             child: const Text('Download Audio just_audio'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              PlaylistEditVM playlistEditVM = PlaylistEditVM();
+
+              playlistEditVM.removeVideoFromPlaylist();
+            },
+            child: const Text('Remove video from playlist'),
           ),
           Expanded(
             child: ListView.builder(
