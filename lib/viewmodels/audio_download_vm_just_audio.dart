@@ -20,7 +20,7 @@ class Track {
   });
 }
 
-class AudioDownloadViewModelJa extends ChangeNotifier {
+class AudioDownloadVMjustAudio extends ChangeNotifier {
   @override
   final List<Audio> audioLst = [];
 
