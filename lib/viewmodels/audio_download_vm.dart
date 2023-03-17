@@ -86,10 +86,11 @@ class AudioDownloadVM extends ChangeNotifier {
           streamManifest.audioOnly.first;
 
       final Duration? audioDuration = youtubeVideo.duration;
-      DateTime? audioUploadDate = youtubeVideo.uploadDate;
+      DateTime? audioUploadDate = (await _yt.videos.get(youtubeVideo.id.value)).uploadDate;
 
       audioUploadDate ??= DateTime(00, 1, 1);
 
+      Video vid = await _yt.videos.get('oxXpB9pSETo');
       final Audio audio = Audio(
         enclosingPlaylist: playlistToDownload,
         originalVideoTitle: youtubeVideo.title,
