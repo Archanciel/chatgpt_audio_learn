@@ -7,14 +7,13 @@ import 'package:googleapis/youtube/v3.dart';
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:http/http.dart' as http;
 
-
 import '../constants.dart';
 
 // Define the IDs of the playlist and video to remove
 const playlistId = 'PLzwWSJNcZTMTB9iwbu77FGokc3WsoxuV0';
 const videoId = 'oxXpB9pSETo';
 
-final apiKey = kGoogleApiKey;
+const apiKey = kGoogleApiKey;
 
 class PlaylistEditVM extends ChangeNotifier {
 // Authenticate with the YouTube Data API using a JSON file
@@ -47,17 +46,17 @@ class PlaylistEditVM extends ChangeNotifier {
   //   }
   // }
 
-/// not working
-Future<void> removeVideoFromPlaylist() async {
-  final url = 'https://www.googleapis.com/youtube/v3/playlistItems?part=id&playlistId=$playlistId&videoId=$videoId&key=$apiKey';
-  final response = await http.delete(Uri.parse(url));
-  
-  if (response.statusCode == 204) {
-    print('The video with ID "$videoId" has been removed from the playlist with ID "$playlistId".');
-  } else {
-    print('An error occurred: ${response.reasonPhrase}');
+  /// not working
+  Future<void> removeVideoFromPlaylist() async {
+    const url =
+        'https://www.googleapis.com/youtube/v3/playlistItems?part=id&playlistId=$playlistId&videoId=$videoId&key=$apiKey';
+    final response = await http.delete(Uri.parse(url));
+
+    if (response.statusCode == 204) {
+      print(
+          'The video with ID "$videoId" has been removed from the playlist with ID "$playlistId".');
+    } else {
+      print('An error occurred: ${response.reasonPhrase}');
+    }
   }
 }
-}
-
-
