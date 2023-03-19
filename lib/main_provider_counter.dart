@@ -5,6 +5,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+/// This basic application demonstrates how to use Provider to
+/// rebuild only one widget when the counter value changes.
 void main() {
   runApp(
     // Provide the model to all widgets within the app. We're using
