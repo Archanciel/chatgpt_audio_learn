@@ -19,6 +19,9 @@ dependencies:
   http: ^0.13.5
   googleapis: ^10.1.0
   googleapis_auth: ^1.4.0
+  on_audio_query: ^2.6.2
+  audio_video_progress_bar: ^1.0.0
+  rxdart: ^0.27.7
 
 dev_dependencies:
   flutter_test:

@@ -5,6 +5,8 @@ import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:rxdart/rxdart.dart';
 
+/// Contains code asking the permissions required by the app. Works
+/// on S8 and on S20 (Android 13).
 void main() {
   runApp(const MyApp());
 }
