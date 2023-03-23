@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+class ThemeProvider extends ChangeNotifier {
+  bool _isDarkMode = false;
+
+  bool get isDarkMode => _isDarkMode;
+
+  void toggleTheme() {
+    _isDarkMode = !_isDarkMode;
+    notifyListeners();
+  }
+}
+
 void main() {
   runApp(MyApp());
 }
@@ -8,16 +19,37 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => ListVM(),
-      child: MaterialApp(
-        title: 'MVVM Example',
-        home: Scaffold(
-          appBar: AppBar(
-            title: const Text('MVVM Example'),
-          ),
-          body: ExpandableListView(),
-        ),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ListVM()),
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+      ],
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return MaterialApp(
+            title: 'MVVM Example',
+            theme: themeProvider.isDarkMode
+                ? ThemeData.dark()
+                : ThemeData.light(),
+            home: Scaffold(
+              appBar: AppBar(
+                title: const Text('MVVM Example'),
+                actions: [
+                  IconButton(
+                    onPressed: () {
+                      Provider.of<ThemeProvider>(context, listen: false)
+                          .toggleTheme();
+                    },
+                    icon: Icon(themeProvider.isDarkMode
+                        ? Icons.light_mode
+                        : Icons.dark_mode),
+                  ),
+                ],
+              ),
+              body: ExpandableListView(),
+            ),
+          );
+        },
       ),
     );
   }
