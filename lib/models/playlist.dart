@@ -9,7 +9,8 @@ class Playlist {
 
   // Contains audio videos currently referrenced in the Youtube
   // playlist.
-  final List<Audio> _playlistAudioLst = [];
+  final List<Audio> _youtubePlaylistAudioLst = [];
+  List<Audio> get youtubePlaylistAudioLst => _youtubePlaylistAudioLst;
 
   // Contains the audios once referenced in the Youtube playlist
   // which were downloaded.
@@ -22,6 +23,13 @@ class Playlist {
 
   Playlist({
     required this.url,
+  });
+
+  Playlist.test({
+    required this.id,
+    required this.title,
+    required this.url,
+    required this.downloadPath,
   });
 
   void addDownloadedAudio(Audio downloadedAudio) {
@@ -47,6 +55,6 @@ class Playlist {
 
   @override
   String toString() {
-    return '$title';
+    return title;
   }
 }
