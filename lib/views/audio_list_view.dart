@@ -30,8 +30,6 @@ class _AudioListViewState extends State<AudioListView> {
   Widget build(BuildContext context) {
     final AudioDownloadVM audioDownloadViewModel =
         Provider.of<AudioDownloadVM>(context);
-    print('*********** rebuilding **********');
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Youtube Audio Downloader'),
