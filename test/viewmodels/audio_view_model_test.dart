@@ -22,7 +22,7 @@ void main() {
     setUp(() {
       mockYoutubeExplode = MockYoutubeExplode();
       viewModel = AudioDownloadVM();
-      viewModel.yt = mockYoutubeExplode;
+      viewModel.youtubeExplode = mockYoutubeExplode;
     });
 
     test('fetchAudios downloads all audios', () async {

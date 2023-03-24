@@ -32,7 +32,7 @@ const String kPlaylistUrl =
 
 // audio_learn playlist url
 // const String kPlaylistUrl =
-//     'https://youtube.com/playlist?list=PLzwWSJNcZTMQL091OKgsyHnyvjSajDVpC';
+//     'https://youtube.com/playlist?list=PLzwWSJNcZTMRBJuvE6vk6PMnqIBhCKUIa';
 
 const double kAudioDefaultSpeed = 1.25;
 const String kSecretClientCodeJsonFileName =
