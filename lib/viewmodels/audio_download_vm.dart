@@ -128,6 +128,7 @@ class AudioDownloadVM extends ChangeNotifier {
 
       audio.downloadDuration = stopwatch.elapsed;
       playlistToDownload.addDownloadedAudio(audio);
+      playlistToDownload.addPlayableAudio(audio);
 
       notifyListeners();
     }

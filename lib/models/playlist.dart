@@ -36,6 +36,15 @@ class Playlist {
     _downloadedAudioLst.remove(downloadedAudio);
   }
 
+  void addPlayableAudio(Audio playableAudio) {
+    playableAudio.enclosingPlaylist = this;
+    _playableAudioLst.add(playableAudio);
+  }
+
+  void removePlayableAudio(Audio playableAudio) {
+    _playableAudioLst.remove(playableAudio);
+  }
+
   @override
   String toString() {
     return '$title';
