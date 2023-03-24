@@ -104,8 +104,9 @@ class AudioDownloadVM extends ChangeNotifier {
         audioDownloadDate: DateTime.now(),
         videoUploadDate: audioUploadDate,
         audioDuration: audioDuration!,
-        audioPlayer: AudioPlayer(),
       );
+
+      audio.audioPlayer = AudioPlayer();
 
       final bool alreadyDownloaded = downloadedAudioFileNameLst
           .any((fileName) => fileName.contains(audio.validVideoTitle));

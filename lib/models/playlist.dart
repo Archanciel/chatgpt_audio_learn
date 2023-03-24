@@ -15,6 +15,7 @@ class Playlist {
   // Contains the audios once referenced in the Youtube playlist
   // which were downloaded.
   final List<Audio> _downloadedAudioLst = [];
+  List<Audio> get downloadedAudioLst => _downloadedAudioLst;
 
   // Contains the downloaded audios currently available on the
   // device.
@@ -25,12 +26,50 @@ class Playlist {
     required this.url,
   });
 
-  Playlist.test({
+  Playlist.json({
     required this.id,
     required this.title,
     required this.url,
     required this.downloadPath,
   });
+  // Factory constructor: creates an instance of Playlist from a JSON object
+  factory Playlist.fromJson(Map<String, dynamic> json) {
+    Playlist playlist = Playlist.json(
+      id: json['id'],
+      title: json['title'],
+      url: json['url'],
+      downloadPath: json['downloadPath'],
+    );
+
+    // Deserialize the Audio instances in the downloadedAudioLst and playableAudioLst
+    if (json['downloadedAudioLst'] != null) {
+      for (var audioJson in json['downloadedAudioLst']) {
+        Audio audio = Audio.fromJson(audioJson);
+        playlist.addDownloadedAudio(audio);
+      }
+    }
+
+    if (json['playableAudioLst'] != null) {
+      for (var audioJson in json['playableAudioLst']) {
+        Audio audio = Audio.fromJson(audioJson);
+        playlist.addPlayableAudio(audio);
+      }
+    }
+
+    return playlist;
+  }
+
+  // Method: converts an instance of Playlist to a JSON object
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'url': url,
+      'downloadPath': downloadPath,
+      'downloadedAudioLst': _downloadedAudioLst.map((audio) => audio.toJson()).toList(),
+      'playableAudioLst': _playableAudioLst.map((audio) => audio.toJson()).toList(),
+    };
+  }
 
   void addDownloadedAudio(Audio downloadedAudio) {
     downloadedAudio.enclosingPlaylist = this;

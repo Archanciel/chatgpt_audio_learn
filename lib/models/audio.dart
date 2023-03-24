@@ -70,7 +70,7 @@ class Audio {
   bool get isPaused => _isPaused;
 
   // AudioPlayer of the current audio
-  AudioPlayer audioPlayer;
+  late AudioPlayer audioPlayer;
 
   double playSpeed = kAudioDefaultSpeed;
 
@@ -81,11 +81,49 @@ class Audio {
     required this.audioDownloadDate,
     required this.videoUploadDate,
     this.audioDuration,
-    required this.audioPlayer,
   })  : validVideoTitle =
             replaceUnauthorizedDirOrFileNameChars(originalVideoTitle),
         fileName =
             '${buildDownloadDatePrefix(audioDownloadDate)}${replaceUnauthorizedDirOrFileNameChars(originalVideoTitle)} ${buildUploadDateSuffix(videoUploadDate)}.mp3';
+
+  Audio.json({
+    required this.enclosingPlaylist,
+    required this.originalVideoTitle,
+    required this.validVideoTitle,
+    required this.videoUrl,
+    required this.audioDownloadDate,
+    required this.videoUploadDate,
+    required this.audioDuration,
+    required this.fileName,
+  });
+
+  // Factory constructor: creates an instance of Audio from a JSON object
+  factory Audio.fromJson(Map<String, dynamic> json) {
+    return Audio.json(
+      enclosingPlaylist:
+          null, // You'll need to handle this separately, see note below
+      originalVideoTitle: json['originalVideoTitle'],
+      validVideoTitle: json['validVideoTitle'],
+      videoUrl: json['videoUrl'],
+      audioDownloadDate: DateTime.parse(json['audioDownloadDate']),
+      videoUploadDate: DateTime.parse(json['videoUploadDate']),
+      audioDuration: Duration(milliseconds: json['audioDuration'] ?? 0),
+      fileName: json['fileName'],
+    );
+  }
+
+  // Method: converts an instance of Audio to a JSON object
+  Map<String, dynamic> toJson() {
+    return {
+      'originalVideoTitle': originalVideoTitle,
+      'validVideoTitle': validVideoTitle,
+      'videoUrl': videoUrl,
+      'audioDownloadDate': audioDownloadDate.toIso8601String(),
+      'videoUploadDate': videoUploadDate.toIso8601String(),
+      'audioDuration': audioDuration?.inMilliseconds,
+      'fileName': fileName,
+    };
+  }
 
   void invertPaused() {
     _isPaused = !_isPaused;
