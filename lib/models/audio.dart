@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:chatgpt_audio_learn/constants.dart';
-import 'package:chatgpt_audio_learn/models/download_playlist.dart';
+import 'package:chatgpt_audio_learn/models/playlist.dart';
 import 'package:intl/intl.dart';
 
 /// Contains informations of the audio extracted from the video
@@ -15,7 +15,7 @@ class Audio {
   static DateFormat uploadDateSuffixFormatter = DateFormat('yy-MM-dd');
 
   // Playlist in which the video is referenced
-  final DownloadPlaylist enclosingPlaylist;
+  Playlist? enclosingPlaylist;
 
   // Video title displayed on Youtube
   final String originalVideoTitle;
@@ -92,7 +92,7 @@ class Audio {
   }
 
   String get filePathName {
-    return '${enclosingPlaylist.downloadPath}${Platform.pathSeparator}$fileName';
+    return '${enclosingPlaylist!.downloadPath}${Platform.pathSeparator}$fileName';
   }
 
   static String buildDownloadDatePrefix(DateTime downloadDate) {

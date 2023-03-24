@@ -3,28 +3,30 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:youtube_explode_dart/youtube_explode_dart.dart';
+
+// importing youtube_explode_dart as yt enables to name the app Model
+// playlist class as Playlist so it does not conflict with
+// youtube_explode_dart Playlist class name.
+import 'package:youtube_explode_dart/youtube_explode_dart.dart' as yt;
 import 'package:audioplayers/audioplayers.dart';
 
 import '../constants.dart';
 import '../models/audio.dart';
-import '../models/download_playlist.dart';
+import '../models/playlist.dart';
 import '../utils/dir_util.dart';
 
 class AudioDownloadVM extends ChangeNotifier {
-  YoutubeExplode _yt = YoutubeExplode();
+  yt.YoutubeExplode _youtubeExplode = yt.YoutubeExplode();
 
   // setter used by test only !
-  set yt(YoutubeExplode yt) => _yt = yt;
+  set youtubeExplode(yt.YoutubeExplode youtubeExplode) =>
+      _youtubeExplode = youtubeExplode;
 
   final Directory _audioDownloadDir = Directory('/storage/emulated/0/Download');
 
   @override
-  final List<Audio> audioLst = [];
-
-  @override
   Future<void> downloadPlaylistAudios({
-    required DownloadPlaylist playlistToDownload,
+    required Playlist playlistToDownload,
     required AudioDownloadViewModelType audioDownloadViewModelType,
   }) async {
     // get Youtube playlist
@@ -47,10 +49,10 @@ class AudioDownloadVM extends ChangeNotifier {
   }
 
   Future<void> downloadPlaylistAudio(
-    DownloadPlaylist playlistToDownload,
+    Playlist playlistToDownload,
     Future<void> Function(
-      Video youtubeVideo,
-      AudioStreamInfo audioStreamInfo,
+      yt.Video youtubeVideo,
+      yt.AudioStreamInfo audioStreamInfo,
       Audio audio,
     )
         downloadAudioFileFunction,
@@ -58,8 +60,9 @@ class AudioDownloadVM extends ChangeNotifier {
     // get Youtube playlist
 
     final String? playlistId =
-        PlaylistId.parsePlaylistId(playlistToDownload.url);
-    final Playlist youtubePlaylist = await _yt.playlists.get(playlistId);
+        yt.PlaylistId.parsePlaylistId(playlistToDownload.url);
+    final yt.Playlist youtubePlaylist =
+        await _youtubeExplode.playlists.get(playlistId);
 
     // define playlist audio download dir
 
@@ -79,19 +82,21 @@ class AudioDownloadVM extends ChangeNotifier {
     final List<String> downloadedAudioFileNameLst =
         getDownloadedAudioNameLst(pathStr: playlistDownloadPath);
 
-    await for (Video youtubeVideo in _yt.playlists.getVideos(playlistId)) {
-      final StreamManifest streamManifest =
-          await _yt.videos.streamsClient.getManifest(youtubeVideo.id);
-      final AudioOnlyStreamInfo audioStreamInfo =
+    await for (yt.Video youtubeVideo
+        in _youtubeExplode.playlists.getVideos(playlistId)) {
+      final yt.StreamManifest streamManifest = await _youtubeExplode
+          .videos.streamsClient
+          .getManifest(youtubeVideo.id);
+      final yt.AudioOnlyStreamInfo audioStreamInfo =
           streamManifest.audioOnly.first;
 
       final Duration? audioDuration = youtubeVideo.duration;
       DateTime? audioUploadDate =
-          (await _yt.videos.get(youtubeVideo.id.value)).uploadDate;
+          (await _youtubeExplode.videos.get(youtubeVideo.id.value)).uploadDate;
 
       audioUploadDate ??= DateTime(00, 1, 1);
 
-      Video vid = await _yt.videos.get('oxXpB9pSETo');
+      yt.Video vid = await _youtubeExplode.videos.get('oxXpB9pSETo');
       final Audio audio = Audio(
         enclosingPlaylist: playlistToDownload,
         originalVideoTitle: youtubeVideo.title,
@@ -122,15 +127,14 @@ class AudioDownloadVM extends ChangeNotifier {
       stopwatch.stop();
 
       audio.downloadDuration = stopwatch.elapsed;
-
-      audioLst.add(audio);
+      playlistToDownload.addDownloadedAudio(audio);
 
       notifyListeners();
     }
   }
 
   Future<void> downloadPlaylistAudioWithJustAudio(
-    DownloadPlaylist playlistToDownload,
+    Playlist playlistToDownload,
   ) async {
     // to code ...
   }
@@ -153,14 +157,14 @@ class AudioDownloadVM extends ChangeNotifier {
   }
 
   Future<void> _downloadAudioFileYoutube(
-    Video youtubeVideo,
-    AudioStreamInfo audioStreamInfo,
+    yt.Video youtubeVideo,
+    yt.AudioStreamInfo audioStreamInfo,
     Audio audio,
   ) async {
     var file = File(audio.filePathName);
     final IOSink audioFile = file.openWrite();
     final Stream<List<int>> stream =
-        _yt.videos.streamsClient.get(audioStreamInfo);
+        _youtubeExplode.videos.streamsClient.get(audioStreamInfo);
 
     await stream.pipe(audioFile);
 

@@ -1,18 +1,18 @@
 // dart file located in lib\views
 
-import 'package:chatgpt_audio_learn/viewmodels/playlist_edit_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../constants.dart';
-import '../models/download_playlist.dart';
+import '../models/playlist.dart';
+import '../viewmodels/playlist_edit_vm.dart';
 import 'audio_list_item_widget.dart';
 
 import '../models/audio.dart';
 import '../viewmodels/audio_download_vm.dart';
 import '../viewmodels/audio_player_vm.dart';
 
-enum ViewModelType { youtube, dio, justAudio }
+enum ViewModelType { youtube, justAudio }
 
 class AudioListView extends StatefulWidget {
   @override
@@ -20,12 +20,11 @@ class AudioListView extends StatefulWidget {
 }
 
 class _AudioListViewState extends State<AudioListView> {
-  ViewModelType _currentViewModelType = ViewModelType.youtube;
-
   final TextEditingController _textEditingController =
       TextEditingController(text: kPlaylistUrl);
 
   final AudioPlayerVM _audioPlayerViwModel = AudioPlayerVM();
+  final Playlist currentPlaylist = Playlist(url: kPlaylistUrl);
 
   @override
   Widget build(BuildContext context) {
@@ -52,12 +51,11 @@ class _AudioListViewState extends State<AudioListView> {
           ElevatedButton(
             onPressed: () {
               final String playlistUrl = _textEditingController.text.trim();
-              DownloadPlaylist playlistToDownload =
-                  DownloadPlaylist(url: playlistUrl);
+              currentPlaylist.url = playlistUrl;
 
               if (playlistUrl.isNotEmpty) {
                 audioDownloadViewModel.downloadPlaylistAudios(
-                  playlistToDownload: playlistToDownload,
+                  playlistToDownload: currentPlaylist,
                   audioDownloadViewModelType:
                       AudioDownloadViewModelType.youtube,
                 );
@@ -68,8 +66,7 @@ class _AudioListViewState extends State<AudioListView> {
           ElevatedButton(
             onPressed: () {
               final String playlistUrl = _textEditingController.text.trim();
-              DownloadPlaylist playlistToDownload =
-                  DownloadPlaylist(url: playlistUrl);
+              Playlist playlistToDownload = Playlist(url: playlistUrl);
 
               if (playlistUrl.isNotEmpty) {
                 audioDownloadViewModel.downloadPlaylistAudios(
@@ -91,9 +88,9 @@ class _AudioListViewState extends State<AudioListView> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: audioDownloadViewModel.audioLst.length,
+              itemCount: currentPlaylist.playableAudios.length,
               itemBuilder: (BuildContext context, int index) {
-                final audio = audioDownloadViewModel.audioLst[index];
+                final audio = currentPlaylist.playableAudios[index];
                 return AudioListItemWidget(
                   audio: audio,
                   onPlayPressedFunction: (Audio audio) {

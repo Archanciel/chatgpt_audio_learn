@@ -32,7 +32,7 @@ class MockAudioViewModel extends ChangeNotifier implements AudioDownloadVM {
   }
 
   @override
-  late YoutubeExplode yt;
+  late YoutubeExplode youtubeExplode;
 }
 
 void main() {

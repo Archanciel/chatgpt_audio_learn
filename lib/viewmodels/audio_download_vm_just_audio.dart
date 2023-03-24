@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:just_audio/just_audio.dart';
 
 import '../models/audio.dart';
-import '../models/download_playlist.dart';
+import '../models/playlist.dart';
 
 class Track {
   final String title;
@@ -25,8 +25,7 @@ class AudioDownloadVMjustAudio extends ChangeNotifier {
   final List<Audio> audioLst = [];
 
   @override
-  Future<void> downloadPlaylistAudios(
-      DownloadPlaylist playlistToDownload) async {
+  Future<void> downloadPlaylistAudios(Playlist playlistToDownload) async {
     final player = AudioPlayer();
     final playlistResponse = await http.get(Uri.parse(playlistToDownload.url));
     final playlistJson = json.decode(playlistResponse.body);
