@@ -154,6 +154,7 @@ class AudioDownloadVM extends ChangeNotifier {
     // to code ...
   }
 
+  /// this method must be refactored
   Future<List<String>> getPlaylistDownloadedAudioValidVideoTitleLst({
     required String playlistPathFileName,
     required Playlist uiPlaylist,
@@ -167,6 +168,7 @@ class AudioDownloadVM extends ChangeNotifier {
       List<Audio> playlistDownloadedAudioLst = playlist.downloadedAudioLst;
 
       for (Audio downloadedAudio in playlistDownloadedAudioLst) {
+        downloadedAudio.audioPlayer = AudioPlayer();
         validAudioVideoTitleLst.add(downloadedAudio.validVideoTitle);
       }
 
