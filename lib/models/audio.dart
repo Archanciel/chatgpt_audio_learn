@@ -31,34 +31,37 @@ class Audio {
   // Audio download date time
   final DateTime audioDownloadDateTime;
 
-  // Downloading audio Duration
-  final Duration? audioDownloadDuration;
+  // Duration in which the audio was downloaded
+  Duration? audioDownloadDuration;
 
   // Date at which the video containing the audio was added on
   // Youtube
   final DateTime videoUploadDate;
 
   // Stored audio file name
-  final String fileName;
+  final String audioFileName;
 
   // Duration of downloaded audio
   final Duration? audioDuration;
 
   // Audio file size in bytes
   int audioFileSize = 0;
-
-  // Duration in which the audio was downloaded
-  late Duration _downloadDuration;
-  Duration get downloadDuration => _downloadDuration;
-  set downloadDuration(Duration downloadDuration) {
-    _downloadDuration = downloadDuration;
-    downloadSpeed = (audioFileSize == 0)
+  set fileSize(int size) {
+    audioFileSize = size;
+    audioDownloadSpeed = (audioFileSize == 0 || audioDownloadDuration == null)
         ? 0.0
-        : audioFileSize / _downloadDuration.inSeconds;
+        : audioFileSize / audioDownloadDuration!.inSeconds;
+  }
+
+  set downloadDuration(Duration downloadDuration) {
+    audioDownloadDuration = downloadDuration;
+    audioDownloadSpeed = (audioFileSize == 0 || audioDownloadDuration == null)
+        ? 0.0
+        : audioFileSize / audioDownloadDuration!.inSeconds;
   }
 
   // Speed at which the audio was downloaded in bytes per second
-  late double downloadSpeed;
+  late double audioDownloadSpeed;
 
   // State of the audio
 
@@ -87,35 +90,40 @@ class Audio {
     this.audioDuration,
   })  : validVideoTitle =
             replaceUnauthorizedDirOrFileNameChars(originalVideoTitle),
-        fileName =
+        audioFileName =
             '${buildDownloadDatePrefix(audioDownloadDateTime)}${replaceUnauthorizedDirOrFileNameChars(originalVideoTitle)} ${buildUploadDateSuffix(videoUploadDate)}.mp3';
 
   /// This constructor requires all instance variables
-  Audio.json({
+  Audio.fullConstructor({
     required this.enclosingPlaylist,
     required this.originalVideoTitle,
     required this.validVideoTitle,
     required this.videoUrl,
     required this.audioDownloadDateTime,
     required this.audioDownloadDuration,
+    required this.audioDownloadSpeed,
     required this.videoUploadDate,
     required this.audioDuration,
-    required this.fileName,
+    required this.audioFileName,
+    required this.audioFileSize,
   });
 
   // Factory constructor: creates an instance of Audio from a JSON object
   factory Audio.fromJson(Map<String, dynamic> json) {
-    return Audio.json(
+    return Audio.fullConstructor(
       enclosingPlaylist:
           null, // You'll need to handle this separately, see note below
       originalVideoTitle: json['originalVideoTitle'],
       validVideoTitle: json['validVideoTitle'],
       videoUrl: json['videoUrl'],
       audioDownloadDateTime: DateTime.parse(json['audioDownloadDateTime']),
-      audioDownloadDuration: Duration(milliseconds: json['audioDownloadDurationMs']),
+      audioDownloadDuration:
+          Duration(milliseconds: json['audioDownloadDurationMs']),
+      audioDownloadSpeed: (json['audioDownloadSpeed'] < 0) ? double.infinity : json['audioDownloadSpeed'],
       videoUploadDate: DateTime.parse(json['videoUploadDate']),
       audioDuration: Duration(milliseconds: json['audioDurationMs'] ?? 0),
-      fileName: json['fileName'],
+      audioFileName: json['audioFileName'],
+      audioFileSize: json['audioFileSize'],
     );
   }
 
@@ -127,9 +135,11 @@ class Audio {
       'videoUrl': videoUrl,
       'audioDownloadDateTime': audioDownloadDateTime.toIso8601String(),
       'audioDownloadDurationMs': audioDownloadDuration?.inMilliseconds,
+      'audioDownloadSpeed': (audioDownloadSpeed.isFinite) ? audioDownloadSpeed : -1.0,
       'videoUploadDate': videoUploadDate.toIso8601String(),
       'audioDurationMs': audioDuration?.inMilliseconds,
-      'fileName': fileName,
+      'audioFileName': audioFileName,
+      'audioFileSize': audioFileSize,
     };
   }
 
@@ -138,7 +148,7 @@ class Audio {
   }
 
   String get filePathName {
-    return '${enclosingPlaylist!.downloadPath}${Platform.pathSeparator}$fileName';
+    return '${enclosingPlaylist!.downloadPath}${Platform.pathSeparator}$audioFileName';
   }
 
   static String buildDownloadDatePrefix(DateTime downloadDate) {

@@ -87,9 +87,9 @@ class _AudioListViewState extends State<AudioListView> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: currentPlaylist.playableAudios.length,
+              itemCount: currentPlaylist.playableAudioLst.length,
               itemBuilder: (BuildContext context, int index) {
-                final audio = currentPlaylist.playableAudios[index];
+                final audio = currentPlaylist.playableAudioLst[index];
                 return AudioListItemWidget(
                   audio: audio,
                   onPlayPressedFunction: (Audio audio) {

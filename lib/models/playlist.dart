@@ -19,13 +19,13 @@ class Playlist {
 
   // Contains the downloaded audios currently available on the
   // device.
-  final List<Audio> _playableAudioLst = [];
-  List<Audio> get playableAudios => _playableAudioLst;
+  List<Audio> playableAudioLst = [];
 
   Playlist({
     required this.url,
   });
 
+  /// This constructor requires all instance variables
   Playlist.json({
     required this.id,
     required this.title,
@@ -66,8 +66,10 @@ class Playlist {
       'title': title,
       'url': url,
       'downloadPath': downloadPath,
-      'downloadedAudioLst': _downloadedAudioLst.map((audio) => audio.toJson()).toList(),
-      'playableAudioLst': _playableAudioLst.map((audio) => audio.toJson()).toList(),
+      'downloadedAudioLst':
+          _downloadedAudioLst.map((audio) => audio.toJson()).toList(),
+      'playableAudioLst':
+          playableAudioLst.map((audio) => audio.toJson()).toList(),
     };
   }
 
@@ -85,11 +87,11 @@ class Playlist {
 
   void addPlayableAudio(Audio playableAudio) {
     playableAudio.enclosingPlaylist = this;
-    _playableAudioLst.add(playableAudio);
+    playableAudioLst.add(playableAudio);
   }
 
   void removePlayableAudio(Audio playableAudio) {
-    _playableAudioLst.remove(playableAudio);
+    playableAudioLst.remove(playableAudio);
   }
 
   @override

@@ -40,7 +40,7 @@ class AudioListItemWidget extends StatelessWidget {
 
     audioFileSizeStr = formatLargeIntValue(audioFileSize.toDouble());
 
-    double audioDownloadSpeed = audio.downloadSpeed;
+    double audioDownloadSpeed = audio.audioDownloadSpeed;
     String audioDownloadSpeedStr;
 
     if (audioDownloadSpeed.isInfinite) {
@@ -53,7 +53,7 @@ class AudioListItemWidget extends StatelessWidget {
       subTitle = '?';
     } else {
       subTitle =
-          '${audioDuration.HHmm()}. Size $audioFileSizeStr. Downloaded at $audioDownloadSpeedStr';
+          '${audioDuration.HHmmss()}. Size $audioFileSizeStr. Downloaded at $audioDownloadSpeedStr';
     }
     return subTitle;
   }

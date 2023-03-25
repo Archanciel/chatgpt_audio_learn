@@ -40,14 +40,18 @@ void main() {
       String filePath = path.join(tempDir.path, 'audio.json');
 
       // Create an Audio instance
-      Audio originalAudio = Audio(
+      Audio originalAudio = Audio.fullConstructor(
         enclosingPlaylist: null,
         originalVideoTitle: 'Test Video Title',
+        validVideoTitle: 'Test Video Title',
         videoUrl: 'https://www.youtube.com/watch?v=testVideoID',
         audioDownloadDateTime: DateTime(2023, 3, 24, 20, 5, 32),
         audioDownloadDuration: const Duration(minutes: 0, seconds: 30),
+        audioDownloadSpeed: 1000000,
         videoUploadDate: DateTime(2023, 3, 1),
         audioDuration: const Duration(minutes: 5, seconds: 30),
+        audioFileName: 'Test Video Title.mp3',
+        audioFileSize: 330000000,
       );
 
       // Save the Audio instance to a file
@@ -55,7 +59,7 @@ void main() {
 
       // Load the Audio instance from the file
       Audio deserializedAudio =
-          JsonDataService.loadFromFile(path: filePath, type: Audio);
+          JsonDataService.loadFromFile(jsonPathfileName: filePath, type: Audio);
 
       // Compare the deserialized Audio instance with the original Audio instance
       compareDeserializedWithOriginalAudio(deserializedAudio, originalAudio);
@@ -71,13 +75,18 @@ void main() {
       String filePath = path.join(tempDir.path, 'audio.json');
 
       // Create an Audio instance
-      Audio originalAudio = Audio(
+      Audio originalAudio = Audio.fullConstructor(
         enclosingPlaylist: null,
         originalVideoTitle: 'Test Video Title',
+        validVideoTitle: 'Test Video Title',
         videoUrl: 'https://www.youtube.com/watch?v=testVideoID',
         audioDownloadDateTime: DateTime(2023, 3, 24, 20, 5, 32),
         audioDownloadDuration: const Duration(minutes: 1, seconds: 30),
+        audioDownloadSpeed: 1000000,
         videoUploadDate: DateTime(2023, 3, 1),
+        audioDuration: null,
+        audioFileName: 'Test Video Title.mp3',
+        audioFileSize: 330000000,
       );
 
       // Save the Audio instance to a file
@@ -85,7 +94,42 @@ void main() {
 
       // Load the Audio instance from the file
       Audio deserializedAudio =
-          JsonDataService.loadFromFile(path: filePath, type: Audio);
+          JsonDataService.loadFromFile(jsonPathfileName: filePath, type: Audio);
+
+      // Compare the deserialized Audio instance with the original Audio instance
+      compareDeserializedWithOriginalAudio(deserializedAudio, originalAudio);
+
+      // Cleanup the temporary directory
+      await tempDir.delete(recursive: true);
+    });
+    test(
+        'saveToFile and loadFromFile for one Audio instance with infinite dowbnload speed',
+        () async {
+      // Create a temporary directory to store the serialized Audio object
+      Directory tempDir = await Directory.systemTemp.createTemp('AudioTest');
+      String filePath = path.join(tempDir.path, 'audio.json');
+
+      // Create an Audio instance
+      Audio originalAudio = Audio.fullConstructor(
+        enclosingPlaylist: null,
+        originalVideoTitle: 'Test Video Title',
+        validVideoTitle: 'Test Video Title',
+        videoUrl: 'https://www.youtube.com/watch?v=testVideoID',
+        audioDownloadDateTime: DateTime(2023, 3, 24, 20, 5, 32),
+        audioDownloadDuration: const Duration(minutes: 1, seconds: 30),
+        audioDownloadSpeed: double.infinity,
+        videoUploadDate: DateTime(2023, 3, 1),
+        audioDuration: null,
+        audioFileName: 'Test Video Title.mp3',
+        audioFileSize: 330000000,
+      );
+
+      // Save the Audio instance to a file
+      JsonDataService.saveToFile(model: originalAudio, path: filePath);
+
+      // Load the Audio instance from the file
+      Audio deserializedAudio =
+          JsonDataService.loadFromFile(jsonPathfileName: filePath, type: Audio);
 
       // Compare the deserialized Audio instance with the original Audio instance
       compareDeserializedWithOriginalAudio(deserializedAudio, originalAudio);
@@ -105,23 +149,32 @@ void main() {
       testPlaylist.title = 'Test Playlist';
       testPlaylist.downloadPath = 'path/to/downloads';
 
-      Audio audio1 = Audio(
+      Audio audio1 = Audio.fullConstructor(
         enclosingPlaylist: testPlaylist,
         originalVideoTitle: 'Test Video 1',
+        validVideoTitle: 'Test Video Title',
         videoUrl: 'https://www.example.com/video-url-1',
         audioDownloadDateTime: DateTime.now(),
         audioDownloadDuration: const Duration(minutes: 0, seconds: 30),
+        audioDownloadSpeed: 1000000,
         videoUploadDate: DateTime.now().subtract(const Duration(days: 10)),
+        audioDuration: const Duration(minutes: 5, seconds: 30),
+        audioFileName: 'Test Video Title.mp3',
+        audioFileSize: 330000000,
       );
 
-      Audio audio2 = Audio(
+      Audio audio2 = Audio.fullConstructor(
         enclosingPlaylist: testPlaylist,
         originalVideoTitle: 'Test Video 2',
+        validVideoTitle: 'Test Video Title',
         videoUrl: 'https://www.example.com/video-url-2',
         audioDownloadDateTime: DateTime.now(),
         audioDownloadDuration: const Duration(minutes: 0, seconds: 38),
+        audioDownloadSpeed: 1000000,
         videoUploadDate: DateTime.now().subtract(const Duration(days: 5)),
         audioDuration: const Duration(minutes: 5, seconds: 30),
+        audioFileName: 'Test Video Title.mp3',
+        audioFileSize: 330000000,
       );
 
       testPlaylist.addDownloadedAudio(audio1);
@@ -131,8 +184,8 @@ void main() {
       JsonDataService.saveToFile(model: testPlaylist, path: filePath);
 
       // Load Playlist from the file
-      Playlist loadedPlaylist =
-          JsonDataService.loadFromFile(path: filePath, type: Playlist);
+      Playlist loadedPlaylist = JsonDataService.loadFromFile(
+          jsonPathfileName: filePath, type: Playlist);
 
       // Compare original and loaded Playlist
       compareDeserializedWithOriginalPlaylist(loadedPlaylist, testPlaylist);
@@ -147,7 +200,8 @@ void main() {
 
       try {
         // Try to load a MyClass instance from the temporary file, which should throw an exception
-        JsonDataService.loadFromFile(path: 'temp.json', type: Audio);
+        JsonDataService.loadFromFile(
+            jsonPathfileName: 'temp.json', type: Audio);
       } catch (e) {
         expect(e, isA<ClassNotContainedInJsonFileException>());
       } finally {
@@ -185,14 +239,18 @@ void main() {
     test('saveListToFile() ClassNotSupportedByFromJsonDataServiceException',
         () async {
       // Create an Audio instance
-      Audio originalAudio = Audio(
+      Audio originalAudio = Audio.fullConstructor(
         enclosingPlaylist: null,
         originalVideoTitle: 'Test Video Title',
+        validVideoTitle: 'Test Video Title',
         videoUrl: 'https://www.youtube.com/watch?v=testVideoID',
         audioDownloadDateTime: DateTime(2023, 3, 24, 20, 5, 32),
         audioDownloadDuration: const Duration(minutes: 0, seconds: 30),
+        audioDownloadSpeed: 1000000,
         videoUploadDate: DateTime(2023, 3, 1),
         audioDuration: const Duration(minutes: 5, seconds: 30),
+        audioFileName: 'Test Video Title.mp3',
+        audioFileSize: 330000000,
       );
 
       // Save the Audio instance to a file
@@ -212,24 +270,32 @@ void main() {
     });
     test('saveListToFile() and loadListFromFile() for Audio list', () async {
       // Create an Audio instance
-      Audio audioOne = Audio(
+      Audio audioOne = Audio.fullConstructor(
         enclosingPlaylist: null,
         originalVideoTitle: 'Test Video One Title',
+        validVideoTitle: 'Test Video Title',
         videoUrl: 'https://www.youtube.com/watch?v=testVideoID',
         audioDownloadDateTime: DateTime(2023, 3, 24, 20, 5, 32),
         audioDownloadDuration: const Duration(minutes: 0, seconds: 30),
+        audioDownloadSpeed: 1000000,
         videoUploadDate: DateTime(2023, 3, 1),
         audioDuration: const Duration(minutes: 5, seconds: 30),
+        audioFileName: 'Test Video Title.mp3',
+        audioFileSize: 330000000,
       );
 
-      Audio audioTwo = Audio(
+      Audio audioTwo = Audio.fullConstructor(
         enclosingPlaylist: null,
         originalVideoTitle: 'Test Video Two Title',
+        validVideoTitle: 'Test Video Title',
         videoUrl: 'https://www.youtube.com/watch?v=testVideoID',
         audioDownloadDateTime: DateTime(2023, 3, 24, 20, 5, 32),
         audioDownloadDuration: const Duration(minutes: 0, seconds: 30),
+        audioDownloadSpeed: 1000000,
         videoUploadDate: DateTime(2023, 3, 1),
         audioDuration: const Duration(minutes: 5, seconds: 30),
+        audioFileName: 'Test Video Title.mp3',
+        audioFileSize: 330000000,
       );
 
       // Prepare test data
@@ -261,23 +327,32 @@ void main() {
       testPlaylistOne.title = 'Test Playlist One';
       testPlaylistOne.downloadPath = 'path/to/downloads';
 
-      Audio audio1 = Audio(
+      Audio audio1 = Audio.fullConstructor(
         enclosingPlaylist: testPlaylistOne,
         originalVideoTitle: 'Test Video 1',
+        validVideoTitle: 'Test Video Title',
         videoUrl: 'https://www.example.com/video-url-1',
         audioDownloadDateTime: DateTime.now(),
         audioDownloadDuration: const Duration(minutes: 0, seconds: 30),
+        audioDownloadSpeed: 1000000,
         videoUploadDate: DateTime.now().subtract(const Duration(days: 10)),
+        audioDuration: null,
+        audioFileName: 'Test Video Title.mp3',
+        audioFileSize: 330000000,
       );
 
-      Audio audio2 = Audio(
+      Audio audio2 = Audio.fullConstructor(
         enclosingPlaylist: testPlaylistOne,
         originalVideoTitle: 'Test Video 2',
+        validVideoTitle: 'Test Video Title',
         videoUrl: 'https://www.example.com/video-url-2',
         audioDownloadDateTime: DateTime.now(),
         audioDownloadDuration: const Duration(minutes: 0, seconds: 30),
+        audioDownloadSpeed: 1000000,
         videoUploadDate: DateTime.now().subtract(const Duration(days: 5)),
         audioDuration: const Duration(minutes: 5, seconds: 30),
+        audioFileName: 'Test Video Title.mp3',
+        audioFileSize: 330000000,
       );
 
       testPlaylistOne.addDownloadedAudio(audio1);
@@ -290,8 +365,36 @@ void main() {
       testPlaylistTwo.title = 'Test Playlist Two';
       testPlaylistTwo.downloadPath = 'path/to/downloads';
 
-      testPlaylistTwo.addDownloadedAudio(audio1);
-      testPlaylistTwo.addDownloadedAudio(audio2);
+      Audio audio3 = Audio.fullConstructor(
+        enclosingPlaylist: testPlaylistTwo,
+        originalVideoTitle: 'Test Video 1',
+        validVideoTitle: 'Test Video Title',
+        videoUrl: 'https://www.example.com/video-url-1',
+        audioDownloadDateTime: DateTime.now(),
+        audioDownloadDuration: const Duration(minutes: 0, seconds: 30),
+        audioDownloadSpeed: 1000000,
+        videoUploadDate: DateTime.now().subtract(const Duration(days: 10)),
+        audioDuration: null,
+        audioFileName: 'Test Video Title.mp3',
+        audioFileSize: 330000000,
+      );
+
+      Audio audio4 = Audio.fullConstructor(
+        enclosingPlaylist: testPlaylistTwo,
+        originalVideoTitle: 'Test Video 2',
+        validVideoTitle: 'Test Video Title',
+        videoUrl: 'https://www.example.com/video-url-2',
+        audioDownloadDateTime: DateTime.now(),
+        audioDownloadDuration: const Duration(minutes: 0, seconds: 30),
+        audioDownloadSpeed: 1000000,
+        videoUploadDate: DateTime.now().subtract(const Duration(days: 5)),
+        audioDuration: const Duration(minutes: 5, seconds: 30),
+        audioFileName: 'Test Video Title.mp3',
+        audioFileSize: 330000000,
+      );
+
+      testPlaylistTwo.addDownloadedAudio(audio3);
+      testPlaylistTwo.addDownloadedAudio(audio4);
 
       // Prepare test data
       List<Playlist> testList = [testPlaylistOne, testPlaylistTwo];
@@ -337,6 +440,11 @@ void compareDeserializedWithOriginalAudio(
   Audio deserializedAudio,
   Audio originalAudio,
 ) {
+  (deserializedAudio.enclosingPlaylist != null)
+      ? expect(deserializedAudio.enclosingPlaylist!.title,
+          originalAudio.enclosingPlaylist!.title)
+      : expect(
+          deserializedAudio.enclosingPlaylist, originalAudio.enclosingPlaylist);
   expect(
       deserializedAudio.originalVideoTitle, originalAudio.originalVideoTitle);
   expect(deserializedAudio.validVideoTitle, originalAudio.validVideoTitle);
@@ -345,9 +453,12 @@ void compareDeserializedWithOriginalAudio(
       originalAudio.audioDownloadDateTime.toIso8601String());
   expect(deserializedAudio.audioDownloadDuration,
       originalAudio.audioDownloadDuration ?? const Duration(milliseconds: 0));
+  expect(
+      deserializedAudio.audioDownloadSpeed, originalAudio.audioDownloadSpeed);
   expect(deserializedAudio.videoUploadDate.toIso8601String(),
       originalAudio.videoUploadDate.toIso8601String());
   expect(deserializedAudio.audioDuration,
       originalAudio.audioDuration ?? const Duration(milliseconds: 0));
-  expect(deserializedAudio.fileName, originalAudio.fileName);
+  expect(deserializedAudio.audioFileName, originalAudio.audioFileName);
+  expect(deserializedAudio.audioFileSize, originalAudio.audioFileSize);
 }

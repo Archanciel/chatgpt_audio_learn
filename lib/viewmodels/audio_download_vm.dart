@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:chatgpt_audio_learn/services/json_data_service.dart';
 import 'package:flutter/material.dart';
 
 // importing youtube_explode_dart as yt enables to name the app Model
@@ -78,9 +79,14 @@ class AudioDownloadVM extends ChangeNotifier {
 
     playlistToDownload.downloadPath = playlistDownloadPath;
 
+    final String playlistDownloadFilePathName =
+        '$playlistDownloadPath${Platform.pathSeparator}$playlistTitle.json';
+
     // get already downloaded audio file names
-    final List<String> downloadedAudioFileNameLst =
-        getDownloadedAudioNameLst(pathStr: playlistDownloadPath);
+    final List<String> downloadedAudioValidVideoTitleLst =
+        await getPlaylistDownloadedAudioValidVideoTitleLst(
+            playlistPathFileName: playlistDownloadFilePathName,
+            uiPlaylist: playlistToDownload);
 
     await for (yt.Video youtubeVideo
         in _youtubeExplode.playlists.getVideos(playlistId)) {
@@ -108,11 +114,11 @@ class AudioDownloadVM extends ChangeNotifier {
 
       audio.audioPlayer = AudioPlayer();
 
-      final bool alreadyDownloaded = downloadedAudioFileNameLst
-          .any((fileName) => fileName.contains(audio.validVideoTitle));
+      final bool alreadyDownloaded = downloadedAudioValidVideoTitleLst.any(
+          (validVideoTitle) => validVideoTitle.contains(audio.validVideoTitle));
 
       if (alreadyDownloaded) {
-        print('${audio.fileName} already downloaded');
+        print('${audio.audioFileName} already downloaded');
         continue;
       }
 
@@ -133,6 +139,13 @@ class AudioDownloadVM extends ChangeNotifier {
 
       notifyListeners();
     }
+
+    JsonDataService.saveToFile(
+      model: playlistToDownload,
+      path: playlistDownloadFilePathName,
+    );
+
+    notifyListeners();
   }
 
   Future<void> downloadPlaylistAudioWithJustAudio(
@@ -141,21 +154,26 @@ class AudioDownloadVM extends ChangeNotifier {
     // to code ...
   }
 
-  List<String> getDownloadedAudioNameLst({
-    required String pathStr,
-  }) {
-    Directory directory = Directory(pathStr);
-    List<FileSystemEntity> files = directory.listSync();
+  Future<List<String>> getPlaylistDownloadedAudioValidVideoTitleLst({
+    required String playlistPathFileName,
+    required Playlist uiPlaylist,
+  }) async {
+    bool jsonFileExists = await File(playlistPathFileName).exists();
+    List<String> validAudioVideoTitleLst = [];
 
-    List<String> fileNames = [];
+    if (jsonFileExists) {
+      Playlist playlist = JsonDataService.loadFromFile(
+          jsonPathfileName: playlistPathFileName, type: Playlist);
+      List<Audio> playlistDownloadedAudioLst = playlist.downloadedAudioLst;
 
-    for (FileSystemEntity file in files) {
-      if (file is File) {
-        fileNames.add(file.path.split('/').last);
+      for (Audio downloadedAudio in playlistDownloadedAudioLst) {
+        validAudioVideoTitleLst.add(downloadedAudio.validVideoTitle);
       }
+
+      uiPlaylist.playableAudioLst = playlist.playableAudioLst;
     }
 
-    return fileNames;
+    return validAudioVideoTitleLst;
   }
 
   Future<void> _downloadAudioFileYoutube(

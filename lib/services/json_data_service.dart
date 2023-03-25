@@ -80,17 +80,17 @@ class JsonDataService {
   }
 
   static dynamic loadFromFile({
-    required String path,
+    required String jsonPathfileName,
     required Type type,
   }) {
-    final String jsonStr = File(path).readAsStringSync();
+    final String jsonStr = File(jsonPathfileName).readAsStringSync();
 
     try {
       return decodeJson(jsonStr, type);
-    } catch(e) {
+    } catch (e) {
       throw ClassNotContainedInJsonFileException(
         className: type.toString(),
-        jsonFilePathName: path,
+        jsonFilePathName: jsonPathfileName,
       );
     }
   }
@@ -179,7 +179,7 @@ class JsonDataService {
     Type type,
   ) {
     final fromJsonFunction = _fromJsonFunctionsMap[type];
-    
+
     if (fromJsonFunction != null) {
       final jsonData = jsonDecode(jsonString);
       if (jsonData is List) {
