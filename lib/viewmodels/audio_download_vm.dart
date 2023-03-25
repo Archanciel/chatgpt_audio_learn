@@ -101,7 +101,7 @@ class AudioDownloadVM extends ChangeNotifier {
         enclosingPlaylist: playlistToDownload,
         originalVideoTitle: youtubeVideo.title,
         videoUrl: youtubeVideo.url,
-        audioDownloadDate: DateTime.now(),
+        audioDownloadDateTime: DateTime.now(),
         videoUploadDate: audioUploadDate,
         audioDuration: audioDuration!,
       );

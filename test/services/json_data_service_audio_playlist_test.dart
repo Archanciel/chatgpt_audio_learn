@@ -44,9 +44,10 @@ void main() {
         enclosingPlaylist: null,
         originalVideoTitle: 'Test Video Title',
         videoUrl: 'https://www.youtube.com/watch?v=testVideoID',
-        audioDownloadDate: DateTime(2023, 3, 24),
+        audioDownloadDateTime: DateTime(2023, 3, 24, 20, 5, 32),
+        audioDownloadDuration: const Duration(minutes: 0, seconds: 30),
         videoUploadDate: DateTime(2023, 3, 1),
-        audioDuration: Duration(minutes: 5, seconds: 30),
+        audioDuration: const Duration(minutes: 5, seconds: 30),
       );
 
       // Save the Audio instance to a file
@@ -74,7 +75,8 @@ void main() {
         enclosingPlaylist: null,
         originalVideoTitle: 'Test Video Title',
         videoUrl: 'https://www.youtube.com/watch?v=testVideoID',
-        audioDownloadDate: DateTime(2023, 3, 24),
+        audioDownloadDateTime: DateTime(2023, 3, 24, 20, 5, 32),
+        audioDownloadDuration: const Duration(minutes: 1, seconds: 30),
         videoUploadDate: DateTime(2023, 3, 1),
       );
 
@@ -107,17 +109,19 @@ void main() {
         enclosingPlaylist: testPlaylist,
         originalVideoTitle: 'Test Video 1',
         videoUrl: 'https://www.example.com/video-url-1',
-        audioDownloadDate: DateTime.now(),
-        videoUploadDate: DateTime.now().subtract(Duration(days: 10)),
+        audioDownloadDateTime: DateTime.now(),
+        audioDownloadDuration: const Duration(minutes: 0, seconds: 30),
+        videoUploadDate: DateTime.now().subtract(const Duration(days: 10)),
       );
 
       Audio audio2 = Audio(
         enclosingPlaylist: testPlaylist,
         originalVideoTitle: 'Test Video 2',
         videoUrl: 'https://www.example.com/video-url-2',
-        audioDownloadDate: DateTime.now(),
-        videoUploadDate: DateTime.now().subtract(Duration(days: 5)),
-        audioDuration: Duration(minutes: 5, seconds: 30),
+        audioDownloadDateTime: DateTime.now(),
+        audioDownloadDuration: const Duration(minutes: 0, seconds: 38),
+        videoUploadDate: DateTime.now().subtract(const Duration(days: 5)),
+        audioDuration: const Duration(minutes: 5, seconds: 30),
       );
 
       testPlaylist.addDownloadedAudio(audio1);
@@ -185,9 +189,10 @@ void main() {
         enclosingPlaylist: null,
         originalVideoTitle: 'Test Video Title',
         videoUrl: 'https://www.youtube.com/watch?v=testVideoID',
-        audioDownloadDate: DateTime(2023, 3, 24),
+        audioDownloadDateTime: DateTime(2023, 3, 24, 20, 5, 32),
+        audioDownloadDuration: const Duration(minutes: 0, seconds: 30),
         videoUploadDate: DateTime(2023, 3, 1),
-        audioDuration: Duration(minutes: 5, seconds: 30),
+        audioDuration: const Duration(minutes: 5, seconds: 30),
       );
 
       // Save the Audio instance to a file
@@ -211,18 +216,20 @@ void main() {
         enclosingPlaylist: null,
         originalVideoTitle: 'Test Video One Title',
         videoUrl: 'https://www.youtube.com/watch?v=testVideoID',
-        audioDownloadDate: DateTime(2023, 3, 24),
+        audioDownloadDateTime: DateTime(2023, 3, 24, 20, 5, 32),
+        audioDownloadDuration: const Duration(minutes: 0, seconds: 30),
         videoUploadDate: DateTime(2023, 3, 1),
-        audioDuration: Duration(minutes: 5, seconds: 30),
+        audioDuration: const Duration(minutes: 5, seconds: 30),
       );
 
       Audio audioTwo = Audio(
         enclosingPlaylist: null,
         originalVideoTitle: 'Test Video Two Title',
         videoUrl: 'https://www.youtube.com/watch?v=testVideoID',
-        audioDownloadDate: DateTime(2023, 3, 24),
+        audioDownloadDateTime: DateTime(2023, 3, 24, 20, 5, 32),
+        audioDownloadDuration: const Duration(minutes: 0, seconds: 30),
         videoUploadDate: DateTime(2023, 3, 1),
-        audioDuration: Duration(minutes: 5, seconds: 30),
+        audioDuration: const Duration(minutes: 5, seconds: 30),
       );
 
       // Prepare test data
@@ -258,17 +265,19 @@ void main() {
         enclosingPlaylist: testPlaylistOne,
         originalVideoTitle: 'Test Video 1',
         videoUrl: 'https://www.example.com/video-url-1',
-        audioDownloadDate: DateTime.now(),
-        videoUploadDate: DateTime.now().subtract(Duration(days: 10)),
+        audioDownloadDateTime: DateTime.now(),
+        audioDownloadDuration: const Duration(minutes: 0, seconds: 30),
+        videoUploadDate: DateTime.now().subtract(const Duration(days: 10)),
       );
 
       Audio audio2 = Audio(
         enclosingPlaylist: testPlaylistOne,
         originalVideoTitle: 'Test Video 2',
         videoUrl: 'https://www.example.com/video-url-2',
-        audioDownloadDate: DateTime.now(),
-        videoUploadDate: DateTime.now().subtract(Duration(days: 5)),
-        audioDuration: Duration(minutes: 5, seconds: 30),
+        audioDownloadDateTime: DateTime.now(),
+        audioDownloadDuration: const Duration(minutes: 0, seconds: 30),
+        videoUploadDate: DateTime.now().subtract(const Duration(days: 5)),
+        audioDuration: const Duration(minutes: 5, seconds: 30),
       );
 
       testPlaylistOne.addDownloadedAudio(audio1);
@@ -332,8 +341,10 @@ void compareDeserializedWithOriginalAudio(
       deserializedAudio.originalVideoTitle, originalAudio.originalVideoTitle);
   expect(deserializedAudio.validVideoTitle, originalAudio.validVideoTitle);
   expect(deserializedAudio.videoUrl, originalAudio.videoUrl);
-  expect(deserializedAudio.audioDownloadDate.toIso8601String(),
-      originalAudio.audioDownloadDate.toIso8601String());
+  expect(deserializedAudio.audioDownloadDateTime.toIso8601String(),
+      originalAudio.audioDownloadDateTime.toIso8601String());
+  expect(deserializedAudio.audioDownloadDuration,
+      originalAudio.audioDownloadDuration ?? const Duration(milliseconds: 0));
   expect(deserializedAudio.videoUploadDate.toIso8601String(),
       originalAudio.videoUploadDate.toIso8601String());
   expect(deserializedAudio.audioDuration,

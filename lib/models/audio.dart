@@ -28,8 +28,11 @@ class Audio {
   // Url referencing the video from which rhe audio was extracted
   final String videoUrl;
 
-  // Audio download date
-  final DateTime audioDownloadDate;
+  // Audio download date time
+  final DateTime audioDownloadDateTime;
+
+  // Downloading audio Duration
+  final Duration? audioDownloadDuration;
 
   // Date at which the video containing the audio was added on
   // Youtube
@@ -78,20 +81,23 @@ class Audio {
     required this.enclosingPlaylist,
     required this.originalVideoTitle,
     required this.videoUrl,
-    required this.audioDownloadDate,
+    required this.audioDownloadDateTime,
+    this.audioDownloadDuration,
     required this.videoUploadDate,
     this.audioDuration,
   })  : validVideoTitle =
             replaceUnauthorizedDirOrFileNameChars(originalVideoTitle),
         fileName =
-            '${buildDownloadDatePrefix(audioDownloadDate)}${replaceUnauthorizedDirOrFileNameChars(originalVideoTitle)} ${buildUploadDateSuffix(videoUploadDate)}.mp3';
+            '${buildDownloadDatePrefix(audioDownloadDateTime)}${replaceUnauthorizedDirOrFileNameChars(originalVideoTitle)} ${buildUploadDateSuffix(videoUploadDate)}.mp3';
 
+  /// This constructor requires all instance variables
   Audio.json({
     required this.enclosingPlaylist,
     required this.originalVideoTitle,
     required this.validVideoTitle,
     required this.videoUrl,
-    required this.audioDownloadDate,
+    required this.audioDownloadDateTime,
+    required this.audioDownloadDuration,
     required this.videoUploadDate,
     required this.audioDuration,
     required this.fileName,
@@ -105,9 +111,10 @@ class Audio {
       originalVideoTitle: json['originalVideoTitle'],
       validVideoTitle: json['validVideoTitle'],
       videoUrl: json['videoUrl'],
-      audioDownloadDate: DateTime.parse(json['audioDownloadDate']),
+      audioDownloadDateTime: DateTime.parse(json['audioDownloadDateTime']),
+      audioDownloadDuration: Duration(milliseconds: json['audioDownloadDurationMs']),
       videoUploadDate: DateTime.parse(json['videoUploadDate']),
-      audioDuration: Duration(milliseconds: json['audioDuration'] ?? 0),
+      audioDuration: Duration(milliseconds: json['audioDurationMs'] ?? 0),
       fileName: json['fileName'],
     );
   }
@@ -118,9 +125,10 @@ class Audio {
       'originalVideoTitle': originalVideoTitle,
       'validVideoTitle': validVideoTitle,
       'videoUrl': videoUrl,
-      'audioDownloadDate': audioDownloadDate.toIso8601String(),
+      'audioDownloadDateTime': audioDownloadDateTime.toIso8601String(),
+      'audioDownloadDurationMs': audioDownloadDuration?.inMilliseconds,
       'videoUploadDate': videoUploadDate.toIso8601String(),
-      'audioDuration': audioDuration?.inMilliseconds,
+      'audioDurationMs': audioDuration?.inMilliseconds,
       'fileName': fileName,
     };
   }
