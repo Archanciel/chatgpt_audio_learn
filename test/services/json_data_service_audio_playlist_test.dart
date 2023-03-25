@@ -32,7 +32,7 @@ class MyUnsupportedTestClass {
 
 void main() {
   const jsonPath = 'test.json';
-  
+
   group('JsonDataService individual', () {
     test('saveToFile and loadFromFile for one Audio instance', () async {
       // Create a temporary directory to store the serialized Audio object
@@ -57,16 +57,7 @@ void main() {
           JsonDataService.loadFromFile(path: filePath, type: Audio);
 
       // Compare the deserialized Audio instance with the original Audio instance
-      expect(deserializedAudio.originalVideoTitle,
-          originalAudio.originalVideoTitle);
-      expect(deserializedAudio.validVideoTitle, originalAudio.validVideoTitle);
-      expect(deserializedAudio.videoUrl, originalAudio.videoUrl);
-      expect(deserializedAudio.audioDownloadDate.toIso8601String(),
-          originalAudio.audioDownloadDate.toIso8601String());
-      expect(deserializedAudio.videoUploadDate.toIso8601String(),
-          originalAudio.videoUploadDate.toIso8601String());
-      expect(deserializedAudio.audioDuration, originalAudio.audioDuration);
-      expect(deserializedAudio.fileName, originalAudio.fileName);
+      compareDeserializedWithOriginalAudio(deserializedAudio, originalAudio);
 
       // Cleanup the temporary directory
       await tempDir.delete(recursive: true);
@@ -95,16 +86,7 @@ void main() {
           JsonDataService.loadFromFile(path: filePath, type: Audio);
 
       // Compare the deserialized Audio instance with the original Audio instance
-      expect(deserializedAudio.originalVideoTitle,
-          originalAudio.originalVideoTitle);
-      expect(deserializedAudio.validVideoTitle, originalAudio.validVideoTitle);
-      expect(deserializedAudio.videoUrl, originalAudio.videoUrl);
-      expect(deserializedAudio.audioDownloadDate.toIso8601String(),
-          originalAudio.audioDownloadDate.toIso8601String());
-      expect(deserializedAudio.videoUploadDate.toIso8601String(),
-          originalAudio.videoUploadDate.toIso8601String());
-      expect(deserializedAudio.audioDuration, Duration(milliseconds: 0));
-      expect(deserializedAudio.fileName, originalAudio.fileName);
+      compareDeserializedWithOriginalAudio(deserializedAudio, originalAudio);
 
       // Cleanup the temporary directory
       await tempDir.delete(recursive: true);
@@ -149,27 +131,7 @@ void main() {
           JsonDataService.loadFromFile(path: filePath, type: Playlist);
 
       // Compare original and loaded Playlist
-      expect(loadedPlaylist.title, testPlaylist.title);
-      expect(loadedPlaylist.downloadPath, testPlaylist.downloadPath);
-      expect(loadedPlaylist.url, testPlaylist.url);
-
-      // Compare Audio instances in original and loaded Playlist
-      expect(loadedPlaylist.downloadedAudioLst.length, 2);
-
-      for (int i = 0; i < loadedPlaylist.downloadedAudioLst.length; i++) {
-        Audio originalAudio = testPlaylist.downloadedAudioLst[i];
-        Audio loadedAudio = loadedPlaylist.downloadedAudioLst[i];
-
-        expect(
-            loadedAudio.originalVideoTitle, originalAudio.originalVideoTitle);
-        expect(loadedAudio.videoUrl, originalAudio.videoUrl);
-        expect(loadedAudio.audioDownloadDate, originalAudio.audioDownloadDate);
-        expect(loadedAudio.videoUploadDate, originalAudio.videoUploadDate);
-        expect(loadedAudio.fileName, originalAudio.fileName);
-        if (i == 1) {
-          expect(loadedAudio.audioDuration, Duration(minutes: 5, seconds: 30));
-        }
-      }
+      compareDeserializedWithOriginalPlaylist(loadedPlaylist, testPlaylist);
 
       // Cleanup the temporary directory
       await tempDir.delete(recursive: true);
@@ -216,7 +178,8 @@ void main() {
         expect(e, isA<ClassNotSupportedByToJsonDataServiceException>());
       }
     });
-    test('saveListToFile() ClassNotSupportedByFromJsonDataServiceException', () async {
+    test('saveListToFile() ClassNotSupportedByFromJsonDataServiceException',
+        () async {
       // Create an Audio instance
       Audio originalAudio = Audio(
         enclosingPlaylist: null,
@@ -232,8 +195,9 @@ void main() {
 
       // Load the list from the file
       try {
-        List<MyUnsupportedTestClass> loadedList = JsonDataService.loadListFromFile(
-            path: jsonPath, type: MyUnsupportedTestClass);
+        List<MyUnsupportedTestClass> loadedList =
+            JsonDataService.loadListFromFile(
+                path: jsonPath, type: MyUnsupportedTestClass);
       } catch (e) {
         expect(e, isA<ClassNotSupportedByFromJsonDataServiceException>());
       }
@@ -275,8 +239,7 @@ void main() {
       expect(loadedList.length, testList.length);
 
       for (int i = 0; i < loadedList.length; i++) {
-        expect(loadedList[i].originalVideoTitle, testList[i].originalVideoTitle);
-        // Add more checks for the other properties of MyClass and MyOtherClass instances
+        compareDeserializedWithOriginalAudio(loadedList[i], testList[i]);
       }
 
       // Clean up the test file
@@ -328,19 +291,52 @@ void main() {
       JsonDataService.saveListToFile(data: testList, path: jsonPath);
 
       // Load the list from the file
-      List<Playlist> loadedList =
-          await JsonDataService.loadListFromFile(path: jsonPath, type: Playlist);
+      List<Playlist> loadedList = await JsonDataService.loadListFromFile(
+          path: jsonPath, type: Playlist);
 
       // Check if the loaded list matches the original list
       expect(loadedList.length, testList.length);
-      
+
       for (int i = 0; i < loadedList.length; i++) {
-        expect(loadedList[i].title, testList[i].title);
-        // Add more checks for the other properties of MyClass and MyOtherClass instances
+        compareDeserializedWithOriginalPlaylist(loadedList[i], testList[i]);
       }
 
       // Clean up the test file
       File(jsonPath).deleteSync();
     });
   });
+}
+
+void compareDeserializedWithOriginalPlaylist(
+    Playlist loadedPlaylist, Playlist testPlaylist) {
+  expect(loadedPlaylist.title, testPlaylist.title);
+  expect(loadedPlaylist.downloadPath, testPlaylist.downloadPath);
+  expect(loadedPlaylist.url, testPlaylist.url);
+
+  // Compare Audio instances in original and loaded Playlist
+  expect(loadedPlaylist.downloadedAudioLst.length, 2);
+
+  for (int i = 0; i < loadedPlaylist.downloadedAudioLst.length; i++) {
+    Audio originalAudio = testPlaylist.downloadedAudioLst[i];
+    Audio loadedAudio = loadedPlaylist.downloadedAudioLst[i];
+
+    compareDeserializedWithOriginalAudio(loadedAudio, originalAudio);
+  }
+}
+
+void compareDeserializedWithOriginalAudio(
+  Audio deserializedAudio,
+  Audio originalAudio,
+) {
+  expect(
+      deserializedAudio.originalVideoTitle, originalAudio.originalVideoTitle);
+  expect(deserializedAudio.validVideoTitle, originalAudio.validVideoTitle);
+  expect(deserializedAudio.videoUrl, originalAudio.videoUrl);
+  expect(deserializedAudio.audioDownloadDate.toIso8601String(),
+      originalAudio.audioDownloadDate.toIso8601String());
+  expect(deserializedAudio.videoUploadDate.toIso8601String(),
+      originalAudio.videoUploadDate.toIso8601String());
+  expect(deserializedAudio.audioDuration,
+      originalAudio.audioDuration ?? const Duration(milliseconds: 0));
+  expect(deserializedAudio.fileName, originalAudio.fileName);
 }
