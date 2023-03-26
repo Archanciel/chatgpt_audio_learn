@@ -20,8 +20,8 @@ class AudioPlayerVM extends ChangeNotifier {
       audio.audioPlayer = audioPlayer;
     }
 
-    await audioPlayer!.play(DeviceFileSource(audio.filePathName));
-    await audioPlayer!.setPlaybackRate(audio.playSpeed);
+    await audioPlayer.play(DeviceFileSource(audio.filePathName));
+    await audioPlayer.setPlaybackRate(audio.playSpeed);
     audio.isPlaying = true;
 
     notifyListeners();
