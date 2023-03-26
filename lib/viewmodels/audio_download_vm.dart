@@ -17,18 +17,35 @@ import '../models/playlist.dart';
 import '../utils/dir_util.dart';
 
 class AudioDownloadVM extends ChangeNotifier {
-  AudioDownloadVM() {
-    
-  }
+  List<Playlist> _listOfPlaylist = [];
+  List<Playlist> get listOfPlaylist => _listOfPlaylist;
+
   yt.YoutubeExplode _youtubeExplode = yt.YoutubeExplode();
 
   // setter used by test only !
   set youtubeExplode(yt.YoutubeExplode youtubeExplode) =>
       _youtubeExplode = youtubeExplode;
 
-  final Directory _audioDownloadDir = Directory('/storage/emulated/0/Download');
+  String _playlistHomePath = DirUtil.getPlaylistDownloadHomePath();
+  
+  AudioDownloadVM() {
+    loadListItems();
+  }
 
-  @override
+  void loadListItems() async {
+    _listOfPlaylist = await JsonDataService.loadListFromFile(
+        path: _playlistHomePath, type: Playlist);
+ 
+    notifyListeners();
+  }
+
+  void addListItem(Playlist listItem) async {
+    _listOfPlaylist.add(listItem);
+    JsonDataService.saveListToFile(path: _playlistHomePath, data: _listOfPlaylist);
+
+    notifyListeners();
+  }
+
   Future<void> downloadPlaylistAudios({
     required Playlist playlistToDownload,
     required AudioDownloadViewModelType audioDownloadViewModelType,
@@ -167,8 +184,7 @@ class AudioDownloadVM extends ChangeNotifier {
     if (jsonFileExists) {
       Playlist playlist = JsonDataService.loadFromFile(
           jsonPathfileName: playlistPathFileName, type: Playlist);
-      List<Audio> playlistDownloadedAudioLst =
-          playlist.downloadedAudioLst;
+      List<Audio> playlistDownloadedAudioLst = playlist.downloadedAudioLst;
 
       for (Audio downloadedAudio in playlistDownloadedAudioLst) {
         validAudioVideoTitleLst.add(downloadedAudio.validVideoTitle);

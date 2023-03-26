@@ -3,8 +3,8 @@ import 'dart:io';
 import '../constants.dart';
 
 class DirUtil {
-  static Future<String> getPlaylistDownloadHomePath(
-      {bool isTest = false}) async {
+  static String getPlaylistDownloadHomePath(
+      {bool isTest = false}) {
     if (Platform.isWindows) {
       return kDownloadAppDirWindows;
     } else {

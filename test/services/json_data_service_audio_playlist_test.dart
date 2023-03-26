@@ -67,6 +67,21 @@ void main() {
       // Cleanup the temporary directory
       await tempDir.delete(recursive: true);
     });
+
+    test('loadFromFile one Audio instance file not exist', () async {
+      // Create a temporary directory to store the serialized Audio object
+      Directory tempDir = await Directory.systemTemp.createTemp('AudioTest');
+      String filePath = path.join(tempDir.path, 'audio.json');
+      // Load the Audio instance from the file
+      dynamic deserializedAudio =
+          JsonDataService.loadFromFile(jsonPathfileName: filePath, type: Audio);
+
+      // Compare the deserialized Audio instance with the original Audio instance
+      expect(deserializedAudio, null);
+
+      // Cleanup the temporary directory
+      await tempDir.delete(recursive: true);
+    });
     test(
         'saveToFile and loadFromFile for one Audio instance with null audioDuration',
         () async {
@@ -193,6 +208,20 @@ void main() {
       // Cleanup the temporary directory
       await tempDir.delete(recursive: true);
     });
+    test('loadFromFile one Playlist instance file not exist', () async {
+      // Create a temporary directory to store the serialized Audio object
+      Directory tempDir = await Directory.systemTemp.createTemp('AudioTest');
+      String filePath = path.join(tempDir.path, 'audio.json');
+      // Load the Audio instance from the file
+      dynamic deserializedPlaylist =
+          JsonDataService.loadFromFile(jsonPathfileName: filePath, type: Playlist);
+
+      // Compare the deserialized Audio instance with the original Audio instance
+      expect(deserializedPlaylist, null);
+
+      // Cleanup the temporary directory
+      await tempDir.delete(recursive: true);
+    });
     test('ClassNotContainedInJsonFileException', () {
       // Prepare a temporary file
       File tempFile = File('temp.json');
@@ -221,7 +250,7 @@ void main() {
   });
   group('JsonDataService list', () {
     test('saveListToFile() ClassNotSupportedByToJsonDataServiceException',
-        () async {
+        () {
       // Prepare test data
       List<MyUnsupportedTestClass> testList = [
         MyUnsupportedTestClass(name: 'Test1', value: 1),
@@ -237,7 +266,7 @@ void main() {
       }
     });
     test('saveListToFile() ClassNotSupportedByFromJsonDataServiceException',
-        () async {
+        () {
       // Create an Audio instance
       Audio originalAudio = Audio.fullConstructor(
         enclosingPlaylist: null,
@@ -306,7 +335,7 @@ void main() {
 
       // Load the list from the file
       List<Audio> loadedList =
-          await JsonDataService.loadListFromFile(path: jsonPath, type: Audio);
+          JsonDataService.loadListFromFile(path: jsonPath, type: Audio);
 
       // Check if the loaded list matches the original list
       expect(loadedList.length, testList.length);
@@ -318,7 +347,16 @@ void main() {
       // Clean up the test file
       File(jsonPath).deleteSync();
     });
-    test('saveListToFile() and loadListFromFile() for Playlist list', () async {
+    test('loadListFromFile() for Audio list file not exist', () {
+      // Create an Audio instance
+      // Load the list from the file
+      List<Audio> loadedList =
+          JsonDataService.loadListFromFile(path: jsonPath, type: Audio);
+
+      // Check if the loaded list matches the original list
+      expect(loadedList.length, 0);
+    });
+    test('saveListToFile() and loadListFromFile() for Playlist list', () {
       // Create an Audio instance
       Playlist testPlaylistOne = Playlist(
         url: 'https://www.example.com/playlist-url',
@@ -403,7 +441,7 @@ void main() {
       JsonDataService.saveListToFile(data: testList, path: jsonPath);
 
       // Load the list from the file
-      List<Playlist> loadedList = await JsonDataService.loadListFromFile(
+      List<Playlist> loadedList = JsonDataService.loadListFromFile(
           path: jsonPath, type: Playlist);
 
       // Check if the loaded list matches the original list
@@ -417,6 +455,15 @@ void main() {
       File(jsonPath).deleteSync();
     });
   });
+    test('loadListFromFile() for Plylist list file not exist', () {
+      // Create an Audio instance
+      // Load the list from the file
+      List<Audio> loadedList =
+          JsonDataService.loadListFromFile(path: jsonPath, type: Playlist);
+
+      // Check if the loaded list matches the original list
+      expect(loadedList.length, 0);
+    });
 }
 
 void compareDeserializedWithOriginalPlaylist(
@@ -426,11 +473,11 @@ void compareDeserializedWithOriginalPlaylist(
   expect(loadedPlaylist.url, testPlaylist.url);
 
   // Compare Audio instances in original and loaded Playlist
-  expect(loadedPlaylist.downloadedAudioLst_todel.length, 2);
+  expect(loadedPlaylist.downloadedAudioLst.length, 2);
 
-  for (int i = 0; i < loadedPlaylist.downloadedAudioLst_todel.length; i++) {
-    Audio originalAudio = testPlaylist.downloadedAudioLst_todel[i];
-    Audio loadedAudio = loadedPlaylist.downloadedAudioLst_todel[i];
+  for (int i = 0; i < loadedPlaylist.downloadedAudioLst.length; i++) {
+    Audio originalAudio = testPlaylist.downloadedAudioLst[i];
+    Audio loadedAudio = loadedPlaylist.downloadedAudioLst[i];
 
     compareDeserializedWithOriginalAudio(loadedAudio, originalAudio);
   }
