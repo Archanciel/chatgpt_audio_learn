@@ -69,7 +69,7 @@ class _ExpandableListViewState extends State<ExpandableListView> {
           children: <Widget>[
             Expanded(
               child: ElevatedButton(
-                key: Key('toggle_button'),
+                key: const Key('toggle_button'),
                 onPressed: () {
                   Provider.of<ListVM>(context, listen: false).toggleList();
                 },
@@ -78,7 +78,7 @@ class _ExpandableListViewState extends State<ExpandableListView> {
             ),
             Expanded(
               child: ElevatedButton(
-                key: Key('delete_button'),
+                key: const Key('delete_button'),
                 onPressed: Provider.of<ListVM>(context).isButton1Enabled
                     ? () {
                         Provider.of<ListVM>(context, listen: false)
@@ -90,14 +90,14 @@ class _ExpandableListViewState extends State<ExpandableListView> {
             ),
             Expanded(
               child: IconButton(
-                key: Key('move_up_button'),
+                key: const Key('move_up_button'),
                 onPressed: Provider.of<ListVM>(context).isButton2Enabled
                     ? () {
                         Provider.of<ListVM>(context, listen: false)
                             .moveSelectedItemUp();
                       }
                     : null,
-                padding: EdgeInsets.all(0),
+                padding: const EdgeInsets.all(0),
                 icon: const Icon(
                   Icons.arrow_drop_up,
                   size: 50,
@@ -107,14 +107,14 @@ class _ExpandableListViewState extends State<ExpandableListView> {
             ),
             Expanded(
               child: IconButton(
-                key: Key('move_down_button'),
+                key: const Key('move_down_button'),
                 onPressed: Provider.of<ListVM>(context).isButton3Enabled
                     ? () {
                         Provider.of<ListVM>(context, listen: false)
                             .moveSelectedItemDown();
                       }
                     : null,
-                padding: EdgeInsets.all(0),
+                padding: const EdgeInsets.all(0),
                 icon: const Icon(
                   Icons.arrow_drop_down,
                   size: 50,

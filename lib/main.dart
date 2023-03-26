@@ -9,6 +9,17 @@ import 'package:chatgpt_audio_learn/viewmodels/audio_download_vm.dart';
 import 'package:chatgpt_audio_learn/views/audio_list_view.dart';
 import 'viewmodels/audio_player_vm.dart';
 
+class ThemeProvider extends ChangeNotifier {
+  bool _isDarkMode = false;
+
+  bool get isDarkMode => _isDarkMode;
+
+  void toggleTheme() {
+    _isDarkMode = !_isDarkMode;
+    notifyListeners();
+  }
+}
+
 void main(List<String> args) {
   List<String> myArgs = [];
 
@@ -39,19 +50,41 @@ void main(List<String> args) {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AudioDownloadVM()),
         ChangeNotifierProvider(create: (_) => AudioPlayerVM()),
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
       ],
-      child: MaterialApp(
-        title: 'Youtube Audio Downloader',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: AudioListView(),
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return MaterialApp(
+            title: 'Youtube Audio Downloader',
+            theme:
+                themeProvider.isDarkMode ? ThemeData.dark() : ThemeData.light(),
+            home: Scaffold(
+              appBar: AppBar(
+                title: const Text('Youtube Audio Downloader'),
+                actions: [
+                  IconButton(
+                    onPressed: () {
+                      Provider.of<ThemeProvider>(context, listen: false)
+                          .toggleTheme();
+                    },
+                    icon: Icon(themeProvider.isDarkMode
+                        ? Icons.light_mode
+                        : Icons.dark_mode),
+                  ),
+                ],
+              ),
+              body: AudioListView(),
+            ),
+          );
+        },
       ),
     );
   }

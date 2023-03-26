@@ -30,83 +30,77 @@ class _AudioListViewState extends State<AudioListView> {
   Widget build(BuildContext context) {
     final AudioDownloadVM audioDownloadViewModel =
         Provider.of<AudioDownloadVM>(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Youtube Audio Downloader'),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              controller: _textEditingController,
-              decoration: const InputDecoration(
-                labelText: 'Youtube playlist link',
-                hintText: 'Enter the link to the youtube playlist',
-                border: OutlineInputBorder(),
-              ),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: TextField(
+            controller: _textEditingController,
+            decoration: const InputDecoration(
+              labelText: 'Youtube playlist link',
+              hintText: 'Enter the link to the youtube playlist',
+              border: OutlineInputBorder(),
             ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              final String playlistUrl = _textEditingController.text.trim();
-              currentPlaylist.url = playlistUrl;
+        ),
+        ElevatedButton(
+          onPressed: () {
+            final String playlistUrl = _textEditingController.text.trim();
+            currentPlaylist.url = playlistUrl;
 
-              if (playlistUrl.isNotEmpty) {
-                audioDownloadViewModel.downloadPlaylistAudios(
-                  playlistToDownload: currentPlaylist,
-                  audioDownloadViewModelType:
-                      AudioDownloadViewModelType.youtube,
-                );
-              }
-            },
-            child: const Text('Download Audio Youtube'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              final String playlistUrl = _textEditingController.text.trim();
-              Playlist playlistToDownload = Playlist(url: playlistUrl);
+            if (playlistUrl.isNotEmpty) {
+              audioDownloadViewModel.downloadPlaylistAudios(
+                playlistToDownload: currentPlaylist,
+                audioDownloadViewModelType: AudioDownloadViewModelType.youtube,
+              );
+            }
+          },
+          child: const Text('Download Audio Youtube'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            final String playlistUrl = _textEditingController.text.trim();
+            Playlist playlistToDownload = Playlist(url: playlistUrl);
 
-              if (playlistUrl.isNotEmpty) {
-                audioDownloadViewModel.downloadPlaylistAudios(
-                  playlistToDownload: playlistToDownload,
-                  audioDownloadViewModelType:
-                      AudioDownloadViewModelType.justAudio,
-                );
-              }
-            },
-            child: const Text('Download Audio just_audio'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              PlaylistEditVM playlistEditVM = PlaylistEditVM();
+            if (playlistUrl.isNotEmpty) {
+              audioDownloadViewModel.downloadPlaylistAudios(
+                playlistToDownload: playlistToDownload,
+                audioDownloadViewModelType:
+                    AudioDownloadViewModelType.justAudio,
+              );
+            }
+          },
+          child: const Text('Download Audio just_audio'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            PlaylistEditVM playlistEditVM = PlaylistEditVM();
 
-              playlistEditVM.removeVideoFromPlaylist();
+            playlistEditVM.removeVideoFromPlaylist();
+          },
+          child: const Text('Remove video from playlist'),
+        ),
+        Expanded(
+          child: ListView.builder(
+            itemCount: currentPlaylist.playableAudioLst.length,
+            itemBuilder: (BuildContext context, int index) {
+              final audio = currentPlaylist.playableAudioLst[index];
+              return AudioListItemWidget(
+                audio: audio,
+                onPlayPressedFunction: (Audio audio) {
+                  _audioPlayerViwModel.play(audio);
+                },
+                onStopPressedFunction: (Audio audio) {
+                  _audioPlayerViwModel.stop(audio);
+                },
+                onPausePressedFunction: (Audio audio) {
+                  _audioPlayerViwModel.pause(audio);
+                },
+              );
             },
-            child: const Text('Remove video from playlist'),
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: currentPlaylist.playableAudioLst.length,
-              itemBuilder: (BuildContext context, int index) {
-                final audio = currentPlaylist.playableAudioLst[index];
-                return AudioListItemWidget(
-                  audio: audio,
-                  onPlayPressedFunction: (Audio audio) {
-                    _audioPlayerViwModel.play(audio);
-                  },
-                  onStopPressedFunction: (Audio audio) {
-                    _audioPlayerViwModel.stop(audio);
-                  },
-                  onPausePressedFunction: (Audio audio) {
-                    _audioPlayerViwModel.pause(audio);
-                  },
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
