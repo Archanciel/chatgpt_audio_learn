@@ -17,6 +17,9 @@ import '../models/playlist.dart';
 import '../utils/dir_util.dart';
 
 class AudioDownloadVM extends ChangeNotifier {
+  AudioDownloadVM() {
+    
+  }
   yt.YoutubeExplode _youtubeExplode = yt.YoutubeExplode();
 
   // setter used by test only !

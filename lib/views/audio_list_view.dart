@@ -81,20 +81,24 @@ class _AudioListViewState extends State<AudioListView> {
           child: const Text('Remove video from playlist'),
         ),
         Expanded(
-          child: ListView.builder(
-            itemCount: currentPlaylist.playableAudioLst.length,
-            itemBuilder: (BuildContext context, int index) {
-              final audio = currentPlaylist.playableAudioLst[index];
-              return AudioListItemWidget(
-                audio: audio,
-                onPlayPressedFunction: (Audio audio) {
-                  _audioPlayerViwModel.play(audio);
-                },
-                onStopPressedFunction: (Audio audio) {
-                  _audioPlayerViwModel.stop(audio);
-                },
-                onPausePressedFunction: (Audio audio) {
-                  _audioPlayerViwModel.pause(audio);
+          child: Consumer<AudioDownloadVM>(
+            builder: (context, audioDownloadVM, child) {
+              return ListView.builder(
+                itemCount: currentPlaylist.playableAudioLst.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final audio = currentPlaylist.playableAudioLst[index];
+                  return AudioListItemWidget(
+                    audio: audio,
+                    onPlayPressedFunction: (Audio audio) {
+                      _audioPlayerViwModel.play(audio);
+                    },
+                    onStopPressedFunction: (Audio audio) {
+                      _audioPlayerViwModel.stop(audio);
+                    },
+                    onPausePressedFunction: (Audio audio) {
+                      _audioPlayerViwModel.pause(audio);
+                    },
+                  );
                 },
               );
             },
