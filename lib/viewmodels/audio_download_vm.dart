@@ -102,7 +102,6 @@ class AudioDownloadVM extends ChangeNotifier {
 
       audioUploadDate ??= DateTime(00, 1, 1);
 
-      yt.Video vid = await _youtubeExplode.videos.get('oxXpB9pSETo');
       final Audio audio = Audio(
         enclosingPlaylist: playlistToDownload,
         originalVideoTitle: youtubeVideo.title,
@@ -165,13 +164,14 @@ class AudioDownloadVM extends ChangeNotifier {
     if (jsonFileExists) {
       Playlist playlist = JsonDataService.loadFromFile(
           jsonPathfileName: playlistPathFileName, type: Playlist);
-      List<Audio> playlistDownloadedAudioLst = playlist.downloadedAudioLst;
+      List<Audio> playlistDownloadedAudioLst =
+          playlist.downloadedAudioLst;
 
       for (Audio downloadedAudio in playlistDownloadedAudioLst) {
-        downloadedAudio.audioPlayer = AudioPlayer();
         validAudioVideoTitleLst.add(downloadedAudio.validVideoTitle);
       }
 
+      uiPlaylist.downloadedAudioLst = playlist.downloadedAudioLst;
       uiPlaylist.playableAudioLst = playlist.playableAudioLst;
     }
 

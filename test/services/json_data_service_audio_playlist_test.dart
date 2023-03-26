@@ -426,11 +426,11 @@ void compareDeserializedWithOriginalPlaylist(
   expect(loadedPlaylist.url, testPlaylist.url);
 
   // Compare Audio instances in original and loaded Playlist
-  expect(loadedPlaylist.downloadedAudioLst.length, 2);
+  expect(loadedPlaylist.downloadedAudioLst_todel.length, 2);
 
-  for (int i = 0; i < loadedPlaylist.downloadedAudioLst.length; i++) {
-    Audio originalAudio = testPlaylist.downloadedAudioLst[i];
-    Audio loadedAudio = loadedPlaylist.downloadedAudioLst[i];
+  for (int i = 0; i < loadedPlaylist.downloadedAudioLst_todel.length; i++) {
+    Audio originalAudio = testPlaylist.downloadedAudioLst_todel[i];
+    Audio loadedAudio = loadedPlaylist.downloadedAudioLst_todel[i];
 
     compareDeserializedWithOriginalAudio(loadedAudio, originalAudio);
   }

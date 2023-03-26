@@ -14,8 +14,7 @@ class Playlist {
 
   // Contains the audios once referenced in the Youtube playlist
   // which were downloaded.
-  final List<Audio> _downloadedAudioLst = [];
-  List<Audio> get downloadedAudioLst => _downloadedAudioLst;
+  List<Audio> downloadedAudioLst = [];
 
   // Contains the downloaded audios currently available on the
   // device.
@@ -67,7 +66,7 @@ class Playlist {
       'url': url,
       'downloadPath': downloadPath,
       'downloadedAudioLst':
-          _downloadedAudioLst.map((audio) => audio.toJson()).toList(),
+          downloadedAudioLst.map((audio) => audio.toJson()).toList(),
       'playableAudioLst':
           playableAudioLst.map((audio) => audio.toJson()).toList(),
     };
@@ -75,14 +74,14 @@ class Playlist {
 
   void addDownloadedAudio(Audio downloadedAudio) {
     downloadedAudio.enclosingPlaylist = this;
-    _downloadedAudioLst.add(downloadedAudio);
+    downloadedAudioLst.add(downloadedAudio);
   }
 
   void removeDownloadedAudio(Audio downloadedAudio) {
     if (downloadedAudio.enclosingPlaylist == this) {
       downloadedAudio.enclosingPlaylist = null;
     }
-    _downloadedAudioLst.remove(downloadedAudio);
+    downloadedAudioLst.remove(downloadedAudio);
   }
 
   void addPlayableAudio(Audio playableAudio) {

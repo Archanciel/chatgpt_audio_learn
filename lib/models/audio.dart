@@ -76,7 +76,7 @@ class Audio {
   bool get isPaused => _isPaused;
 
   // AudioPlayer of the current audio
-  late AudioPlayer audioPlayer;
+  AudioPlayer? audioPlayer;
 
   double playSpeed = kAudioDefaultSpeed;
 

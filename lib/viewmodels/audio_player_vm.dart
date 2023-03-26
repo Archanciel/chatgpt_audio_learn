@@ -13,9 +13,15 @@ class AudioPlayerVM extends ChangeNotifier {
       print('File not found: ${audio.filePathName}');
     }
 
-    AudioPlayer audioPlayer = audio.audioPlayer;
-    await audioPlayer.play(DeviceFileSource(audio.filePathName));
-    await audioPlayer.setPlaybackRate(audio.playSpeed);
+    AudioPlayer? audioPlayer = audio.audioPlayer;
+
+    if (audioPlayer == null) {
+      audioPlayer = AudioPlayer();
+      audio.audioPlayer = audioPlayer;
+    }
+
+    await audioPlayer!.play(DeviceFileSource(audio.filePathName));
+    await audioPlayer!.setPlaybackRate(audio.playSpeed);
     audio.isPlaying = true;
 
     notifyListeners();
@@ -24,9 +30,9 @@ class AudioPlayerVM extends ChangeNotifier {
   Future<void> pause(Audio audio) async {
     // Stop the audio
     if (audio.isPaused) {
-      await audio.audioPlayer.resume();
+      await audio.audioPlayer!.resume();
     } else {
-      await audio.audioPlayer.pause();
+      await audio.audioPlayer!.pause();
     }
 
     audio.invertPaused();
@@ -36,7 +42,7 @@ class AudioPlayerVM extends ChangeNotifier {
 
   Future<void> stop(Audio audio) async {
     // Stop the audio
-    await audio.audioPlayer.stop();
+    await audio.audioPlayer!.stop();
     audio.isPlaying = false;
     notifyListeners();
   }

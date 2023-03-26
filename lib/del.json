@@ -1,0 +1,82 @@
+{
+  "id": "",
+  "title": "to_delete",
+  "url": "https://youtube.com/playlist?list=PLzwWSJNcZTMTB9iwbu77FGokc3WsoxuV0",
+  "downloadPath": "C:\\Users\\Jean-Pierre\\Downloads\\Audio\\to_delete",
+  "downloadedAudioLst": [
+    {
+      "originalVideoTitle": "Flutter Responsive Design (MediaQuery, Orientation)",
+      "validVideoTitle": "Flutter Responsive Design (MediaQuery, Orientation)",
+      "videoUrl": "https://www.youtube.com/watch?v=Tdpvv5t67l4",
+      "audioDownloadDateTime": "2023-03-26T18:16:14.780940",
+      "audioDownloadDurationMs": 642,
+      "audioDownloadSpeed": -1.0,
+      "videoUploadDate": "2022-06-27T00:00:00.000",
+      "audioDurationMs": 190000,
+      "audioFileName": "230326-Flutter Responsive Design (MediaQuery, Orientation) 22-06-27.mp3",
+      "audioFileSize": 1159231
+    },
+    {
+      "originalVideoTitle": "Jancovici dans l'émission #EtApres sur France 2 - 16/04/2020",
+      "validVideoTitle": "Jancovici dans l'émission #EtApres sur France 2 - 16_04_2020",
+      "videoUrl": "https://www.youtube.com/watch?v=GH6SGJjV8qM",
+      "audioDownloadDateTime": "2023-03-26T18:19:11.923270",
+      "audioDownloadDurationMs": 774,
+      "audioDownloadSpeed": -1.0,
+      "videoUploadDate": "2020-04-17T00:00:00.000",
+      "audioDurationMs": 229000,
+      "audioFileName": "230326-Jancovici dans l'émission #EtApres sur France 2 - 16_04_2020 20-04-17.mp3",
+      "audioFileSize": 1395057
+    },
+    {
+      "originalVideoTitle": "Designing web landing page using ChatGPT",
+      "validVideoTitle": "Designing web landing page using ChatGPT",
+      "videoUrl": "https://www.youtube.com/watch?v=zFu9t4QTJbA",
+      "audioDownloadDateTime": "2023-03-26T18:19:24.441765",
+      "audioDownloadDurationMs": 3962,
+      "audioDownloadSpeed": 1028274.3333333334,
+      "videoUploadDate": "2023-01-19T00:00:00.000",
+      "audioDurationMs": 506000,
+      "audioFileName": "230326-Designing web landing page using ChatGPT 23-01-19.mp3",
+      "audioFileSize": 3084823
+    }
+  ],
+  "playableAudioLst": [
+    {
+      "originalVideoTitle": "Flutter Responsive Design (MediaQuery, Orientation)",
+      "validVideoTitle": "Flutter Responsive Design (MediaQuery, Orientation)",
+      "videoUrl": "https://www.youtube.com/watch?v=Tdpvv5t67l4",
+      "audioDownloadDateTime": "2023-03-26T18:16:14.780940",
+      "audioDownloadDurationMs": 642,
+      "audioDownloadSpeed": -1.0,
+      "videoUploadDate": "2022-06-27T00:00:00.000",
+      "audioDurationMs": 190000,
+      "audioFileName": "230326-Flutter Responsive Design (MediaQuery, Orientation) 22-06-27.mp3",
+      "audioFileSize": 1159231
+    },
+    {
+      "originalVideoTitle": "Jancovici dans l'émission #EtApres sur France 2 - 16/04/2020",
+      "validVideoTitle": "Jancovici dans l'émission #EtApres sur France 2 - 16_04_2020",
+      "videoUrl": "https://www.youtube.com/watch?v=GH6SGJjV8qM",
+      "audioDownloadDateTime": "2023-03-26T18:19:11.923270",
+      "audioDownloadDurationMs": 774,
+      "audioDownloadSpeed": -1.0,
+      "videoUploadDate": "2020-04-17T00:00:00.000",
+      "audioDurationMs": 229000,
+      "audioFileName": "230326-Jancovici dans l'émission #EtApres sur France 2 - 16_04_2020 20-04-17.mp3",
+      "audioFileSize": 1395057
+    },
+    {
+      "originalVideoTitle": "Designing web landing page using ChatGPT",
+      "validVideoTitle": "Designing web landing page using ChatGPT",
+      "videoUrl": "https://www.youtube.com/watch?v=zFu9t4QTJbA",
+      "audioDownloadDateTime": "2023-03-26T18:19:24.441765",
+      "audioDownloadDurationMs": 3962,
+      "audioDownloadSpeed": 1028274.3333333334,
+      "videoUploadDate": "2023-01-19T00:00:00.000",
+      "audioDurationMs": 506000,
+      "audioFileName": "230326-Designing web landing page using ChatGPT 23-01-19.mp3",
+      "audioFileSize": 3084823
+    }
+  ]
+}
