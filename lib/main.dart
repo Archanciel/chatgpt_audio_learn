@@ -2,11 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:chatgpt_audio_learn/constants.dart';
 import 'package:chatgpt_audio_learn/utils/dir_util.dart';
 import 'package:chatgpt_audio_learn/viewmodels/audio_download_vm.dart';
 import 'package:chatgpt_audio_learn/views/audio_list_view.dart';
+import 'app_localization.dart';
 import 'viewmodels/audio_player_vm.dart';
 
 class ThemeProvider extends ChangeNotifier {
@@ -64,6 +66,16 @@ class MyApp extends StatelessWidget {
         builder: (context, themeProvider, child) {
           return MaterialApp(
             title: 'Youtube Audio Downloader',
+            localizationsDelegates: const [
+              AppLocalizationsDelegate(),
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('en', ''),
+              Locale('fr', ''),
+            ],
             theme: themeProvider.isDarkMode
                 ? ThemeData.dark().copyWith(
                     colorScheme: ThemeData.dark().colorScheme.copyWith(
