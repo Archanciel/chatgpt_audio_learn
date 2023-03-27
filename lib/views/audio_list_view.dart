@@ -1,6 +1,7 @@
 // dart file located in lib\views
 
 import 'package:flutter/material.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 
 import '../constants.dart';
@@ -24,6 +25,34 @@ class _AudioListViewState extends State<AudioListView> {
       TextEditingController(text: kPlaylistUrl);
 
   final AudioPlayerVM _audioPlayerViwModel = AudioPlayerVM();
+
+  //define on audio plugin
+  final OnAudioQuery _audioQuery = OnAudioQuery();
+
+  //request permission from initStateMethod
+  @override
+  void initState() {
+    super.initState();
+    requestStoragePermission();
+  }
+
+  /// Requires adding the lines below to the main and debug AndroidManifest.xml
+  /// files in order to work on S20 - Android 13 !
+  ///     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+  ///     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
+  ///     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
+  void requestStoragePermission() async {
+    //only if the platform is not web, coz web have no permissions
+    if (!kIsWeb) {
+      bool permissionStatus = await _audioQuery.permissionsStatus();
+      if (!permissionStatus) {
+        await _audioQuery.permissionsRequest();
+      }
+
+      //ensure build method is called
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
