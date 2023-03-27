@@ -4,25 +4,16 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+// import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart' as l10n;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:chatgpt_audio_learn/constants.dart';
 import 'package:chatgpt_audio_learn/utils/dir_util.dart';
 import 'package:chatgpt_audio_learn/viewmodels/audio_download_vm.dart';
 import 'package:chatgpt_audio_learn/views/audio_list_view.dart';
 import 'viewmodels/audio_player_vm.dart';
-
-class ThemeProvider extends ChangeNotifier {
-  bool _isDarkMode = false;
-
-  bool get isDarkMode => _isDarkMode;
-
-  void toggleTheme() {
-    _isDarkMode = !_isDarkMode;
-    notifyListeners();
-  }
-}
+import 'viewmodels/language_provider.dart';
+import 'viewmodels/theme_provider.dart';
 
 void main(List<String> args) {
   List<String> myArgs = [];
@@ -62,22 +53,18 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AudioDownloadVM()),
         ChangeNotifierProvider(create: (_) => AudioPlayerVM()),
-        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(
+            create: (_) => LanguageProvider(initialLocale: Locale('en'))),
       ],
-      child: Consumer<ThemeProvider>(
-        builder: (context, themeProvider, child) {
+      child: Consumer2<ThemeProvider, LanguageProvider>(
+        builder: (context, themeProvider, languageProvider, child) {
           return MaterialApp(
-            title: l10n.AppLocalizations.of(context)!.title,
-            localizationsDelegates: const [
-              l10n.AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: const [
-              Locale('en', ''),
-              Locale('fr', ''),
-            ],
+            title: 'Bof',
+            locale: languageProvider.currentLocale,
+            // title: AppLocalizations.of(context)!.title,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
             theme: themeProvider.isDarkMode
                 ? ThemeData.dark().copyWith(
                     colorScheme: ThemeData.dark().colorScheme.copyWith(
@@ -128,51 +115,78 @@ class MyApp extends StatelessWidget {
                     ),
                   )
                 : ThemeData.light(),
-            home: Scaffold(
-              appBar: AppBar(
-                title: const Text('Youtube Audio Downloader'),
-                actions: [
-                  IconButton(
-                    onPressed: () {
-                      Provider.of<ThemeProvider>(context, listen: false)
-                          .toggleTheme();
-                    },
-                    icon: Icon(themeProvider.isDarkMode
-                        ? Icons.light_mode
-                        : Icons.dark_mode),
-                  ),
-                  PopupMenuButton<String>(
-                    onSelected: (String languageCode) {
-                      Locale newLocale = Locale(languageCode);
-                      l10n.AppLocalizations.delegate
-                          .load(newLocale)
-                          .then((localizations) {
-                        Provider.of<AudioDownloadVM>(context, listen: false)
-                            .changeLocale(context, newLocale);
-                      });
-                    },
-                    itemBuilder: (BuildContext context) {
-                      return [
-                        PopupMenuItem<String>(
-                          value: 'en',
-                          child: Text(l10n.AppLocalizations.of(context)!
-                              .translate('english')),
-                        ),
-                        PopupMenuItem<String>(
-                          value: 'fr',
-                          child: Text(l10n.AppLocalizations.of(context)!
-                              .translate('french')),
-                        ),
-                      ];
-                    },
-                  ),
-                ],
-              ),
-              body: AudioListView(),
-            ),
+            home: MyHomePage(),
           );
         },
       ),
+    );
+  }
+}
+
+/// Before enclosing Scaffold in MyHomePage, this exception was
+/// thrown: 
+///
+/// Exception has occurred.
+/// _CastError (Null check operator used on a null value)
+///
+/// if the AppBar title is obtained that way:
+///
+///            home: Scaffold(
+///              appBar: AppBar(
+///                title: Text(AppLocalizations.of(context)!.title),
+/// 
+/// The issue occurs because the context provided to the
+/// AppLocalizations.of(context) is not yet aware of the
+/// localization configuration, as it's being accessed within
+/// the same MaterialApp widget where you define the localization
+/// delegates and the locale.
+///
+/// To fix this issue, you can wrap your Scaffold in a new widget,
+/// like MyHomePage, which will have access to the correct context.
+class MyHomePage extends StatelessWidget {
+  const MyHomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.title),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
+            },
+            icon: Icon(
+                themeProvider.isDarkMode ? Icons.light_mode : Icons.dark_mode),
+          ),
+          PopupMenuButton<String>(
+            onSelected: (String languageCode) {
+              Locale newLocale = Locale(languageCode);
+              AppLocalizations.delegate.load(newLocale).then((localizations) {
+                Provider.of<LanguageProvider>(context, listen: false)
+                    .changeLocale(newLocale);
+              });
+            },
+            itemBuilder: (BuildContext context) {
+              return [
+                PopupMenuItem<String>(
+                  value: 'en',
+                  child: Text(AppLocalizations.of(context)!
+                      .translate(AppLocalizations.of(context)!.english)),
+                ),
+                PopupMenuItem<String>(
+                  value: 'fr',
+                  child: Text(AppLocalizations.of(context)!
+                      .translate(AppLocalizations.of(context)!.french)),
+                ),
+              ];
+            },
+          ),
+        ],
+      ),
+      body: AudioListView(),
     );
   }
 }

@@ -5,10 +5,10 @@
   "moveItemUp": "Déplacer l'élément vers le haut",
   "moveItemDown": "Déplacer l'élément vers le bas",
   "language": "Langue",
-  "english": "Anglais",
-  "french": "Français",
+  "english": "anglais",
+  "french": "français",
   "downloadAudio": "Télécharger Audio Youtuube",
-  "translate": "Sélectionnez {language}",
+  "translate": "Affichage {language}",
   "@translate": {
     "description": "Menu AppBsr de sélection de la langue.",
     "placeholders": {
