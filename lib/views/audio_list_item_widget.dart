@@ -38,9 +38,9 @@ class AudioListItemWidget extends StatelessWidget {
     int audioFileSize = audio.audioFileSize;
     String audioFileSizeStr;
 
-    audioFileSizeStr = formatLargeIntValue(audioFileSize.toDouble());
+    audioFileSizeStr = formatLargeIntValue(audioFileSize);
 
-    double audioDownloadSpeed = audio.audioDownloadSpeed;
+    int audioDownloadSpeed = audio.audioDownloadSpeed;
     String audioDownloadSpeedStr;
 
     if (audioDownloadSpeed.isInfinite) {
@@ -58,7 +58,7 @@ class AudioListItemWidget extends StatelessWidget {
     return subTitle;
   }
 
-  String formatLargeIntValue(double value) {
+  String formatLargeIntValue(int value) {
     String formattedValueStr;
 
     if (value < 1000000) {

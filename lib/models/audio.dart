@@ -49,19 +49,19 @@ class Audio {
   set fileSize(int size) {
     audioFileSize = size;
     audioDownloadSpeed = (audioFileSize == 0 || audioDownloadDuration == null)
-        ? 0.0
-        : audioFileSize / audioDownloadDuration!.inSeconds;
+        ? 0
+        : (audioFileSize / audioDownloadDuration!.inMicroseconds * 1000000).round() as int;
   }
 
   set downloadDuration(Duration downloadDuration) {
     audioDownloadDuration = downloadDuration;
     audioDownloadSpeed = (audioFileSize == 0 || audioDownloadDuration == null)
-        ? 0.0
-        : audioFileSize / audioDownloadDuration!.inSeconds;
+        ? 0
+        : (audioFileSize / audioDownloadDuration!.inMicroseconds * 1000000).round() as int;
   }
 
   // Speed at which the audio was downloaded in bytes per second
-  late double audioDownloadSpeed;
+  late int audioDownloadSpeed;
 
   // State of the audio
 

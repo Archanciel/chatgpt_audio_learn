@@ -35,7 +35,7 @@ class AudioDownloadVM extends ChangeNotifier {
 
   void loadPlaylist() async {
     String jsonPathFileName =
-        '$_playlistHomePath${Platform.pathSeparator}to_delete${Platform.pathSeparator}to_delete.json';
+        '$_playlistHomePath${Platform.pathSeparator}$kUniquePlaylistTitle${Platform.pathSeparator}$kUniquePlaylistTitle.json';
     dynamic currentPlaylist = JsonDataService.loadFromFile(
         jsonPathFileName: jsonPathFileName, type: Playlist);
     if (currentPlaylist != null) {

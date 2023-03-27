@@ -117,41 +117,6 @@ void main() {
       // Cleanup the temporary directory
       await tempDir.delete(recursive: true);
     });
-    test(
-        'saveToFile and loadFromFile for one Audio instance with infinite dowbnload speed',
-        () async {
-      // Create a temporary directory to store the serialized Audio object
-      Directory tempDir = await Directory.systemTemp.createTemp('AudioTest');
-      String filePath = path.join(tempDir.path, 'audio.json');
-
-      // Create an Audio instance
-      Audio originalAudio = Audio.fullConstructor(
-        enclosingPlaylist: null,
-        originalVideoTitle: 'Test Video Title',
-        validVideoTitle: 'Test Video Title',
-        videoUrl: 'https://www.youtube.com/watch?v=testVideoID',
-        audioDownloadDateTime: DateTime(2023, 3, 24, 20, 5, 32),
-        audioDownloadDuration: const Duration(minutes: 1, seconds: 30),
-        audioDownloadSpeed: double.infinity,
-        videoUploadDate: DateTime(2023, 3, 1),
-        audioDuration: null,
-        audioFileName: 'Test Video Title.mp3',
-        audioFileSize: 330000000,
-      );
-
-      // Save the Audio instance to a file
-      JsonDataService.saveToFile(model: originalAudio, path: filePath);
-
-      // Load the Audio instance from the file
-      Audio deserializedAudio =
-          JsonDataService.loadFromFile(jsonPathFileName: filePath, type: Audio);
-
-      // Compare the deserialized Audio instance with the original Audio instance
-      compareDeserializedWithOriginalAudio(deserializedAudio, originalAudio);
-
-      // Cleanup the temporary directory
-      await tempDir.delete(recursive: true);
-    });
     test('saveToFile and loadFromFile for one Playlist instance', () async {
       // Create a temporary directory to store the serialized Audio object
       Directory tempDir = await Directory.systemTemp.createTemp('AudioTest');
