@@ -80,18 +80,18 @@ class JsonDataService {
   }
 
   static dynamic loadFromFile({
-    required String jsonPathfileName,
+    required String jsonPathFileName,
     required Type type,
   }) {
-    if (File(jsonPathfileName).existsSync()) {
-      final String jsonStr = File(jsonPathfileName).readAsStringSync();
+    if (File(jsonPathFileName).existsSync()) {
+      final String jsonStr = File(jsonPathFileName).readAsStringSync();
 
       try {
         return decodeJson(jsonStr, type);
       } catch (e) {
         throw ClassNotContainedInJsonFileException(
           className: type.toString(),
-          jsonFilePathName: jsonPathfileName,
+          jsonFilePathName: jsonPathFileName,
         );
       }
     } else {
@@ -134,26 +134,26 @@ class JsonDataService {
   }
 
   static void saveListToFile({
-    required String path,
+    required String jsonPathFileName,
     required dynamic data,
   }) {
     String jsonStr = encodeJsonList(data);
-    File(path).writeAsStringSync(jsonStr);
+    File(jsonPathFileName).writeAsStringSync(jsonStr);
   }
 
   static List<T> loadListFromFile<T>({
-    required String path,
+    required String jsonPathFileName,
     required Type type,
   }) {
-    if (File(path).existsSync()) {
-      String jsonStr = File(path).readAsStringSync();
+    if (File(jsonPathFileName).existsSync()) {
+      String jsonStr = File(jsonPathFileName).readAsStringSync();
 
       try {
         return decodeJsonList(jsonStr, type);
       } on StateError {
         throw ClassNotContainedInJsonFileException(
           className: type.toString(),
-          jsonFilePathName: path,
+          jsonFilePathName: jsonPathFileName,
         );
       }
     } else {

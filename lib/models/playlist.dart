@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'audio.dart';
 
 /// This class
@@ -96,5 +98,9 @@ class Playlist {
   @override
   String toString() {
     return title;
+  }
+
+  String getPlaylistDownloadFilePathName() {
+    return '$downloadPath${Platform.pathSeparator}$title.json';
   }
 }

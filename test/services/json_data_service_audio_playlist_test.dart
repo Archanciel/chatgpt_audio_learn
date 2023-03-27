@@ -59,7 +59,7 @@ void main() {
 
       // Load the Audio instance from the file
       Audio deserializedAudio =
-          JsonDataService.loadFromFile(jsonPathfileName: filePath, type: Audio);
+          JsonDataService.loadFromFile(jsonPathFileName: filePath, type: Audio);
 
       // Compare the deserialized Audio instance with the original Audio instance
       compareDeserializedWithOriginalAudio(deserializedAudio, originalAudio);
@@ -74,7 +74,7 @@ void main() {
       String filePath = path.join(tempDir.path, 'audio.json');
       // Load the Audio instance from the file
       dynamic deserializedAudio =
-          JsonDataService.loadFromFile(jsonPathfileName: filePath, type: Audio);
+          JsonDataService.loadFromFile(jsonPathFileName: filePath, type: Audio);
 
       // Compare the deserialized Audio instance with the original Audio instance
       expect(deserializedAudio, null);
@@ -109,7 +109,7 @@ void main() {
 
       // Load the Audio instance from the file
       Audio deserializedAudio =
-          JsonDataService.loadFromFile(jsonPathfileName: filePath, type: Audio);
+          JsonDataService.loadFromFile(jsonPathFileName: filePath, type: Audio);
 
       // Compare the deserialized Audio instance with the original Audio instance
       compareDeserializedWithOriginalAudio(deserializedAudio, originalAudio);
@@ -144,7 +144,7 @@ void main() {
 
       // Load the Audio instance from the file
       Audio deserializedAudio =
-          JsonDataService.loadFromFile(jsonPathfileName: filePath, type: Audio);
+          JsonDataService.loadFromFile(jsonPathFileName: filePath, type: Audio);
 
       // Compare the deserialized Audio instance with the original Audio instance
       compareDeserializedWithOriginalAudio(deserializedAudio, originalAudio);
@@ -200,7 +200,7 @@ void main() {
 
       // Load Playlist from the file
       Playlist loadedPlaylist = JsonDataService.loadFromFile(
-          jsonPathfileName: filePath, type: Playlist);
+          jsonPathFileName: filePath, type: Playlist);
 
       // Compare original and loaded Playlist
       compareDeserializedWithOriginalPlaylist(loadedPlaylist, testPlaylist);
@@ -213,8 +213,8 @@ void main() {
       Directory tempDir = await Directory.systemTemp.createTemp('AudioTest');
       String filePath = path.join(tempDir.path, 'audio.json');
       // Load the Audio instance from the file
-      dynamic deserializedPlaylist =
-          JsonDataService.loadFromFile(jsonPathfileName: filePath, type: Playlist);
+      dynamic deserializedPlaylist = JsonDataService.loadFromFile(
+          jsonPathFileName: filePath, type: Playlist);
 
       // Compare the deserialized Audio instance with the original Audio instance
       expect(deserializedPlaylist, null);
@@ -230,7 +230,7 @@ void main() {
       try {
         // Try to load a MyClass instance from the temporary file, which should throw an exception
         JsonDataService.loadFromFile(
-            jsonPathfileName: 'temp.json', type: Audio);
+            jsonPathFileName: 'temp.json', type: Audio);
       } catch (e) {
         expect(e, isA<ClassNotContainedInJsonFileException>());
       } finally {
@@ -249,8 +249,7 @@ void main() {
     });
   });
   group('JsonDataService list', () {
-    test('saveListToFile() ClassNotSupportedByToJsonDataServiceException',
-        () {
+    test('saveListToFile() ClassNotSupportedByToJsonDataServiceException', () {
       // Prepare test data
       List<MyUnsupportedTestClass> testList = [
         MyUnsupportedTestClass(name: 'Test1', value: 1),
@@ -260,7 +259,8 @@ void main() {
       // Save the list to a file
       try {
         // Try to decode the JSON string into an instance of UnsupportedClass, which should throw an exception
-        JsonDataService.saveListToFile(path: jsonPath, data: testList);
+        JsonDataService.saveListToFile(
+            jsonPathFileName: jsonPath, data: testList);
       } catch (e) {
         expect(e, isA<ClassNotSupportedByToJsonDataServiceException>());
       }
@@ -289,7 +289,7 @@ void main() {
       try {
         List<MyUnsupportedTestClass> loadedList =
             JsonDataService.loadListFromFile(
-                path: jsonPath, type: MyUnsupportedTestClass);
+                jsonPathFileName: jsonPath, type: MyUnsupportedTestClass);
       } catch (e) {
         expect(e, isA<ClassNotSupportedByFromJsonDataServiceException>());
       }
@@ -331,11 +331,12 @@ void main() {
       List<Audio> testList = [audioOne, audioTwo];
 
       // Save the list to a file
-      JsonDataService.saveListToFile(data: testList, path: jsonPath);
+      JsonDataService.saveListToFile(
+          data: testList, jsonPathFileName: jsonPath);
 
       // Load the list from the file
-      List<Audio> loadedList =
-          JsonDataService.loadListFromFile(path: jsonPath, type: Audio);
+      List<Audio> loadedList = JsonDataService.loadListFromFile(
+          jsonPathFileName: jsonPath, type: Audio);
 
       // Check if the loaded list matches the original list
       expect(loadedList.length, testList.length);
@@ -350,8 +351,8 @@ void main() {
     test('loadListFromFile() for Audio list file not exist', () {
       // Create an Audio instance
       // Load the list from the file
-      List<Audio> loadedList =
-          JsonDataService.loadListFromFile(path: jsonPath, type: Audio);
+      List<Audio> loadedList = JsonDataService.loadListFromFile(
+          jsonPathFileName: jsonPath, type: Audio);
 
       // Check if the loaded list matches the original list
       expect(loadedList.length, 0);
@@ -438,11 +439,12 @@ void main() {
       List<Playlist> testList = [testPlaylistOne, testPlaylistTwo];
 
       // Save the list to a file
-      JsonDataService.saveListToFile(data: testList, path: jsonPath);
+      JsonDataService.saveListToFile(
+          data: testList, jsonPathFileName: jsonPath);
 
       // Load the list from the file
       List<Playlist> loadedList = JsonDataService.loadListFromFile(
-          path: jsonPath, type: Playlist);
+          jsonPathFileName: jsonPath, type: Playlist);
 
       // Check if the loaded list matches the original list
       expect(loadedList.length, testList.length);
@@ -455,15 +457,15 @@ void main() {
       File(jsonPath).deleteSync();
     });
   });
-    test('loadListFromFile() for Plylist list file not exist', () {
-      // Create an Audio instance
-      // Load the list from the file
-      List<Audio> loadedList =
-          JsonDataService.loadListFromFile(path: jsonPath, type: Playlist);
+  test('loadListFromFile() for Plylist list file not exist', () {
+    // Create an Audio instance
+    // Load the list from the file
+    List<Audio> loadedList = JsonDataService.loadListFromFile(
+        jsonPathFileName: jsonPath, type: Playlist);
 
-      // Check if the loaded list matches the original list
-      expect(loadedList.length, 0);
-    });
+    // Check if the loaded list matches the original list
+    expect(loadedList.length, 0);
+  });
 }
 
 void compareDeserializedWithOriginalPlaylist(

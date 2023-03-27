@@ -24,7 +24,6 @@ class _AudioListViewState extends State<AudioListView> {
       TextEditingController(text: kPlaylistUrl);
 
   final AudioPlayerVM _audioPlayerViwModel = AudioPlayerVM();
-  final Playlist currentPlaylist = Playlist(url: kPlaylistUrl);
 
   @override
   Widget build(BuildContext context) {
@@ -46,11 +45,11 @@ class _AudioListViewState extends State<AudioListView> {
         ElevatedButton(
           onPressed: () {
             final String playlistUrl = _textEditingController.text.trim();
-            currentPlaylist.url = playlistUrl;
+            Playlist playlistToDownload = Playlist(url: playlistUrl);
 
             if (playlistUrl.isNotEmpty) {
               audioDownloadViewModel.downloadPlaylistAudios(
-                playlistToDownload: currentPlaylist,
+                playlistToDownload: playlistToDownload,
                 audioDownloadViewModelType: AudioDownloadViewModelType.youtube,
               );
             }
@@ -84,9 +83,12 @@ class _AudioListViewState extends State<AudioListView> {
           child: Consumer<AudioDownloadVM>(
             builder: (context, audioDownloadVM, child) {
               return ListView.builder(
-                itemCount: currentPlaylist.playableAudioLst.length,
+                itemCount: (audioDownloadVM.listOfPlaylist.isEmpty)
+                    ? 0
+                    : audioDownloadVM.listOfPlaylist[0].playableAudioLst.length,
                 itemBuilder: (BuildContext context, int index) {
-                  final audio = currentPlaylist.playableAudioLst[index];
+                  final audio =
+                      audioDownloadVM.listOfPlaylist[0].playableAudioLst[index];
                   return AudioListItemWidget(
                     audio: audio,
                     onPlayPressedFunction: (Audio audio) {
