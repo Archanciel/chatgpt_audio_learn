@@ -1,14 +1,16 @@
 // dart file located in lib
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart' as l10n;
 import 'package:chatgpt_audio_learn/constants.dart';
 import 'package:chatgpt_audio_learn/utils/dir_util.dart';
 import 'package:chatgpt_audio_learn/viewmodels/audio_download_vm.dart';
 import 'package:chatgpt_audio_learn/views/audio_list_view.dart';
-import 'app_localization.dart';
 import 'viewmodels/audio_player_vm.dart';
 
 class ThemeProvider extends ChangeNotifier {
@@ -65,9 +67,9 @@ class MyApp extends StatelessWidget {
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
           return MaterialApp(
-            title: 'Youtube Audio Downloader',
+            title: l10n.AppLocalizations.of(context)!.title,
             localizationsDelegates: const [
-              AppLocalizationsDelegate(),
+              l10n.AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
@@ -138,6 +140,31 @@ class MyApp extends StatelessWidget {
                     icon: Icon(themeProvider.isDarkMode
                         ? Icons.light_mode
                         : Icons.dark_mode),
+                  ),
+                  PopupMenuButton<String>(
+                    onSelected: (String languageCode) {
+                      Locale newLocale = Locale(languageCode);
+                      l10n.AppLocalizations.delegate
+                          .load(newLocale)
+                          .then((localizations) {
+                        Provider.of<AudioDownloadVM>(context, listen: false)
+                            .changeLocale(context, newLocale);
+                      });
+                    },
+                    itemBuilder: (BuildContext context) {
+                      return [
+                        PopupMenuItem<String>(
+                          value: 'en',
+                          child: Text(l10n.AppLocalizations.of(context)!
+                              .translate('english')),
+                        ),
+                        PopupMenuItem<String>(
+                          value: 'fr',
+                          child: Text(l10n.AppLocalizations.of(context)!
+                              .translate('french')),
+                        ),
+                      ];
+                    },
                   ),
                 ],
               ),

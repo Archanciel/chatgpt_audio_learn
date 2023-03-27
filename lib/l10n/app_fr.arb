@@ -6,5 +6,13 @@
   "moveItemDown": "Déplacer l'élément vers le bas",
   "language": "Langue",
   "english": "Anglais",
-  "french": "Français"
+  "french": "Français",
+  "downloadAudio": "Télécharger Audio Youtuube",
+  "translate": "Sélectionnez {language}",
+  "@translate": {
+    "description": "Menu AppBsr de sélection de la langue.",
+    "placeholders": {
+      "language": {}
+    }
+  }
 }

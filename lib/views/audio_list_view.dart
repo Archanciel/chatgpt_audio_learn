@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../constants.dart';
 import '../models/playlist.dart';
@@ -83,7 +84,7 @@ class _AudioListViewState extends State<AudioListView> {
               );
             }
           },
-          child: const Text('Download Audio Youtube'),
+          child: Text(AppLocalizations.of(context)!.downloadAudio),
         ),
         ElevatedButton(
           onPressed: () {

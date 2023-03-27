@@ -1,10 +1,21 @@
 {
   "title": "Youtube Audio Downloader",
+  "@title": {
+    "description": "The app title displayed in the appbar."
+  },
   "toggleList": "Toggle List",
   "delete": "Delete",
   "moveItemUp": "Move item up",
   "moveItemDown": "Move item down",
   "language": "Language",
   "english": "English",
-  "french": "French"
+  "french": "French",
+  "downloadAudio": "Download Audio Youtuube",
+  "translate": "Select {language}",
+  "@translate": {
+    "description": "Appbar language selection menu item.",
+    "placeholders": {
+      "language": {}
+    }
+  }
 }

@@ -28,6 +28,9 @@ class AudioDownloadVM extends ChangeNotifier {
 
   String _playlistHomePath = DirUtil.getPlaylistDownloadHomePath();
 
+  Locale _appLocale = Locale('en');
+  Locale get appLocale => _appLocale;
+
   AudioDownloadVM() {
     // should load list of playlist !
     loadPlaylist();
@@ -235,5 +238,14 @@ class AudioDownloadVM extends ChangeNotifier {
     await stream.pipe(audioFile);
 
     audio.audioFileSize = await file.length();
+  }
+
+  /// Method called when an app language is selected by the user.
+  /// The method notifies the VM listeners about the changement of
+  /// the app's locale.
+  void changeLocale(BuildContext context, Locale newLocale) {
+    _appLocale = newLocale;
+
+    notifyListeners();
   }
 }
