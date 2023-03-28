@@ -4,56 +4,45 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:chatgpt_audio_learn/viewmodels/theme_provider.dart';
 import 'package:chatgpt_audio_learn/viewmodels/language_provider.dart';
-import 'package:chatgpt_audio_learn/views/audio_list_view.dart';
+import 'package:chatgpt_audio_learn/main.dart';
 
 void main() {
   testWidgets('Language changes when selecting a different language',
       (WidgetTester tester) async {
-    // Initialize providers
-    final themeProvider = ThemeProvider();
-    final languageProvider = LanguageProvider(initialLocale: Locale('en'));
-    final audioDownloadVM = AudioDownloadVM();
-
-    // Build the AudioListView widget with providers
     await tester.pumpWidget(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider.value(value: audioDownloadVM),
-          ChangeNotifierProvider.value(value: themeProvider),
-          ChangeNotifierProvider.value(value: languageProvider),
-        ],
-        child: MaterialApp(
-          home: Scaffold(
-            body: AudioListView(),
+      const MaterialApp(
+        home: Scaffold(
+          body: MainApp(
+            key: Key('mainAppKey'),
           ),
         ),
       ),
     );
 
 // Check the initial language
-    expect(find.text('Download audio'), findsOneWidget);
+    expect(find.text('Download Audio Youtube'), findsOneWidget);
 
 // Open the language selection popup menu
     await tester.tap(find.byIcon(Icons.more_vert));
     await tester.pumpAndSettle();
 
 // Select the French language option
-    await tester.tap(find.text('Français'));
+    await tester.tap(find.text('Select French'));
     await tester.pumpAndSettle();
 
 // Check if the language has changed
-    expect(find.text('Télécharger audio'), findsOneWidget);
+    expect(find.text('Télécharger Audio Youtube'), findsOneWidget);
 
 // Open the language selection popup menu again
     await tester.tap(find.byIcon(Icons.more_vert));
     await tester.pumpAndSettle();
 
 // Select the English language option
-    await tester.tap(find.text('English'));
+    await tester.tap(find.text('Affichage anglais'));
     await tester.pumpAndSettle();
 
 // Check if the language has changed back
-    expect(find.text('Download audio'), findsOneWidget);
+    expect(find.text('Download Audio Youtube'), findsOneWidget);
   });
 }
 

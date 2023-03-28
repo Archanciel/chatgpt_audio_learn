@@ -41,11 +41,11 @@ void main(List<String> args) {
     print('***** $kDownloadAppDir mp3 files deleted *****');
   }
 
-  runApp(MyApp());
+  runApp(MainApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
       child: Consumer2<ThemeProvider, LanguageProvider>(
         builder: (context, themeProvider, languageProvider, child) {
           return MaterialApp(
-            title: 'Bof',
+            title: 'ChatGPT Audio Learn',
             locale: languageProvider.currentLocale,
             // title: AppLocalizations.of(context)!.title,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -115,7 +115,7 @@ class MyApp extends StatelessWidget {
                     ),
                   )
                 : ThemeData.light(),
-            home: MyHomePage(),
+            home: const MyHomePage(),
           );
         },
       ),

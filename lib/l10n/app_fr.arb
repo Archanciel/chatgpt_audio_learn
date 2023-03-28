@@ -7,7 +7,7 @@
   "language": "Langue",
   "english": "anglais",
   "french": "français",
-  "downloadAudio": "Télécharger Audio Youtuube",
+  "downloadAudio": "Télécharger Audio Youtube",
   "translate": "Affichage {language}",
   "@translate": {
     "description": "Menu AppBsr de sélection de la langue.",
