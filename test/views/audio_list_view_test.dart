@@ -1,72 +1,65 @@
+import 'package:chatgpt_audio_learn/viewmodels/audio_download_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
-
-import 'package:chatgpt_audio_learn/models/audio.dart';
+import 'package:chatgpt_audio_learn/viewmodels/theme_provider.dart';
+import 'package:chatgpt_audio_learn/viewmodels/language_provider.dart';
 import 'package:chatgpt_audio_learn/views/audio_list_view.dart';
-import 'package:chatgpt_audio_learn/viewmodels/audio_download_vm.dart';
-import 'package:youtube_explode_dart/src/youtube_explode_base.dart';
-
-class MockAudioViewModel extends ChangeNotifier implements AudioDownloadVM {
-  @override
-  List<Audio> audioLst = [];
-
-  @override
-  Future<void> downloadPlaylistAudios(String playlistUrl) async {
-    audioLst = [
-      Audio(
-          originalVideoTitle: 'Audio 1',
-          audioDuration: Duration(minutes: 3, seconds: 42),
-          filePathName: '/storage/emulated/0/Download/Audio 1.mp3'),
-      Audio(
-          originalVideoTitle: 'Audio 2',
-          audioDuration: Duration(minutes: 5, seconds: 21),
-          filePathName: '/storage/emulated/0/Download/Audio 2.mp3'),
-      Audio(
-          originalVideoTitle: 'Audio 3',
-          audioDuration: Duration(minutes: 2, seconds: 15),
-          filePathName: '/storage/emulated/0/Download/Audio 3.mp3'),
-    ];
-
-    notifyListeners();
-  }
-
-  @override
-  late YoutubeExplode youtubeExplode;
-}
 
 void main() {
-  group('AudioListView', () {
-    late MockAudioViewModel mockAudioViewModel;
+  testWidgets('Language changes when selecting a different language',
+      (WidgetTester tester) async {
+    // Initialize providers
+    final themeProvider = ThemeProvider();
+    final languageProvider = LanguageProvider(initialLocale: Locale('en'));
+    final audioDownloadVM = AudioDownloadVM();
 
-    setUp(() {
-      mockAudioViewModel = MockAudioViewModel();
-    });
-
-    testWidgets('displays list of audios', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        ChangeNotifierProvider<AudioDownloadVM>.value(
-          value: mockAudioViewModel,
-          child: MaterialApp(
-            home: Scaffold(
-              body: AudioListView(),
-            ),
+    // Build the AudioListView widget with providers
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider.value(value: audioDownloadVM),
+          ChangeNotifierProvider.value(value: themeProvider),
+          ChangeNotifierProvider.value(value: languageProvider),
+        ],
+        child: MaterialApp(
+          home: Scaffold(
+            body: AudioListView(),
           ),
         ),
-      );
+      ),
+    );
 
-      // Wait for the audios to be loaded
-      await tester.pumpAndSettle();
+// Check the initial language
+    expect(find.text('Download audio'), findsOneWidget);
 
-      // Verify that all the audios are displayed
-      expect(find.text('Audio 1'), findsOneWidget);
-      expect(find.text('3:42'), findsOneWidget);
+// Open the language selection popup menu
+    await tester.tap(find.byIcon(Icons.more_vert));
+    await tester.pumpAndSettle();
 
-      expect(find.text('Audio 2'), findsOneWidget);
-      expect(find.text('5:21'), findsOneWidget);
+// Select the French language option
+    await tester.tap(find.text('Français'));
+    await tester.pumpAndSettle();
 
-      expect(find.text('Audio 3'), findsOneWidget);
-      expect(find.text('2:15'), findsOneWidget);
-    });
+// Check if the language has changed
+    expect(find.text('Télécharger audio'), findsOneWidget);
+
+// Open the language selection popup menu again
+    await tester.tap(find.byIcon(Icons.more_vert));
+    await tester.pumpAndSettle();
+
+// Select the English language option
+    await tester.tap(find.text('English'));
+    await tester.pumpAndSettle();
+
+// Check if the language has changed back
+    expect(find.text('Download audio'), findsOneWidget);
   });
 }
+
+// Now, you have a test to check if the language changes
+// correctly when selecting a different language from the
+// `PopupMenuButton` in the `AudioListView` widget. Make
+// sure to adjust the test code to match your app's localization
+// strings and widget structure.
+
