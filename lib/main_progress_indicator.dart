@@ -146,6 +146,8 @@ class HomePage extends StatelessWidget {
                     return Column(
                       children: [
                         const CircularProgressIndicator(),
+                        Text(
+                            '${(viewModel.downloadProgress * 100).toStringAsFixed(1)}%'),
                         const SizedBox(height: 16.0),
                         LinearProgressIndicator(
                             value: viewModel.downloadProgress),
