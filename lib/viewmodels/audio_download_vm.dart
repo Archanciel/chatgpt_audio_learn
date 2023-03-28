@@ -58,25 +58,13 @@ class AudioDownloadVM extends ChangeNotifier {
 
   Future<void> downloadPlaylistAudios({
     required Playlist playlistToDownload,
-    required AudioDownloadViewModelType audioDownloadViewModelType,
   }) async {
     // get Youtube playlist
 
-    switch (audioDownloadViewModelType) {
-      case AudioDownloadViewModelType.youtube:
-        {
-          await downloadPlaylistAudio(
-            playlistToDownload,
-            _downloadAudioFileYoutube,
-          );
-          break;
-        }
-      case AudioDownloadViewModelType.justAudio:
-        {
-          await downloadPlaylistAudioWithJustAudio(playlistToDownload);
-          break;
-        }
-    }
+    await downloadPlaylistAudio(
+      playlistToDownload,
+      _downloadAudioFileYoutube,
+    );
   }
 
   Future<void> downloadPlaylistAudio(
@@ -193,12 +181,6 @@ class AudioDownloadVM extends ChangeNotifier {
     );
 
     notifyListeners();
-  }
-
-  Future<void> downloadPlaylistAudioWithJustAudio(
-    Playlist playlistToDownload,
-  ) async {
-    // to code ...
   }
 
   /// this method must be refactored
