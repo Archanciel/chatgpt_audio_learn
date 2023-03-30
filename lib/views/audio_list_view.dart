@@ -1,5 +1,7 @@
 // dart file located in lib\views
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
@@ -44,7 +46,7 @@ class _AudioListViewState extends State<AudioListView> {
   ///     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
   void requestStoragePermission() async {
     //only if the platform is not web, coz web have no permissions
-    if (!kIsWeb) {
+    if (!kIsWeb && !Platform.isWindows) {
       bool permissionStatus = await _audioQuery.permissionsStatus();
       if (!permissionStatus) {
         await _audioQuery.permissionsRequest();
