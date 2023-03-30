@@ -74,7 +74,7 @@ class HomeViewModel extends ChangeNotifier {
     var fileSink = file.openWrite();
     var totalBytesRead = 0;
 
-// Créez un Timer pour limiter les appels à notifyListeners
+    // Créez un Timer pour limiter les appels à notifyListeners
     var updateInterval = Duration(seconds: 1);
     var lastUpdate = DateTime.now();
     var timer = Timer.periodic(updateInterval, (timer) {
