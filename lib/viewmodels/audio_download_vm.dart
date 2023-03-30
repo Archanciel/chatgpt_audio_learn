@@ -21,12 +21,17 @@ class AudioDownloadVM extends ChangeNotifier {
   List<Playlist> get listOfPlaylist => _listOfPlaylist;
 
   yt.YoutubeExplode _youtubeExplode = yt.YoutubeExplode();
-
   // setter used by test only !
   set youtubeExplode(yt.YoutubeExplode youtubeExplode) =>
       _youtubeExplode = youtubeExplode;
 
   String _playlistHomePath = DirUtil.getPlaylistDownloadHomePath();
+
+  bool _isDownloading = false;
+  bool get isDownloading => _isDownloading;
+
+  double _downloadProgress = 0.0;
+  double get downloadProgress => _downloadProgress;
 
   AudioDownloadVM() {
     // should load list of playlist !
@@ -53,26 +58,13 @@ class AudioDownloadVM extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Downloads the audio of the videos referenced in the passed
+  /// playlist.
   Future<void> downloadPlaylistAudios({
     required Playlist playlistToDownload,
   }) async {
     // get Youtube playlist
 
-    await downloadPlaylistAudio(
-      playlistToDownload,
-      _downloadAudioFileYoutube,
-    );
-  }
-
-  Future<void> downloadPlaylistAudio(
-    Playlist playlistToDownload,
-    Future<void> Function(
-      yt.Video youtubeVideo,
-      yt.AudioStreamInfo audioStreamInfo,
-      Audio audio,
-    )
-        downloadAudioFileFunction,
-  ) async {
     Playlist savedPlaylist;
     String? playlistId;
     yt.Playlist youtubePlaylist;
@@ -217,5 +209,10 @@ class AudioDownloadVM extends ChangeNotifier {
     await stream.pipe(audioFile);
 
     audio.audioFileSize = await file.length();
+  }
+
+  void _updateDownloadProgress(double progress) {
+    _downloadProgress = progress;
+    notifyListeners();
   }
 }
