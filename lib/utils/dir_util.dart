@@ -21,10 +21,7 @@ class DirUtil {
   }) async {
     String path = await DirUtil.getPlaylistDownloadHomePath();
     final Directory directory = Directory(path);
-
-    // using await directory.exists did delete dir only on second
-    // app restart. Uncomprehensible !
-    bool directoryExists = directory.existsSync();
+    bool directoryExists = await directory.exists();
 
     if (isAppDirToBeDeleted) {
       if (directoryExists) {
