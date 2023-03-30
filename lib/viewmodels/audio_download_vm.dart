@@ -34,11 +34,12 @@ class AudioDownloadVM extends ChangeNotifier {
   double get downloadProgress => _downloadProgress;
 
   AudioDownloadVM() {
-    // should load list of playlist !
-    loadPlaylist();
+    // Should load all the playlists, not only the audio_learn or to_delete
+    // playlist !
+    loadTemporaryUniquePlaylist();
   }
 
-  void loadPlaylist() async {
+  void loadTemporaryUniquePlaylist() async {
     String jsonPathFileName =
         '$_playlistHomePath${Platform.pathSeparator}$kUniquePlaylistTitle${Platform.pathSeparator}$kUniquePlaylistTitle.json';
     dynamic currentPlaylist = JsonDataService.loadFromFile(
@@ -46,16 +47,42 @@ class AudioDownloadVM extends ChangeNotifier {
     if (currentPlaylist != null) {
       // is null if json file not exist
       _listOfPlaylist.add(currentPlaylist);
-      notifyListeners();
     }
+    
+    notifyListeners();
   }
 
-  void addListItem(Playlist listItem) async {
-    _listOfPlaylist.add(listItem);
+  /// Currently not used.
+  void addNewPlaylist(Playlist playlist) async {
+    _listOfPlaylist.add(playlist);
     JsonDataService.saveListToFile(
         jsonPathFileName: _playlistHomePath, data: _listOfPlaylist);
 
     notifyListeners();
+  }
+
+  Future<Playlist> obtainPlaylist(
+    Playlist playlistToDownload,
+    String? playlistId,
+    yt.Playlist youtubePlaylist,
+  ) async {
+    Playlist savedPlaylist = playlistToDownload;
+    _listOfPlaylist.add(savedPlaylist);
+
+    // define playlist audio download dir
+
+    final String audioDownloadPath = DirUtil.getPlaylistDownloadHomePath();
+    final String playlistTitle = youtubePlaylist.title;
+    savedPlaylist.title = playlistTitle;
+    final String playlistDownloadPath =
+        '$audioDownloadPath${Platform.pathSeparator}$playlistTitle';
+
+    // ensure playlist audio download dir exists
+    await DirUtil.createDirIfNotExist(pathStr: playlistDownloadPath);
+
+    savedPlaylist.downloadPath = playlistDownloadPath;
+
+    return savedPlaylist;
   }
 
   /// Downloads the audio of the videos referenced in the passed
@@ -71,34 +98,36 @@ class AudioDownloadVM extends ChangeNotifier {
 
     if (_listOfPlaylist.isNotEmpty) {
       savedPlaylist = _listOfPlaylist.firstWhere(
-        (element) => element.url == playlistToDownload.url,
-      );
+          (element) => element.url == playlistToDownload.url,
+          orElse: () => Playlist(url: 'not found'));
 
-      // playlist was already downloaded and  is stored in
-      // a playlist json file
+      if (savedPlaylist.url == 'not found') {
+        // playlist was never downloaded
 
-      playlistId = yt.PlaylistId.parsePlaylistId(savedPlaylist.url);
-      youtubePlaylist = await _youtubeExplode.playlists.get(playlistId);
+        playlistId = yt.PlaylistId.parsePlaylistId(savedPlaylist.url);
+        youtubePlaylist = await _youtubeExplode.playlists.get(playlistId);
+
+        savedPlaylist = await obtainPlaylist(
+          playlistToDownload,
+          playlistId,
+          youtubePlaylist,
+        );
+      } else {
+        // playlist was already downloaded and so is stored in
+        // a playlist json file
+
+        playlistId = yt.PlaylistId.parsePlaylistId(savedPlaylist.url);
+        youtubePlaylist = await _youtubeExplode.playlists.get(playlistId);
+      }
     } else {
-      // playlist was never downloaded
-
-      savedPlaylist = playlistToDownload;
-      _listOfPlaylist.add(savedPlaylist);
-      playlistId = yt.PlaylistId.parsePlaylistId(savedPlaylist.url);
+      playlistId = yt.PlaylistId.parsePlaylistId(playlistToDownload.url);
       youtubePlaylist = await _youtubeExplode.playlists.get(playlistId);
 
-      // define playlist audio download dir
-
-      final String audioDownloadPath = DirUtil.getPlaylistDownloadHomePath();
-      final String playlistTitle = youtubePlaylist.title;
-      savedPlaylist.title = playlistTitle;
-      final String playlistDownloadPath =
-          '$audioDownloadPath${Platform.pathSeparator}$playlistTitle';
-
-      // ensure playlist audio download dir exists
-      await DirUtil.createDirIfNotExist(pathStr: playlistDownloadPath);
-
-      savedPlaylist.downloadPath = playlistDownloadPath;
+      savedPlaylist = await obtainPlaylist(
+        playlistToDownload,
+        playlistId,
+        youtubePlaylist,
+      );
     }
 
     // get already downloaded audio file names
@@ -109,8 +138,6 @@ class AudioDownloadVM extends ChangeNotifier {
         await getPlaylistDownloadedAudioValidVideoTitleLst(
             playlistPathFileName: playlistDownloadFilePathName,
             uiPlaylist: savedPlaylist);
-
-    // get Youtube playlist
 
     await for (yt.Video youtubeVideo
         in _youtubeExplode.playlists.getVideos(playlistId)) {
