@@ -41,7 +41,7 @@ void main(List<String> args) {
     print('***** $kDownloadAppDir mp3 files deleted *****');
   }
 
-  runApp(MainApp());
+  runApp(const MainApp());
 }
 
 class MainApp extends StatelessWidget {
@@ -55,7 +55,7 @@ class MainApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AudioPlayerVM()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(
-            create: (_) => LanguageProvider(initialLocale: Locale('en'))),
+            create: (_) => LanguageProvider(initialLocale: const Locale('en'))),
       ],
       child: Consumer2<ThemeProvider, LanguageProvider>(
         builder: (context, themeProvider, languageProvider, child) {
@@ -106,7 +106,7 @@ class MainApp extends StatelessWidget {
                     inputDecorationTheme: InputDecorationTheme(
                       fillColor: Colors.grey[900],
                       filled: true,
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                     ),
                     textSelectionTheme: TextSelectionThemeData(
                       cursorColor: Colors.white,

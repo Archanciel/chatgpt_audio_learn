@@ -47,8 +47,10 @@ class AudioDownloadVM extends ChangeNotifier {
     if (currentPlaylist != null) {
       // is null if json file not exist
       _listOfPlaylist.add(currentPlaylist);
+    } else {
+      _listOfPlaylist = [];
     }
-    
+
     notifyListeners();
   }
 
@@ -61,11 +63,10 @@ class AudioDownloadVM extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Playlist> obtainPlaylist(
-    Playlist playlistToDownload,
-    String? playlistId,
-    yt.Playlist youtubePlaylist,
-  ) async {
+  Future<Playlist> obtainPlaylist({
+    required Playlist playlistToDownload,
+    required yt.Playlist youtubePlaylist,
+  }) async {
     Playlist savedPlaylist = playlistToDownload;
     _listOfPlaylist.add(savedPlaylist);
 
@@ -104,13 +105,12 @@ class AudioDownloadVM extends ChangeNotifier {
       if (savedPlaylist.url == 'not found') {
         // playlist was never downloaded
 
-        playlistId = yt.PlaylistId.parsePlaylistId(savedPlaylist.url);
+        playlistId = yt.PlaylistId.parsePlaylistId(playlistToDownload.url);
         youtubePlaylist = await _youtubeExplode.playlists.get(playlistId);
 
         savedPlaylist = await obtainPlaylist(
-          playlistToDownload,
-          playlistId,
-          youtubePlaylist,
+          playlistToDownload: playlistToDownload,
+          youtubePlaylist: youtubePlaylist,
         );
       } else {
         // playlist was already downloaded and so is stored in
@@ -124,9 +124,8 @@ class AudioDownloadVM extends ChangeNotifier {
       youtubePlaylist = await _youtubeExplode.playlists.get(playlistId);
 
       savedPlaylist = await obtainPlaylist(
-        playlistToDownload,
-        playlistId,
-        youtubePlaylist,
+        playlistToDownload: playlistToDownload,
+        youtubePlaylist: youtubePlaylist,
       );
     }
 
@@ -175,18 +174,20 @@ class AudioDownloadVM extends ChangeNotifier {
       Stopwatch stopwatch = Stopwatch()..start();
 
       // Download the audio file
-      await _downloadAudioFileYoutube(
-        youtubeVideo,
-        audioStreamInfo,
-        audio,
+      await _downloadAudioFile(
+        youtubeVideo: youtubeVideo,
+        audioStreamInfo: audioStreamInfo,
+        audio: audio,
       );
 
       stopwatch.stop();
 
       audio.downloadDuration = stopwatch.elapsed;
 
-      _listOfPlaylist[0].addDownloadedAudio(audio);
-      _listOfPlaylist[0].addPlayableAudio(audio);
+      Playlist temporaryUniquePlaylist = _listOfPlaylist[0];
+
+      temporaryUniquePlaylist.addDownloadedAudio(audio);
+      temporaryUniquePlaylist.addPlayableAudio(audio);
 
       notifyListeners();
     }
@@ -223,11 +224,11 @@ class AudioDownloadVM extends ChangeNotifier {
     return validAudioVideoTitleLst;
   }
 
-  Future<void> _downloadAudioFileYoutube(
-    yt.Video youtubeVideo,
-    yt.AudioStreamInfo audioStreamInfo,
-    Audio audio,
-  ) async {
+  Future<void> _downloadAudioFile({
+    required yt.Video youtubeVideo,
+    required yt.AudioStreamInfo audioStreamInfo,
+    required Audio audio,
+  }) async {
     var file = File(audio.filePathName);
     final IOSink audioFile = file.openWrite();
     final Stream<List<int>> stream =
