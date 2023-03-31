@@ -54,32 +54,32 @@ class HomeViewModel extends ChangeNotifier {
     _isDownloading = true;
     notifyListeners();
 
-    var yt = YoutubeExplode();
-    var video = await yt.videos.get(url);
-    var manifest = await yt.videos.streamsClient.getManifest(url);
-    var audioStreamInfo = manifest.audioOnly.first;
-    var audioStream = yt.videos.streamsClient.get(audioStreamInfo);
+    YoutubeExplode youtubeExplode = YoutubeExplode();
+    Video video = await youtubeExplode.videos.get(url);
+    StreamManifest streamManifest = await youtubeExplode.videos.streamsClient.getManifest(url);
+    AudioOnlyStreamInfo audioStreamInfo = streamManifest.audioOnly.first;
+    Stream<List<int>> audioStream = youtubeExplode.videos.streamsClient.get(audioStreamInfo);
 
-    var title = video.title;
-    var duration = video.duration.toString();
-    var fileSize = audioStreamInfo.size.totalBytes;
+    String title = video.title;
+    String durationStr = video.duration.toString();
+    int audioFileSize = audioStreamInfo.size.totalBytes;
 
     _videoInfo = VideoInfo(
-        title: title, duration: duration, fileSize: fileSize.toString());
+        title: title, duration: durationStr, fileSize: audioFileSize.toString());
 
-    var directory = await getApplicationDocumentsDirectory();
-    var filePath = '${directory.path}/$title.mp4';
+    Directory directory = await getApplicationDocumentsDirectory();
+    String audioFilePathName = '${directory.path}/$title.mp3';
 
-    var file = File(filePath);
-    var fileSink = file.openWrite();
-    var totalBytesRead = 0;
+    File file = File(audioFilePathName);
+    IOSink audioFileSink = file.openWrite();
+    int totalBytesRead = 0;
 
     // Créez un Timer pour limiter les appels à notifyListeners
-    var updateInterval = Duration(seconds: 1);
-    var lastUpdate = DateTime.now();
-    var timer = Timer.periodic(updateInterval, (timer) {
+    Duration updateInterval = const Duration(seconds: 1);
+    DateTime lastUpdate = DateTime.now();
+    Timer timer = Timer.periodic(updateInterval, (timer) {
       if (DateTime.now().difference(lastUpdate) >= updateInterval) {
-        _updateDownloadProgress(totalBytesRead / fileSize);
+        _updateDownloadProgress(totalBytesRead / audioFileSize);
         lastUpdate = DateTime.now();
       }
     });
@@ -89,10 +89,10 @@ class HomeViewModel extends ChangeNotifier {
 
       // Vérifiez si le délai a été dépassé avant de mettre à jour la progression
       if (DateTime.now().difference(lastUpdate) >= updateInterval) {
-        _updateDownloadProgress(totalBytesRead / fileSize);
+        _updateDownloadProgress(totalBytesRead / audioFileSize);
         lastUpdate = DateTime.now();
       }
-      fileSink.add(byteChunk);
+      audioFileSink.add(byteChunk);
     }
 
     // Assurez-vous de mettre à jour la progression une dernière fois à 100% avant de terminer
@@ -101,10 +101,10 @@ class HomeViewModel extends ChangeNotifier {
     // Annulez le Timer pour éviter les appels inutiles
     timer.cancel();
 
-    await fileSink.flush();
-    await fileSink.close();
+    await audioFileSink.flush();
+    await audioFileSink.close();
 
-    yt.close();
+    youtubeExplode.close();
 
     _isDownloading = false;
     notifyListeners();
