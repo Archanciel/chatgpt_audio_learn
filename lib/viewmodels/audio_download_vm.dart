@@ -257,6 +257,8 @@ class AudioDownloadVM extends ChangeNotifier {
       }
     });
 
+    _isDownloading = true;
+
     await for (var byteChunk in audioStream) {
       totalBytesRead += byteChunk.length;
 
@@ -268,6 +270,8 @@ class AudioDownloadVM extends ChangeNotifier {
 
       audioFileSink.add(byteChunk);
     }
+
+    _isDownloading = false;
 
     // Assurez-vous de mettre à jour la progression une dernière fois à 100% avant de terminer
     _updateDownloadProgress(1.0);
