@@ -104,7 +104,7 @@ class _AudioListViewState extends State<AudioListView> {
                         isHighQuality: value ?? false);
                   },
                 ),
-                Text("High quality"),
+                Text(AppLocalizations.of(context)!.audioQuality),
               ],
             ),
           ],

@@ -129,7 +129,7 @@ class Audio {
           : json['audioDownloadSpeed'],
       videoUploadDate: DateTime.parse(json['videoUploadDate']),
       audioDuration: Duration(milliseconds: json['audioDurationMs'] ?? 0),
-      isMusicQuality: json['isMusicQuality'],
+      isMusicQuality: json['isMusicQuality'] ?? false,
       audioFileName: json['audioFileName'],
       audioFileSize: json['audioFileSize'],
     );

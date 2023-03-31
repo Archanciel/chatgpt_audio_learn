@@ -14,5 +14,6 @@
     "placeholders": {
       "language": {}
     }
-  }
+  },
+  "audioQuality": "Qualité max"
 }
