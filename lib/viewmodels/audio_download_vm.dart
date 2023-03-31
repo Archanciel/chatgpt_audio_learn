@@ -1,5 +1,6 @@
 // dart file located in lib\viewmodels
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:chatgpt_audio_learn/services/json_data_service.dart';
@@ -20,7 +21,7 @@ class AudioDownloadVM extends ChangeNotifier {
   List<Playlist> _listOfPlaylist = [];
   List<Playlist> get listOfPlaylist => _listOfPlaylist;
 
-  yt.YoutubeExplode _youtubeExplode = yt.YoutubeExplode();
+  late yt.YoutubeExplode _youtubeExplode;
   // setter used by test only !
   set youtubeExplode(yt.YoutubeExplode youtubeExplode) =>
       _youtubeExplode = youtubeExplode;
@@ -94,6 +95,8 @@ class AudioDownloadVM extends ChangeNotifier {
   Future<void> downloadPlaylistAudios({
     required Playlist playlistToDownload,
   }) async {
+    _youtubeExplode = yt.YoutubeExplode();
+
     // get Youtube playlist
 
     Playlist savedPlaylist;
@@ -193,6 +196,8 @@ class AudioDownloadVM extends ChangeNotifier {
       path: playlistDownloadFilePathName,
     );
 
+    _youtubeExplode.close();
+
     notifyListeners();
   }
 
@@ -227,7 +232,7 @@ class AudioDownloadVM extends ChangeNotifier {
     final yt.StreamManifest streamManifest =
         await _youtubeExplode.videos.streamsClient.getManifest(youtubeVideoId);
 
-    yt.AudioOnlyStreamInfo audioStreamInfo;
+    final yt.AudioOnlyStreamInfo audioStreamInfo;
 
     if (_isHighQuality) {
       audioStreamInfo = streamManifest.audioOnly.withHighestBitrate();
@@ -235,14 +240,43 @@ class AudioDownloadVM extends ChangeNotifier {
       audioStreamInfo = streamManifest.audioOnly.first;
     }
 
+    final int audioFileSize = audioStreamInfo.size.totalBytes;
+    audio.audioFileSize = audioFileSize;
     final File file = File(audio.filePathName);
-    final IOSink audioFile = file.openWrite();
-    final Stream<List<int>> stream =
+    final IOSink audioFileSink = file.openWrite();
+    final Stream<List<int>> audioStream =
         _youtubeExplode.videos.streamsClient.get(audioStreamInfo);
+    int totalBytesRead = 0;
 
-    await stream.pipe(audioFile);
+    Duration updateInterval = const Duration(seconds: 1);
+    DateTime lastUpdate = DateTime.now();
+    Timer timer = Timer.periodic(updateInterval, (timer) {
+      if (DateTime.now().difference(lastUpdate) >= updateInterval) {
+        _updateDownloadProgress(totalBytesRead / audioFileSize);
+        lastUpdate = DateTime.now();
+      }
+    });
 
-    audio.audioFileSize = await file.length();
+    await for (var byteChunk in audioStream) {
+      totalBytesRead += byteChunk.length;
+
+      // Vérifiez si le délai a été dépassé avant de mettre à jour la progression
+      if (DateTime.now().difference(lastUpdate) >= updateInterval) {
+        _updateDownloadProgress(totalBytesRead / audioFileSize);
+        lastUpdate = DateTime.now();
+      }
+
+      audioFileSink.add(byteChunk);
+    }
+
+    // Assurez-vous de mettre à jour la progression une dernière fois à 100% avant de terminer
+    _updateDownloadProgress(1.0);
+
+    // Annulez le Timer pour éviter les appels inutiles
+    timer.cancel();
+
+    await audioFileSink.flush();
+    await audioFileSink.close();
   }
 
   void _updateDownloadProgress(double progress) {
