@@ -50,6 +50,7 @@ void main() {
         audioDownloadSpeed: 1000000,
         videoUploadDate: DateTime(2023, 3, 1),
         audioDuration: const Duration(minutes: 5, seconds: 30),
+        isMusicQuality: false,
         audioFileName: 'Test Video Title.mp3',
         audioFileSize: 330000000,
       );
@@ -100,6 +101,7 @@ void main() {
         audioDownloadSpeed: 1000000,
         videoUploadDate: DateTime(2023, 3, 1),
         audioDuration: null,
+        isMusicQuality: false,
         audioFileName: 'Test Video Title.mp3',
         audioFileSize: 330000000,
       );
@@ -139,6 +141,7 @@ void main() {
         audioDownloadSpeed: 1000000,
         videoUploadDate: DateTime.now().subtract(const Duration(days: 10)),
         audioDuration: const Duration(minutes: 5, seconds: 30),
+        isMusicQuality: false,
         audioFileName: 'Test Video Title.mp3',
         audioFileSize: 330000000,
       );
@@ -153,6 +156,7 @@ void main() {
         audioDownloadSpeed: 1000000,
         videoUploadDate: DateTime.now().subtract(const Duration(days: 5)),
         audioDuration: const Duration(minutes: 5, seconds: 30),
+        isMusicQuality: false,
         audioFileName: 'Test Video Title.mp3',
         audioFileSize: 330000000,
       );
@@ -243,6 +247,7 @@ void main() {
         audioDownloadSpeed: 1000000,
         videoUploadDate: DateTime(2023, 3, 1),
         audioDuration: const Duration(minutes: 5, seconds: 30),
+        isMusicQuality: false,
         audioFileName: 'Test Video Title.mp3',
         audioFileSize: 330000000,
       );
@@ -274,6 +279,7 @@ void main() {
         audioDownloadSpeed: 1000000,
         videoUploadDate: DateTime(2023, 3, 1),
         audioDuration: const Duration(minutes: 5, seconds: 30),
+        isMusicQuality: false,
         audioFileName: 'Test Video Title.mp3',
         audioFileSize: 330000000,
       );
@@ -288,6 +294,7 @@ void main() {
         audioDownloadSpeed: 1000000,
         videoUploadDate: DateTime(2023, 3, 1),
         audioDuration: const Duration(minutes: 5, seconds: 30),
+        isMusicQuality: false,
         audioFileName: 'Test Video Title.mp3',
         audioFileSize: 330000000,
       );
@@ -341,6 +348,7 @@ void main() {
         audioDownloadSpeed: 1000000,
         videoUploadDate: DateTime.now().subtract(const Duration(days: 10)),
         audioDuration: null,
+        isMusicQuality: false,
         audioFileName: 'Test Video Title.mp3',
         audioFileSize: 330000000,
       );
@@ -355,6 +363,7 @@ void main() {
         audioDownloadSpeed: 1000000,
         videoUploadDate: DateTime.now().subtract(const Duration(days: 5)),
         audioDuration: const Duration(minutes: 5, seconds: 30),
+        isMusicQuality: false,
         audioFileName: 'Test Video Title.mp3',
         audioFileSize: 330000000,
       );
@@ -379,6 +388,7 @@ void main() {
         audioDownloadSpeed: 1000000,
         videoUploadDate: DateTime.now().subtract(const Duration(days: 10)),
         audioDuration: null,
+        isMusicQuality: false,
         audioFileName: 'Test Video Title.mp3',
         audioFileSize: 330000000,
       );
@@ -393,6 +403,7 @@ void main() {
         audioDownloadSpeed: 1000000,
         videoUploadDate: DateTime.now().subtract(const Duration(days: 5)),
         audioDuration: const Duration(minutes: 5, seconds: 30),
+        isMusicQuality: false,
         audioFileName: 'Test Video Title.mp3',
         audioFileSize: 330000000,
       );
@@ -473,6 +484,7 @@ void compareDeserializedWithOriginalAudio(
       originalAudio.videoUploadDate.toIso8601String());
   expect(deserializedAudio.audioDuration,
       originalAudio.audioDuration ?? const Duration(milliseconds: 0));
+  expect(deserializedAudio.isMusicQuality, originalAudio.isMusicQuality);
   expect(deserializedAudio.audioFileName, originalAudio.audioFileName);
   expect(deserializedAudio.audioFileSize, originalAudio.audioFileSize);
 }

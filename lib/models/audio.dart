@@ -50,14 +50,16 @@ class Audio {
     audioFileSize = size;
     audioDownloadSpeed = (audioFileSize == 0 || audioDownloadDuration == null)
         ? 0
-        : (audioFileSize / audioDownloadDuration!.inMicroseconds * 1000000).round() as int;
+        : (audioFileSize / audioDownloadDuration!.inMicroseconds * 1000000)
+            .round() as int;
   }
 
   set downloadDuration(Duration downloadDuration) {
     audioDownloadDuration = downloadDuration;
     audioDownloadSpeed = (audioFileSize == 0 || audioDownloadDuration == null)
         ? 0
-        : (audioFileSize / audioDownloadDuration!.inMicroseconds * 1000000).round() as int;
+        : (audioFileSize / audioDownloadDuration!.inMicroseconds * 1000000)
+            .round() as int;
   }
 
   // Speed at which the audio was downloaded in bytes per second
@@ -79,6 +81,8 @@ class Audio {
   AudioPlayer? audioPlayer;
 
   double playSpeed = kAudioDefaultSpeed;
+
+  bool isMusicQuality = false;
 
   Audio({
     required this.enclosingPlaylist,
@@ -104,6 +108,7 @@ class Audio {
     required this.audioDownloadSpeed,
     required this.videoUploadDate,
     required this.audioDuration,
+    required this.isMusicQuality,
     required this.audioFileName,
     required this.audioFileSize,
   });
@@ -119,9 +124,12 @@ class Audio {
       audioDownloadDateTime: DateTime.parse(json['audioDownloadDateTime']),
       audioDownloadDuration:
           Duration(milliseconds: json['audioDownloadDurationMs']),
-      audioDownloadSpeed: (json['audioDownloadSpeed'] < 0) ? double.infinity : json['audioDownloadSpeed'],
+      audioDownloadSpeed: (json['audioDownloadSpeed'] < 0)
+          ? double.infinity
+          : json['audioDownloadSpeed'],
       videoUploadDate: DateTime.parse(json['videoUploadDate']),
       audioDuration: Duration(milliseconds: json['audioDurationMs'] ?? 0),
+      isMusicQuality: json['isMusicQuality'],
       audioFileName: json['audioFileName'],
       audioFileSize: json['audioFileSize'],
     );
@@ -135,9 +143,11 @@ class Audio {
       'videoUrl': videoUrl,
       'audioDownloadDateTime': audioDownloadDateTime.toIso8601String(),
       'audioDownloadDurationMs': audioDownloadDuration?.inMilliseconds,
-      'audioDownloadSpeed': (audioDownloadSpeed.isFinite) ? audioDownloadSpeed : -1.0,
+      'audioDownloadSpeed':
+          (audioDownloadSpeed.isFinite) ? audioDownloadSpeed : -1.0,
       'videoUploadDate': videoUploadDate.toIso8601String(),
       'audioDurationMs': audioDuration?.inMilliseconds,
+      'isMusicQuality': isMusicQuality,
       'audioFileName': audioFileName,
       'audioFileSize': audioFileSize,
     };
