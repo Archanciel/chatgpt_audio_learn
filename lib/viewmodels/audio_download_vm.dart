@@ -33,6 +33,9 @@ class AudioDownloadVM extends ChangeNotifier {
   double _downloadProgress = 0.0;
   double get downloadProgress => _downloadProgress;
 
+  bool _isHighQuality = false;
+  bool get isHighQuality => _isHighQuality;
+
   AudioDownloadVM() {
     // Should load all the playlists, not only the audio_learn or to_delete
     // playlist !
@@ -140,12 +143,6 @@ class AudioDownloadVM extends ChangeNotifier {
 
     await for (yt.Video youtubeVideo
         in _youtubeExplode.playlists.getVideos(playlistId)) {
-      final yt.StreamManifest streamManifest = await _youtubeExplode
-          .videos.streamsClient
-          .getManifest(youtubeVideo.id);
-      final yt.AudioOnlyStreamInfo audioStreamInfo =
-          streamManifest.audioOnly.first;
-
       final Duration? audioDuration = youtubeVideo.duration;
       DateTime? audioUploadDate =
           (await _youtubeExplode.videos.get(youtubeVideo.id.value)).uploadDate;
@@ -175,8 +172,7 @@ class AudioDownloadVM extends ChangeNotifier {
 
       // Download the audio file
       await _downloadAudioFile(
-        youtubeVideo: youtubeVideo,
-        audioStreamInfo: audioStreamInfo,
+        youtubeVideoId: youtubeVideo.id,
         audio: audio,
       );
 
@@ -225,11 +221,21 @@ class AudioDownloadVM extends ChangeNotifier {
   }
 
   Future<void> _downloadAudioFile({
-    required yt.Video youtubeVideo,
-    required yt.AudioStreamInfo audioStreamInfo,
+    required yt.VideoId youtubeVideoId,
     required Audio audio,
   }) async {
-    var file = File(audio.filePathName);
+    final yt.StreamManifest streamManifest =
+        await _youtubeExplode.videos.streamsClient.getManifest(youtubeVideoId);
+
+    yt.AudioOnlyStreamInfo audioStreamInfo;
+
+    if (_isHighQuality) {
+      audioStreamInfo = streamManifest.audioOnly.withHighestBitrate();
+    } else {
+      audioStreamInfo = streamManifest.audioOnly.first;
+    }
+
+    final File file = File(audio.filePathName);
     final IOSink audioFile = file.openWrite();
     final Stream<List<int>> stream =
         _youtubeExplode.videos.streamsClient.get(audioStreamInfo);
@@ -241,6 +247,13 @@ class AudioDownloadVM extends ChangeNotifier {
 
   void _updateDownloadProgress(double progress) {
     _downloadProgress = progress;
+
+    notifyListeners();
+  }
+
+  void setAudioQuality({required bool isHighQuality}) {
+    _isHighQuality = isHighQuality;
+
     notifyListeners();
   }
 }

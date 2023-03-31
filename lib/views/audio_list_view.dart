@@ -62,6 +62,8 @@ class _AudioListViewState extends State<AudioListView> {
     final AudioDownloadVM audioDownloadViewModel =
         Provider.of<AudioDownloadVM>(context);
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Padding(
           padding: const EdgeInsets.all(16.0),
@@ -74,18 +76,38 @@ class _AudioListViewState extends State<AudioListView> {
             ),
           ),
         ),
-        ElevatedButton(
-          onPressed: () {
-            final String playlistUrl = _textEditingController.text.trim();
-            Playlist playlistToDownload = Playlist(url: playlistUrl);
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                final String playlistUrl = _textEditingController.text.trim();
+                Playlist playlistToDownload = Playlist(url: playlistUrl);
 
-            if (playlistUrl.isNotEmpty) {
-              audioDownloadViewModel.downloadPlaylistAudios(
-                playlistToDownload: playlistToDownload,
-              );
-            }
-          },
-          child: Text(AppLocalizations.of(context)!.downloadAudio),
+                if (playlistUrl.isNotEmpty) {
+                  audioDownloadViewModel.downloadPlaylistAudios(
+                    playlistToDownload: playlistToDownload,
+                  );
+                }
+              },
+              child: Text(AppLocalizations.of(context)!.downloadAudio),
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Checkbox(
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  visualDensity: VisualDensity.compact,
+                  value: audioDownloadViewModel.isHighQuality,
+                  onChanged: (bool? value) {
+                    audioDownloadViewModel.setAudioQuality(
+                        isHighQuality: value ?? false);
+                  },
+                ),
+                Text("High quality"),
+              ],
+            ),
+          ],
         ),
         ElevatedButton(
           onPressed: () {
