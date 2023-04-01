@@ -186,12 +186,17 @@ class AudioDownloadVM extends ChangeNotifier {
       Playlist temporaryUniquePlaylist = _listOfPlaylist[0];
 
       temporaryUniquePlaylist.addDownloadedAudio(audio);
-      temporaryUniquePlaylist.addPlayableAudio(audio);
+      temporaryUniquePlaylist.insertAtStartPlayableAudio(audio);
 
       notifyListeners();
     }
 
-    savedPlaylist.sortDownloadAudioLst(sortOnNameStr: 'audioDownloadDateTime');
+    // temporary here since, from now, new downloaded audio will
+    // be inserted at start of playable audio list
+    savedPlaylist.sortPlayableAudioLst(
+        audioSortCriteriomn: AudioSortCriterion.audioDownloadDateTime,
+        isSortAscending: false);
+
     JsonDataService.saveToFile(
       model: savedPlaylist,
       path: playlistDownloadFilePathName,

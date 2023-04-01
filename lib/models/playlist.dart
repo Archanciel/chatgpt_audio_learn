@@ -53,7 +53,7 @@ class Playlist {
     if (json['playableAudioLst'] != null) {
       for (var audioJson in json['playableAudioLst']) {
         Audio audio = Audio.fromJson(audioJson);
-        playlist.addPlayableAudio(audio);
+        playlist.insertAtStartPlayableAudio(audio);
       }
     }
 
@@ -86,9 +86,9 @@ class Playlist {
     downloadedAudioLst.remove(downloadedAudio);
   }
 
-  void addPlayableAudio(Audio playableAudio) {
+  void insertAtStartPlayableAudio(Audio playableAudio) {
     playableAudio.enclosingPlaylist = this;
-    playableAudioLst.add(playableAudio);
+    playableAudioLst.insert(0, playableAudio);
   }
 
   void removePlayableAudio(Audio playableAudio) {
@@ -105,48 +105,47 @@ class Playlist {
   }
 
   void sortDownloadedAudioLst({
-    required String sortOnNameStr,
-    bool isSortAscending = true,
+    required AudioSortCriterion audioSortCriteriomn,
+    required bool isSortAscending,
   }) {
     _sortAudioLst(
       lstToSort: downloadedAudioLst,
-      sortOnNameStr: sortOnNameStr,
+      audioSortCriteriomn: audioSortCriteriomn,
       isSortAscending: isSortAscending,
     );
   }
 
   void sortPlayableAudioLst({
-    required String sortOnNameStr,
-    bool isSortAscending = true,
+    required AudioSortCriterion audioSortCriteriomn,
+    required bool isSortAscending,
   }) {
     _sortAudioLst(
       lstToSort: playableAudioLst,
-      sortOnNameStr: sortOnNameStr,
+      audioSortCriteriomn: audioSortCriteriomn,
       isSortAscending: isSortAscending,
     );
   }
 
   void _sortAudioLst({
     required List<Audio> lstToSort,
-    required String sortOnNameStr,
+    required AudioSortCriterion audioSortCriteriomn,
     required bool isSortAscending,
   }) {
     lstToSort.sort((a, b) {
       dynamic aValue;
       dynamic bValue;
 
-      switch (sortOnNameStr) {
-        case 'validVideoTitle':
+      switch (audioSortCriteriomn) {
+        case AudioSortCriterion.validVideoTitle:
           aValue = a.validVideoTitle;
           bValue = b.validVideoTitle;
           break;
-        case 'audioDownloadDateTime':
+        case AudioSortCriterion.audioDownloadDateTime:
           aValue = a.audioDownloadDateTime;
           bValue = b.audioDownloadDateTime;
           break;
         default:
-          throw ArgumentError(
-              'Invalid sortOnAudioInstanceVariable: $sortOnNameStr');
+          break;
       }
 
       int compareResult = aValue.compareTo(bValue);
