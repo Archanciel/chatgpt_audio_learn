@@ -432,15 +432,15 @@ void main() {
       // Clean up the test file
       File(jsonPath).deleteSync();
     });
-  });
-  test('loadListFromFile() for Plylist list file not exist', () {
-    // Create an Audio instance
-    // Load the list from the file
-    List<Audio> loadedList = JsonDataService.loadListFromFile(
-        jsonPathFileName: jsonPath, type: Playlist);
+    test('loadListFromFile() for Playlist list file not exist', () {
+      // Create an Audio instance
+      // Load the list from the file
+      List<Audio> loadedList = JsonDataService.loadListFromFile(
+          jsonPathFileName: jsonPath, type: Playlist);
 
-    // Check if the loaded list matches the original list
-    expect(loadedList.length, 0);
+      // Check if the loaded list matches the original list
+      expect(loadedList.length, 0);
+    });
   });
 }
 

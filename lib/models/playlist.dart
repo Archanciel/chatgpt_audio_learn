@@ -103,4 +103,55 @@ class Playlist {
   String getPlaylistDownloadFilePathName() {
     return '$downloadPath${Platform.pathSeparator}$title.json';
   }
+
+  void sortDownloadedAudioLst({
+    required String sortOnNameStr,
+    bool isSortAscending = true,
+  }) {
+    _sortAudioLst(
+      lstToSort: downloadedAudioLst,
+      sortOnNameStr: sortOnNameStr,
+      isSortAscending: isSortAscending,
+    );
+  }
+
+  void sortPlayableAudioLst({
+    required String sortOnNameStr,
+    bool isSortAscending = true,
+  }) {
+    _sortAudioLst(
+      lstToSort: playableAudioLst,
+      sortOnNameStr: sortOnNameStr,
+      isSortAscending: isSortAscending,
+    );
+  }
+
+  void _sortAudioLst({
+    required List<Audio> lstToSort,
+    required String sortOnNameStr,
+    required bool isSortAscending,
+  }) {
+    lstToSort.sort((a, b) {
+      dynamic aValue;
+      dynamic bValue;
+
+      switch (sortOnNameStr) {
+        case 'validVideoTitle':
+          aValue = a.validVideoTitle;
+          bValue = b.validVideoTitle;
+          break;
+        case 'audioDownloadDateTime':
+          aValue = a.audioDownloadDateTime;
+          bValue = b.audioDownloadDateTime;
+          break;
+        default:
+          throw ArgumentError(
+              'Invalid sortOnAudioInstanceVariable: $sortOnNameStr');
+      }
+
+      int compareResult = aValue.compareTo(bValue);
+
+      return isSortAscending ? compareResult : -compareResult;
+    });
+  }
 }

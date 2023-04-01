@@ -191,6 +191,7 @@ class AudioDownloadVM extends ChangeNotifier {
       notifyListeners();
     }
 
+    savedPlaylist.sortDownloadAudioLst(sortOnNameStr: 'audioDownloadDateTime');
     JsonDataService.saveToFile(
       model: savedPlaylist,
       path: playlistDownloadFilePathName,
