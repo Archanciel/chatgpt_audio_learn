@@ -9,6 +9,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../constants.dart';
 import '../models/playlist.dart';
+import '../utils/ui_util.dart';
 import '../viewmodels/playlist_edit_vm.dart';
 import 'audio_list_item_widget.dart';
 
@@ -120,31 +121,25 @@ class _AudioListViewState extends State<AudioListView> {
         Consumer<AudioDownloadVM>(
           builder: (context, audioDownloadVM, child) {
             if (audioDownloadVM.isDownloading) {
-              return Column(
-                children: [
-                  const SizedBox(height: 16.0),
-                  Text(
-                    audioDownloadVM.currentDownloadingAudio.originalVideoTitle,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 10.0),
-                  LinearProgressIndicator(
-                      value: audioDownloadVM.downloadProgress),
-                  const SizedBox(height: 10.0),
-                  Text(
-                      'Progress: ${(audioDownloadVM.downloadProgress * 100).toStringAsFixed(1)}%'),
-                  const SizedBox(height: 16.0),
-                ],
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Text(
+                      audioDownloadVM.currentDownloadingAudio.originalVideoTitle,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 10.0),
+                    LinearProgressIndicator(
+                        value: audioDownloadVM.downloadProgress),
+                    const SizedBox(height: 10.0),
+                    Text(
+                        'Progress: ${(audioDownloadVM.downloadProgress * 100).
+                        toStringAsFixed(1)}% at ${UiUtil.formatLargeIntValue(
+                          audioDownloadVM.lastSecondDownloadSpeed)}/sec'),
+                  ],
+                ),
               );
-              // } else if (audioDownloadVM.videoInfo != null) {
-              //   return Column(
-              //     children: [
-              //       Text('Title: ${audioDownloadVM.videoInfo!.title}'),
-              //       Text('Duration: ${audioDownloadVM.videoInfo!.duration}'),
-              //       Text(
-              //           'File size: ${audioDownloadVM.videoInfo!.fileSize}'), // Mettre à jour la taille du fichier dans le ViewModel lors du téléchargement
-              //     ],
-              //   );
             } else {
               return const SizedBox.shrink();
             }

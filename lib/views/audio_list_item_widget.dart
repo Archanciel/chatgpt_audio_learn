@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/audio.dart';
+import '../utils/ui_util.dart';
 import '../viewmodels/audio_player_vm.dart';
 import '../utils/time_util.dart';
 
@@ -38,7 +39,7 @@ class AudioListItemWidget extends StatelessWidget {
     int audioFileSize = audio.audioFileSize;
     String audioFileSizeStr;
 
-    audioFileSizeStr = formatLargeIntValue(audioFileSize);
+    audioFileSizeStr = UiUtil.formatLargeIntValue(audioFileSize);
 
     int audioDownloadSpeed = audio.audioDownloadSpeed;
     String audioDownloadSpeedStr;
@@ -46,7 +47,7 @@ class AudioListItemWidget extends StatelessWidget {
     if (audioDownloadSpeed.isInfinite) {
       audioDownloadSpeedStr = 'infinite o/sec';
     } else {
-      audioDownloadSpeedStr = '${formatLargeIntValue(audioDownloadSpeed)}/sec';
+      audioDownloadSpeedStr = '${UiUtil.formatLargeIntValue(audioDownloadSpeed)}/sec';
     }
 
     if (audioDuration == null) {
@@ -56,17 +57,6 @@ class AudioListItemWidget extends StatelessWidget {
           '${audioDuration.HHmmss()}. Size $audioFileSizeStr. Downloaded at $audioDownloadSpeedStr';
     }
     return subTitle;
-  }
-
-  String formatLargeIntValue(int value) {
-    String formattedValueStr;
-
-    if (value < 1000000) {
-      formattedValueStr = '${value ~/ 1000} Ko';
-    } else {
-      formattedValueStr = '${(value / 1000000).toStringAsFixed(2)} Mo';
-    }
-    return formattedValueStr;
   }
 
   Widget _buildPlayButton() {

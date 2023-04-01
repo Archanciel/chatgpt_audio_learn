@@ -34,6 +34,9 @@ class AudioDownloadVM extends ChangeNotifier {
   double _downloadProgress = 0.0;
   double get downloadProgress => _downloadProgress;
 
+  int _lastSecondDownloadSpeed = 0;
+  int get lastSecondDownloadSpeed => _lastSecondDownloadSpeed;
+
   late Audio _currentDownloadingAudio;
   Audio get currentDownloadingAudio => _currentDownloadingAudio;
 
@@ -256,13 +259,16 @@ class AudioDownloadVM extends ChangeNotifier {
     final IOSink audioFileSink = file.openWrite();
     final Stream<List<int>> audioStream =
         _youtubeExplode.videos.streamsClient.get(audioStreamInfo);
-    int totalBytesRead = 0;
+    int totalBytesDownloaded = 0;
+    int previousSecondBytesDownloaded = 0;
 
     Duration updateInterval = const Duration(seconds: 1);
     DateTime lastUpdate = DateTime.now();
     Timer timer = Timer.periodic(updateInterval, (timer) {
       if (DateTime.now().difference(lastUpdate) >= updateInterval) {
-        _updateDownloadProgress(totalBytesRead / audioFileSize);
+        _updateDownloadProgress(totalBytesDownloaded / audioFileSize,
+            totalBytesDownloaded - previousSecondBytesDownloaded);
+        previousSecondBytesDownloaded = totalBytesDownloaded;
         lastUpdate = DateTime.now();
       }
     });
@@ -270,11 +276,13 @@ class AudioDownloadVM extends ChangeNotifier {
     _isDownloading = true;
 
     await for (var byteChunk in audioStream) {
-      totalBytesRead += byteChunk.length;
+      totalBytesDownloaded += byteChunk.length;
 
       // Vérifiez si le délai a été dépassé avant de mettre à jour la progression
       if (DateTime.now().difference(lastUpdate) >= updateInterval) {
-        _updateDownloadProgress(totalBytesRead / audioFileSize);
+        _updateDownloadProgress(totalBytesDownloaded / audioFileSize,
+            totalBytesDownloaded - previousSecondBytesDownloaded);
+        previousSecondBytesDownloaded = totalBytesDownloaded;
         lastUpdate = DateTime.now();
       }
 
@@ -284,7 +292,7 @@ class AudioDownloadVM extends ChangeNotifier {
     _isDownloading = false;
 
     // Assurez-vous de mettre à jour la progression une dernière fois à 100% avant de terminer
-    _updateDownloadProgress(1.0);
+    _updateDownloadProgress(1.0, 0);
 
     // Annulez le Timer pour éviter les appels inutiles
     timer.cancel();
@@ -293,8 +301,9 @@ class AudioDownloadVM extends ChangeNotifier {
     await audioFileSink.close();
   }
 
-  void _updateDownloadProgress(double progress) {
+  void _updateDownloadProgress(double progress, int lastSecondDownloadSpeed) {
     _downloadProgress = progress;
+    _lastSecondDownloadSpeed = lastSecondDownloadSpeed;
 
     notifyListeners();
   }
