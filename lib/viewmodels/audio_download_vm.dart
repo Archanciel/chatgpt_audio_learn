@@ -34,6 +34,9 @@ class AudioDownloadVM extends ChangeNotifier {
   double _downloadProgress = 0.0;
   double get downloadProgress => _downloadProgress;
 
+  late Audio _currentDownloadingAudio;
+  Audio get currentDownloadingAudio => _currentDownloadingAudio;
+
   bool _isHighQuality = false;
   bool get isHighQuality => _isHighQuality;
 
@@ -235,6 +238,7 @@ class AudioDownloadVM extends ChangeNotifier {
     required yt.VideoId youtubeVideoId,
     required Audio audio,
   }) async {
+    _currentDownloadingAudio = audio;
     final yt.StreamManifest streamManifest =
         await _youtubeExplode.videos.streamsClient.getManifest(youtubeVideoId);
 

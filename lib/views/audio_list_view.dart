@@ -122,26 +122,29 @@ class _AudioListViewState extends State<AudioListView> {
             if (audioDownloadVM.isDownloading) {
               return Column(
                 children: [
-                  const CircularProgressIndicator(),
-                  Text(
-                      '${(audioDownloadVM.downloadProgress * 100).toStringAsFixed(1)}%'),
                   const SizedBox(height: 16.0),
+                  Text(
+                    audioDownloadVM.currentDownloadingAudio.originalVideoTitle,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10.0),
                   LinearProgressIndicator(
                       value: audioDownloadVM.downloadProgress),
-                  const SizedBox(height: 16.0),
+                  const SizedBox(height: 10.0),
                   Text(
                       'Progress: ${(audioDownloadVM.downloadProgress * 100).toStringAsFixed(1)}%'),
+                  const SizedBox(height: 16.0),
                 ],
               );
-            // } else if (audioDownloadVM.videoInfo != null) {
-            //   return Column(
-            //     children: [
-            //       Text('Title: ${audioDownloadVM.videoInfo!.title}'),
-            //       Text('Duration: ${audioDownloadVM.videoInfo!.duration}'),
-            //       Text(
-            //           'File size: ${audioDownloadVM.videoInfo!.fileSize}'), // Mettre à jour la taille du fichier dans le ViewModel lors du téléchargement
-            //     ],
-            //   );
+              // } else if (audioDownloadVM.videoInfo != null) {
+              //   return Column(
+              //     children: [
+              //       Text('Title: ${audioDownloadVM.videoInfo!.title}'),
+              //       Text('Duration: ${audioDownloadVM.videoInfo!.duration}'),
+              //       Text(
+              //           'File size: ${audioDownloadVM.videoInfo!.fileSize}'), // Mettre à jour la taille du fichier dans le ViewModel lors du téléchargement
+              //     ],
+              //   );
             } else {
               return const SizedBox.shrink();
             }
