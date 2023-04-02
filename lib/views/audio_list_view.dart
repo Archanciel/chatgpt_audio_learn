@@ -80,18 +80,26 @@ class _AudioListViewState extends State<AudioListView> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton(
-              onPressed: () {
-                final String playlistUrl = _textEditingController.text.trim();
-                Playlist playlistToDownload = Playlist(url: playlistUrl);
+            Consumer<AudioDownloadVM>(
+              builder: (context, audioDownloadVM, child) {
+                return ElevatedButton(
+                  onPressed: audioDownloadVM.isDownloading
+                      ? null
+                      : () {
+                          final String playlistUrl =
+                              _textEditingController.text.trim();
+                          Playlist playlistToDownload =
+                              Playlist(url: playlistUrl);
 
-                if (playlistUrl.isNotEmpty) {
-                  audioDownloadViewModel.downloadPlaylistAudios(
-                    playlistToDownload: playlistToDownload,
-                  );
-                }
+                          if (playlistUrl.isNotEmpty) {
+                            audioDownloadVM.downloadPlaylistAudios(
+                              playlistToDownload: playlistToDownload,
+                            );
+                          }
+                        },
+                  child: Text(AppLocalizations.of(context)!.downloadAudio),
+                );
               },
-              child: Text(AppLocalizations.of(context)!.downloadAudio),
             ),
             Row(
               mainAxisSize: MainAxisSize.min,
@@ -126,7 +134,8 @@ class _AudioListViewState extends State<AudioListView> {
                 child: Column(
                   children: [
                     Text(
-                      audioDownloadVM.currentDownloadingAudio.originalVideoTitle,
+                      audioDownloadVM
+                          .currentDownloadingAudio.originalVideoTitle,
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 10.0),
@@ -134,9 +143,8 @@ class _AudioListViewState extends State<AudioListView> {
                         value: audioDownloadVM.downloadProgress),
                     const SizedBox(height: 10.0),
                     Text(
-                        'Progress: ${(audioDownloadVM.downloadProgress * 100).
-                        toStringAsFixed(1)}% at ${UiUtil.formatLargeIntValue(
-                          audioDownloadVM.lastSecondDownloadSpeed)}/sec'),
+                      '${(audioDownloadVM.downloadProgress * 100).toStringAsFixed(1)}% of ${UiUtil.formatLargeIntValue(audioDownloadVM.currentDownloadingAudio.audioFileSize)} at ${UiUtil.formatLargeIntValue(audioDownloadVM.lastSecondDownloadSpeed)}/sec',
+                    ),
                   ],
                 ),
               );

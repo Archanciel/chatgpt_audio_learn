@@ -132,6 +132,8 @@ class AudioDownloadVM extends ChangeNotifier {
         youtubePlaylist = await _youtubeExplode.playlists.get(playlistId);
       }
     } else {
+      // situation in which the appdoes download playlists for the first
+      // time
       playlistId = yt.PlaylistId.parsePlaylistId(playlistToDownload.url);
       youtubePlaylist = await _youtubeExplode.playlists.get(playlistId);
 
@@ -179,6 +181,10 @@ class AudioDownloadVM extends ChangeNotifier {
 
       Stopwatch stopwatch = Stopwatch()..start();
 
+      if (!_isDownloading) {
+        _setIsDownloading(isDownloading: true);
+      }
+      
       // Download the audio file
       await _downloadAudioFile(
         youtubeVideoId: youtubeVideo.id,
@@ -189,24 +195,18 @@ class AudioDownloadVM extends ChangeNotifier {
 
       audio.downloadDuration = stopwatch.elapsed;
 
-      Playlist temporaryUniquePlaylist = _listOfPlaylist[0];
+      savedPlaylist.addDownloadedAudio(audio);
+      savedPlaylist.insertAtStartPlayableAudio(audio);
 
-      temporaryUniquePlaylist.addDownloadedAudio(audio);
-      temporaryUniquePlaylist.insertAtStartPlayableAudio(audio);
+      JsonDataService.saveToFile(
+        model: savedPlaylist,
+        path: playlistDownloadFilePathName,
+      );
 
       notifyListeners();
     }
 
-    // temporary here since, from now, new downloaded audio will
-    // be inserted at start of playable audio list
-    savedPlaylist.sortPlayableAudioLst(
-        audioSortCriteriomn: AudioSortCriterion.audioDownloadDateTime,
-        isSortAscending: false);
-
-    JsonDataService.saveToFile(
-      model: savedPlaylist,
-      path: playlistDownloadFilePathName,
-    );
+    _setIsDownloading(isDownloading: false);
 
     _youtubeExplode.close();
 
@@ -273,8 +273,6 @@ class AudioDownloadVM extends ChangeNotifier {
       }
     });
 
-    _isDownloading = true;
-
     await for (var byteChunk in audioStream) {
       totalBytesDownloaded += byteChunk.length;
 
@@ -288,8 +286,6 @@ class AudioDownloadVM extends ChangeNotifier {
 
       audioFileSink.add(byteChunk);
     }
-
-    _isDownloading = false;
 
     // Assurez-vous de mettre à jour la progression une dernière fois à 100% avant de terminer
     _updateDownloadProgress(1.0, 0);
@@ -310,6 +306,12 @@ class AudioDownloadVM extends ChangeNotifier {
 
   void setAudioQuality({required bool isHighQuality}) {
     _isHighQuality = isHighQuality;
+
+    notifyListeners();
+  }
+
+  void _setIsDownloading({required bool isDownloading}) {
+    _isDownloading = isDownloading;
 
     notifyListeners();
   }
