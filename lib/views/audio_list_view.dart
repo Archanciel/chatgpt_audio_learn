@@ -128,6 +128,12 @@ class _AudioListViewState extends State<AudioListView> {
         ),
         Consumer<AudioDownloadVM>(
           builder: (context, audioDownloadVM, child) {
+            String downloadProgressPercent =
+                '${(audioDownloadVM.downloadProgress * 100).toStringAsFixed(1)}%';
+            String downloadFileSize =
+                '${UiUtil.formatLargeIntValue(audioDownloadVM.currentDownloadingAudio.audioFileSize)}';
+            String downloadSpeed =
+                '${UiUtil.formatLargeIntValue(audioDownloadVM.lastSecondDownloadSpeed)}/sec';
             if (audioDownloadVM.isDownloading) {
               return Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -143,7 +149,7 @@ class _AudioListViewState extends State<AudioListView> {
                         value: audioDownloadVM.downloadProgress),
                     const SizedBox(height: 10.0),
                     Text(
-                      '${(audioDownloadVM.downloadProgress * 100).toStringAsFixed(1)}% of ${UiUtil.formatLargeIntValue(audioDownloadVM.currentDownloadingAudio.audioFileSize)} at ${UiUtil.formatLargeIntValue(audioDownloadVM.lastSecondDownloadSpeed)}/sec',
+                      '$downloadProgressPercent ${AppLocalizations.of(context)!.ofPreposition} $downloadFileSize ${AppLocalizations.of(context)!.atPreposition} $downloadSpeed',
                     ),
                   ],
                 ),

@@ -15,5 +15,7 @@
       "language": {}
     }
   },
-  "audioQuality": "Qualité max"
+  "audioQuality": "Qualité max",
+  "ofPreposition": "de",
+  "atPreposition": "à"
 }

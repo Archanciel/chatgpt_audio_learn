@@ -18,5 +18,7 @@
       "language": {}
     }
   },
-  "audioQuality": "Max quality"
+  "audioQuality": "Max quality",
+  "ofPreposition": "of",
+  "atPreposition": "at"
 }
