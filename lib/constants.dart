@@ -21,7 +21,7 @@ DateFormat englishDateTimeFormat = DateFormat("yyyy-MM-dd HH:mm");
 DateFormat frenchDateTimeFormat = DateFormat("dd-MM-yyyy HH:mm");
 
 // to_delete playlist url
-const String kPlaylistUrl =
+const String kUniquePlaylistUrl =
     'https://youtube.com/playlist?list=PLzwWSJNcZTMTB9iwbu77FGokc3WsoxuV0';
 const String kUniquePlaylistTitle = 'to_delete';
 const bool kDeleteAppDir = false;

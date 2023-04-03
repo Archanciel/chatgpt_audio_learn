@@ -26,7 +26,7 @@ class AudioListView extends StatefulWidget {
 
 class _AudioListViewState extends State<AudioListView> {
   final TextEditingController _textEditingController =
-      TextEditingController(text: kPlaylistUrl);
+      TextEditingController(text: kUniquePlaylistUrl);
 
   final AudioPlayerVM _audioPlayerViwModel = AudioPlayerVM();
 
