@@ -128,13 +128,13 @@ class _AudioListViewState extends State<AudioListView> {
         ),
         Consumer<AudioDownloadVM>(
           builder: (context, audioDownloadVM, child) {
-            String downloadProgressPercent =
-                '${(audioDownloadVM.downloadProgress * 100).toStringAsFixed(1)}%';
-            String downloadFileSize =
-                '${UiUtil.formatLargeIntValue(audioDownloadVM.currentDownloadingAudio.audioFileSize)}';
-            String downloadSpeed =
-                '${UiUtil.formatLargeIntValue(audioDownloadVM.lastSecondDownloadSpeed)}/sec';
             if (audioDownloadVM.isDownloading) {
+              String downloadProgressPercent =
+                  '${(audioDownloadVM.downloadProgress * 100).toStringAsFixed(1)}%';
+              String downloadFileSize =
+                  '${UiUtil.formatLargeIntValue(audioDownloadVM.currentDownloadingAudio.audioFileSize)}';
+              String downloadSpeed =
+                  '${UiUtil.formatLargeIntValue(audioDownloadVM.lastSecondDownloadSpeed)}/sec';
               return Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
