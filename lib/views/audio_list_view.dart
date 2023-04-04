@@ -126,6 +126,8 @@ class _AudioListViewState extends State<AudioListView> {
           },
           child: const Text('Remove video from playlist'),
         ),
+        // displaying the currently downloading audiodownload
+        // informations.
         Consumer<AudioDownloadVM>(
           builder: (context, audioDownloadVM, child) {
             if (audioDownloadVM.isDownloading) {

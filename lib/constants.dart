@@ -21,16 +21,22 @@ DateFormat englishDateTimeFormat = DateFormat("yyyy-MM-dd HH:mm");
 DateFormat frenchDateTimeFormat = DateFormat("dd-MM-yyyy HH:mm");
 
 // to_delete playlist url
-const String kUniquePlaylistUrl =
-    'https://youtube.com/playlist?list=PLzwWSJNcZTMTB9iwbu77FGokc3WsoxuV0';
-const String kUniquePlaylistTitle = 'to_delete';
-const bool kDeleteAppDir = false;
+// const String kUniquePlaylistUrl =
+//     'https://youtube.com/playlist?list=PLzwWSJNcZTMTB9iwbu77FGokc3WsoxuV0';
+// const String kUniquePlaylistTitle = 'to_delete';
+// const bool kDeleteAppDir = false;
+
+// audio_learn_test_download_3_small_videos playlist url
+// const String kUniquePlaylistUrl =
+//     'https://youtube.com/playlist?list=PLzwWSJNcZTMRB9ILve6fEIS_OHGrV5R2o';
+// const String kUniquePlaylistTitle = 'audio_learn_test_download_3_small_videos';
+// const bool kDeleteAppDir = false;
 
 // audio_learn playlist url
-// const String kPlaylistUrl =
-//     'https://youtube.com/playlist?list=PLzwWSJNcZTMRBJuvE6vk6PMnqIBhCKUIa';
-// const String kUniquePlaylistTitle = 'audio_learn';
-// const bool kDeleteAppDir = false;
+const String kUniquePlaylistUrl =
+    'https://youtube.com/playlist?list=PLzwWSJNcZTMRBJuvE6vk6PMnqIBhCKUIa';
+const String kUniquePlaylistTitle = 'audio_learn';
+const bool kDeleteAppDir = false;
 
 const double kAudioDefaultSpeed = 1.25;
 const String kSecretClientCodeJsonFileName =

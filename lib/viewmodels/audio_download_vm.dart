@@ -46,10 +46,10 @@ class AudioDownloadVM extends ChangeNotifier {
   AudioDownloadVM() {
     // Should load all the playlists, not only the audio_learn or to_delete
     // playlist !
-    loadTemporaryUniquePlaylist();
+    _loadTemporaryUniquePlaylist();
   }
 
-  void loadTemporaryUniquePlaylist() async {
+  void _loadTemporaryUniquePlaylist() async {
     String jsonPathFileName =
         '$_playlistHomePath${Platform.pathSeparator}$kUniquePlaylistTitle${Platform.pathSeparator}$kUniquePlaylistTitle.json';
     dynamic currentPlaylist = JsonDataService.loadFromFile(
@@ -71,29 +71,6 @@ class AudioDownloadVM extends ChangeNotifier {
         jsonPathFileName: _playlistHomePath, data: _listOfPlaylist);
 
     notifyListeners();
-  }
-
-  Future<Playlist> obtainPlaylist({
-    required Playlist playlistToDownload,
-    required yt.Playlist youtubePlaylist,
-  }) async {
-    Playlist savedPlaylist = playlistToDownload;
-    _listOfPlaylist.add(savedPlaylist);
-
-    // define playlist audio download dir
-
-    final String audioDownloadPath = DirUtil.getPlaylistDownloadHomePath();
-    final String playlistTitle = youtubePlaylist.title;
-    savedPlaylist.title = playlistTitle;
-    final String playlistDownloadPath =
-        '$audioDownloadPath${Platform.pathSeparator}$playlistTitle';
-
-    // ensure playlist audio download dir exists
-    await DirUtil.createDirIfNotExist(pathStr: playlistDownloadPath);
-
-    savedPlaylist.downloadPath = playlistDownloadPath;
-
-    return savedPlaylist;
   }
 
   /// Downloads the audio of the videos referenced in the passed
@@ -120,7 +97,7 @@ class AudioDownloadVM extends ChangeNotifier {
         playlistId = yt.PlaylistId.parsePlaylistId(playlistToDownload.url);
         youtubePlaylist = await _youtubeExplode.playlists.get(playlistId);
 
-        savedPlaylist = await obtainPlaylist(
+        savedPlaylist = await _obtainPlaylist(
           playlistToDownload: playlistToDownload,
           youtubePlaylist: youtubePlaylist,
         );
@@ -137,7 +114,7 @@ class AudioDownloadVM extends ChangeNotifier {
       playlistId = yt.PlaylistId.parsePlaylistId(playlistToDownload.url);
       youtubePlaylist = await _youtubeExplode.playlists.get(playlistId);
 
-      savedPlaylist = await obtainPlaylist(
+      savedPlaylist = await _obtainPlaylist(
         playlistToDownload: playlistToDownload,
         youtubePlaylist: youtubePlaylist,
       );
@@ -148,7 +125,7 @@ class AudioDownloadVM extends ChangeNotifier {
         savedPlaylist.getPlaylistDownloadFilePathName();
 
     final List<String> downloadedAudioValidVideoTitleLst =
-        await getPlaylistDownloadedAudioValidVideoTitleLst(
+        await _getPlaylistDownloadedAudioValidVideoTitleLst(
             playlistPathFileName: playlistDownloadFilePathName,
             uiPlaylist: savedPlaylist);
 
@@ -176,6 +153,14 @@ class AudioDownloadVM extends ChangeNotifier {
 
       if (alreadyDownloaded) {
         print('${audio.audioFileName} already downloaded');
+
+        // avoids that the last downloaded audio download
+        // informations remain displayed until all videos referenced
+        // in the playlist have been handled.
+        if (_isDownloading) {
+          _setIsDownloading(isDownloading: false);
+        }
+        
         continue;
       }
 
@@ -184,7 +169,7 @@ class AudioDownloadVM extends ChangeNotifier {
       if (!_isDownloading) {
         _setIsDownloading(isDownloading: true);
       }
-      
+
       // Download the audio file
       await _downloadAudioFile(
         youtubeVideoId: youtubeVideo.id,
@@ -213,8 +198,37 @@ class AudioDownloadVM extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setAudioQuality({required bool isHighQuality}) {
+    _isHighQuality = isHighQuality;
+
+    notifyListeners();
+  }
+
+  Future<Playlist> _obtainPlaylist({
+    required Playlist playlistToDownload,
+    required yt.Playlist youtubePlaylist,
+  }) async {
+    Playlist savedPlaylist = playlistToDownload;
+    _listOfPlaylist.add(savedPlaylist);
+
+    // define playlist audio download dir
+
+    final String audioDownloadPath = DirUtil.getPlaylistDownloadHomePath();
+    final String playlistTitle = youtubePlaylist.title;
+    savedPlaylist.title = playlistTitle;
+    final String playlistDownloadPath =
+        '$audioDownloadPath${Platform.pathSeparator}$playlistTitle';
+
+    // ensure playlist audio download dir exists
+    await DirUtil.createDirIfNotExist(pathStr: playlistDownloadPath);
+
+    savedPlaylist.downloadPath = playlistDownloadPath;
+
+    return savedPlaylist;
+  }
+
   /// this method must be refactored
-  Future<List<String>> getPlaylistDownloadedAudioValidVideoTitleLst({
+  Future<List<String>> _getPlaylistDownloadedAudioValidVideoTitleLst({
     required String playlistPathFileName,
     required Playlist uiPlaylist,
   }) async {
@@ -300,12 +314,6 @@ class AudioDownloadVM extends ChangeNotifier {
   void _updateDownloadProgress(double progress, int lastSecondDownloadSpeed) {
     _downloadProgress = progress;
     _lastSecondDownloadSpeed = lastSecondDownloadSpeed;
-
-    notifyListeners();
-  }
-
-  void setAudioQuality({required bool isHighQuality}) {
-    _isHighQuality = isHighQuality;
 
     notifyListeners();
   }
