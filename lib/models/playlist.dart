@@ -53,7 +53,7 @@ class Playlist {
     if (json['playableAudioLst'] != null) {
       for (var audioJson in json['playableAudioLst']) {
         Audio audio = Audio.fromJson(audioJson);
-        playlist.insertAtStartPlayableAudio(audio);
+        playlist.addPlayableAudio(audio);
       }
     }
 
@@ -86,6 +86,16 @@ class Playlist {
     downloadedAudioLst.remove(downloadedAudio);
   }
 
+  /// Used when uploading the Playlist json file. Since the
+  /// json file contains the playable audio list in the right
+  /// order, using add and not insert maintains the right order !
+  void addPlayableAudio(Audio playableAudio) {
+    playableAudio.enclosingPlaylist = this;
+    playableAudioLst.add(playableAudio);
+  }
+
+  /// Used by DownloadAudioVM to add newly downloaded audio
+  /// at the head of the playable list.
   void insertAtStartPlayableAudio(Audio playableAudio) {
     playableAudio.enclosingPlaylist = this;
     playableAudioLst.insert(0, playableAudio);
