@@ -160,7 +160,7 @@ class AudioDownloadVM extends ChangeNotifier {
         if (_isDownloading) {
           _setIsDownloading(isDownloading: false);
         }
-        
+
         continue;
       }
 
