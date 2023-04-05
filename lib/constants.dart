@@ -5,8 +5,6 @@ const String kApplicationVersion = '0.1';
 const String kDownloadAppDir = '/storage/emulated/0/Download/audio';
 // not working: getDownloadedAudioNameLst() returns empty list !
 //const String kDownloadAppDir = '/storage/9016-4EF8/Audio';
-const String kDownloadAppDirWindows =
-    'C:\\Users\\Jean-Pierre\\Downloads\\Audio';
 
 // files in this local test dir are stored in project test_data dir updated
 // on GitHub
@@ -21,18 +19,24 @@ DateFormat englishDateTimeFormat = DateFormat("yyyy-MM-dd HH:mm");
 DateFormat frenchDateTimeFormat = DateFormat("dd-MM-yyyy HH:mm");
 
 // to_delete playlist url
+// const String kDownloadAppDirWindows =
+//     'C:\\Users\\Jean-Pierre\\Downloads\\Audio';
 // const String kUniquePlaylistUrl =
 //     'https://youtube.com/playlist?list=PLzwWSJNcZTMTB9iwbu77FGokc3WsoxuV0';
 // const String kUniquePlaylistTitle = 'to_delete';
 // const bool kDeleteAppDir = false;
 
-// audio_learn_test_download_2_small_videos playlist url
+// files in this local test dir are stored in project test_data dir updated
+// on GitHub
+const String kDownloadAppDirWindows = "C:\\Users\\Jean-Pierre\\Development\\Flutter\\chatgpt_audio_learn\\test\\data\\audio";
 const String kUniquePlaylistUrl =
     'https://youtube.com/playlist?list=PLzwWSJNcZTMRB9ILve6fEIS_OHGrV5R2o';
 const String kUniquePlaylistTitle = 'audio_learn_test_download_2_small_videos';
 const bool kDeleteAppDir = false;
 
 // audio_learn playlist url
+// const String kDownloadAppDirWindows =
+//     'C:\\Users\\Jean-Pierre\\Downloads\\Audio';
 // const String kUniquePlaylistUrl =
 //     'https://youtube.com/playlist?list=PLzwWSJNcZTMRBJuvE6vk6PMnqIBhCKUIa';
 // const String kUniquePlaylistTitle = 'audio_learn';
