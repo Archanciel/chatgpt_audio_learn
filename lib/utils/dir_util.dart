@@ -3,8 +3,7 @@ import 'dart:io';
 import '../constants.dart';
 
 class DirUtil {
-  static String getPlaylistDownloadHomePath(
-      {bool isTest = false}) {
+  static String getPlaylistDownloadHomePath({bool isTest = false}) {
     if (Platform.isWindows) {
       return kDownloadAppDirWindows;
     } else {
@@ -57,5 +56,17 @@ class DirUtil {
         file.deleteSync();
       }
     }
+  }
+
+  static Future<void> copyFileToDirectory({
+    required String sourceFilePathName,
+    required String targetDirectoryPath,
+    String? targetFileName,
+  }) async {
+    File sourceFile = File(sourceFilePathName);
+    String copiedFileName = targetFileName ?? sourceFile.uri.pathSegments.last;
+    String targetFilePath = '$targetDirectoryPath/$copiedFileName';
+
+    await sourceFile.copy(targetFilePath);
   }
 }

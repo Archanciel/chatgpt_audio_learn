@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:chatgpt_audio_learn/constants.dart';
 import 'package:chatgpt_audio_learn/models/audio.dart';
 import 'package:chatgpt_audio_learn/models/playlist.dart';
+import 'package:chatgpt_audio_learn/utils/dir_util.dart';
 import 'package:chatgpt_audio_learn/viewmodels/audio_download_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -10,11 +11,13 @@ import 'package:integration_test/integration_test.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  const String testPlaylistId = 'PLzwWSJNcZTMRB9ILve6fEIS_OHGrV5R2o';
   const String testPlaylistUrl =
       'https://youtube.com/playlist?list=PLzwWSJNcZTMRB9ILve6fEIS_OHGrV5R2o';
   const String testPlaylistTitle = 'audio_learn_test_download_2_small_videos';
   const String testPlaylistDir =
       '$kDownloadAppTestDir\\audio_learn_test_download_2_small_videos';
+  const int secondsDelay = 7;
 
   // Necessary to avoid FatalFailureException (FatalFailureException: Failed
   // to perform an HTTP request to YouTube due to a fatal failure. In most
@@ -66,7 +69,7 @@ void main() {
       // when running the audio_download_vm_test only.
       // Waiting 5 seconds only causes MissingPluginException
       // 'No implementation found for method $method on channel $name'
-      // when all tsts are run. 10 seconds solve the problem.
+      // when all tsts are run. 7 seconds solve the problem.
       await Future.delayed(const Duration(seconds: 10));
       await tester.pump();
 
@@ -74,10 +77,13 @@ void main() {
 
       Playlist downloadedPlaylist = audioDownloadVM.listOfPlaylist[0];
 
-      expect(downloadedPlaylist.id, 'PLzwWSJNcZTMRB9ILve6fEIS_OHGrV5R2o');
-      expect(downloadedPlaylist.title, testPlaylistTitle);
-      expect(downloadedPlaylist.url, testPlaylistUrl);
-      expect(downloadedPlaylist.downloadPath, testPlaylistDir);
+      checkDownloadedPlaylist(
+        downloadedPlaylist: downloadedPlaylist,
+        testPlaylistId: testPlaylistId,
+        testPlaylistTitle: testPlaylistTitle,
+        testPlaylistUrl: testPlaylistUrl,
+        testPlaylistDir: testPlaylistDir,
+      );
 
       expect(audioDownloadVM.isDownloading, false);
       expect(audioDownloadVM.downloadProgress, 1.0);
@@ -104,13 +110,140 @@ void main() {
 
       deletePlaylistDownloadDir(directory);
     });
+    testWidgets(
+        'Playlist 2 short audios: playlist 1st audio was already downloaded and was deleted',
+        (WidgetTester tester) async {
+      late AudioDownloadVM audioDownloadVM;
+      final Directory directory = Directory(testPlaylistDir);
+
+      deletePlaylistDownloadDir(directory);
+
+      expect(directory.existsSync(), false);
+
+      await DirUtil.createDirIfNotExist(pathStr: testPlaylistDir);
+      await DirUtil.copyFileToDirectory(
+        sourceFilePathName:
+            "${testPlaylistDir}_saved\\${testPlaylistTitle}_1_audio.json",
+        targetDirectoryPath: testPlaylistDir,
+        targetFileName: '$testPlaylistTitle.json',
+      );
+
+      AudioDownloadVM audioDownloadVMbeforeDownload = AudioDownloadVM();
+      Playlist downloadedPlaylistBeforeDownload =
+          audioDownloadVMbeforeDownload.listOfPlaylist[0];
+
+      checkDownloadedPlaylist(
+        downloadedPlaylist: downloadedPlaylistBeforeDownload,
+        testPlaylistId: testPlaylistId,
+        testPlaylistTitle: testPlaylistTitle,
+        testPlaylistUrl: testPlaylistUrl,
+        testPlaylistDir: testPlaylistDir,
+      );
+
+      List<Audio> downloadedAudioLstBeforeDownload =
+          downloadedPlaylistBeforeDownload.downloadedAudioLst;
+      List<Audio> playableAudioLstBeforeDownload =
+          downloadedPlaylistBeforeDownload.playableAudioLst;
+
+      expect(downloadedAudioLstBeforeDownload.length, 1);
+      expect(playableAudioLstBeforeDownload.length, 1);
+
+      checkDownloadedAudioOne(downloadedAudioLstBeforeDownload[0]);
+      checkDownloadedAudioOne(playableAudioLstBeforeDownload[0]);
+
+      // await tester.pumpWidget(MyApp());
+      await tester.pumpWidget(ChangeNotifierProvider(
+        create: (BuildContext context) {
+          audioDownloadVM = AudioDownloadVM();
+          return audioDownloadVM;
+        },
+        child: MaterialApp(home: DownloadPlaylistPage()),
+      ));
+
+      await tester.tap(find.byType(ElevatedButton));
+      await tester.pump();
+
+      // Add a delay to allow the download to finish. 5 seconds is ok
+      // when running the audio_download_vm_test only.
+      // Waiting 5 seconds only causes MissingPluginException
+      // 'No implementation found for method $method on channel $name'
+      // when all tsts are run. 7 seconds solve the problem.
+      await Future.delayed(const Duration(seconds: secondsDelay));
+      await tester.pump();
+
+      expect(directory.existsSync(), true);
+
+      Playlist downloadedPlaylist = audioDownloadVM.listOfPlaylist[0];
+
+      checkDownloadedPlaylist(
+        downloadedPlaylist: downloadedPlaylist,
+        testPlaylistId: testPlaylistId,
+        testPlaylistTitle: testPlaylistTitle,
+        testPlaylistUrl: testPlaylistUrl,
+        testPlaylistDir: testPlaylistDir,
+      );
+
+      expect(audioDownloadVM.isDownloading, false);
+      expect(audioDownloadVM.downloadProgress, 1.0);
+      expect(audioDownloadVM.lastSecondDownloadSpeed, 0);
+      expect(audioDownloadVM.isHighQuality, false);
+
+      // downloadedAudioLst contains added Audio^s
+      checkDownloadedAudios(
+        downloadedAudioOne: downloadedPlaylist.downloadedAudioLst[0],
+        downloadedAudioTwo: downloadedPlaylist.downloadedAudioLst[1],
+      );
+
+      // playableAudioLst contains inserted at list start Audio^s
+      checkDownloadedAudios(
+        downloadedAudioOne: downloadedPlaylist.playableAudioLst[1],
+        downloadedAudioTwo: downloadedPlaylist.playableAudioLst[0],
+      );
+
+      // Checking if there are 3 files in the directory (1 mp3 and 1 json)
+      final List<FileSystemEntity> files =
+          directory.listSync(recursive: false, followLinks: false);
+
+      expect(files.length, 2);
+
+      deletePlaylistDownloadDir(directory);
+    });
   });
+}
+
+void checkDownloadedPlaylist({
+  required Playlist downloadedPlaylist,
+  required String testPlaylistId,
+  required String testPlaylistTitle,
+  required String testPlaylistUrl,
+  required String testPlaylistDir,
+}) {
+  expect(downloadedPlaylist.id, testPlaylistId);
+  expect(downloadedPlaylist.title, testPlaylistTitle);
+  expect(downloadedPlaylist.url, testPlaylistUrl);
+  expect(downloadedPlaylist.downloadPath, testPlaylistDir);
 }
 
 void checkDownloadedAudios({
   required Audio downloadedAudioOne,
   required Audio downloadedAudioTwo,
 }) {
+  checkDownloadedAudioOne(downloadedAudioOne);
+
+  expect(downloadedAudioTwo.originalVideoTitle, "Innovation (Short Film)");
+  expect(downloadedAudioTwo.validVideoTitle, "Innovation (Short Film)");
+  expect(downloadedAudioTwo.videoUrl,
+      "https://www.youtube.com/watch?v=0lTH9cCod4M");
+  expect(downloadedAudioTwo.videoUploadDate,
+      DateTime.parse("2020-01-07T00:00:00.000"));
+  expect(downloadedAudioTwo.audioDuration, const Duration(milliseconds: 49000));
+  expect(downloadedAudioTwo.isMusicQuality, false);
+  expect(downloadedAudioTwo.audioFileName,
+      "230406-Innovation (Short Film) 20-01-07.mp3");
+  expect(downloadedAudioTwo.audioFileSize, 295404);
+}
+
+void checkDownloadedAudioOne(Audio downloadedAudioOne) {
   expect(downloadedAudioOne.originalVideoTitle,
       "English conversation: Tea or coffee?");
   expect(downloadedAudioOne.validVideoTitle,
@@ -124,18 +257,6 @@ void checkDownloadedAudios({
   expect(downloadedAudioOne.audioFileName,
       "230406-English conversation - Tea or coffee 23-03-22.mp3");
   expect(downloadedAudioOne.audioFileSize, 143076);
-
-  expect(downloadedAudioTwo.originalVideoTitle, "Innovation (Short Film)");
-  expect(downloadedAudioTwo.validVideoTitle, "Innovation (Short Film)");
-  expect(downloadedAudioTwo.videoUrl,
-      "https://www.youtube.com/watch?v=0lTH9cCod4M");
-  expect(downloadedAudioTwo.videoUploadDate,
-      DateTime.parse("2020-01-07T00:00:00.000"));
-  expect(downloadedAudioTwo.audioDuration, const Duration(milliseconds: 49000));
-  expect(downloadedAudioTwo.isMusicQuality, false);
-  expect(downloadedAudioTwo.audioFileName,
-      "230406-Innovation (Short Film) 20-01-07.mp3");
-  expect(downloadedAudioTwo.audioFileSize, 295404);
 }
 
 void deletePlaylistDownloadDir(Directory directory) {
