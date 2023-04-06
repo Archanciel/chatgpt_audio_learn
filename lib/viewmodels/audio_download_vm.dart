@@ -109,7 +109,7 @@ class AudioDownloadVM extends ChangeNotifier {
         youtubePlaylist = await _youtubeExplode.playlists.get(playlistId);
       }
     } else {
-      // situation in which the appdoes download playlists for the first
+      // situation in which the app downloads playlists for the first
       // time
       playlistId = yt.PlaylistId.parsePlaylistId(playlistToDownload.url);
       youtubePlaylist = await _youtubeExplode.playlists.get(playlistId);
