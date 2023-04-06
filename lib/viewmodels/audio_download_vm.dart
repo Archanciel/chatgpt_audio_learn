@@ -211,13 +211,12 @@ class AudioDownloadVM extends ChangeNotifier {
     Playlist savedPlaylist = playlistToDownload;
     _listOfPlaylist.add(savedPlaylist);
 
-    // define playlist audio download dir
+    savedPlaylist.id = youtubePlaylist.id.toString();
 
-    final String audioDownloadPath = DirUtil.getPlaylistDownloadHomePath();
     final String playlistTitle = youtubePlaylist.title;
     savedPlaylist.title = playlistTitle;
     final String playlistDownloadPath =
-        '$audioDownloadPath${Platform.pathSeparator}$playlistTitle';
+        '${DirUtil.getPlaylistDownloadHomePath()}${Platform.pathSeparator}$playlistTitle';
 
     // ensure playlist audio download dir exists
     await DirUtil.createDirIfNotExist(pathStr: playlistDownloadPath);

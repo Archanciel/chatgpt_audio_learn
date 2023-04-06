@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:chatgpt_audio_learn/constants.dart';
+import 'package:chatgpt_audio_learn/models/audio.dart';
 import 'package:chatgpt_audio_learn/models/playlist.dart';
 import 'package:chatgpt_audio_learn/viewmodels/audio_download_vm.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +22,8 @@ void main() {
   // which broke the library.
   // If this issue persists, please report it on the project's GitHub page.
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  
-  group('Download playlist audios', () {
+
+  group('Download 1 playlist with short audios', () {
     test('Check initial values', () {
       final Directory directory = Directory(testPlaylistDir);
 
@@ -61,31 +62,80 @@ void main() {
       await tester.tap(find.byType(ElevatedButton));
       await tester.pump();
 
-      // Add a delay to allow the download to finish.
-      // Note: this might not be enough time, consider increasing the duration or finding a more stable way to check for completion.
-      await Future.delayed(Duration(seconds: 10));
+      // Add a delay to allow the download to finish. 5 seconds is ok
+      // when running the audio_download_vm_test only.
+      // Waiting 5 seconds only causes MissingPluginException
+      // 'No implementation found for method $method on channel $name'
+      // when all tsts are run. 10 seconds solve the problem.
+      await Future.delayed(const Duration(seconds: 10));
       await tester.pump();
 
       expect(directory.existsSync(), true);
 
-      expect(audioDownloadVM.listOfPlaylist[0].title, testPlaylistTitle);
-      expect(audioDownloadVM.listOfPlaylist[0].url, testPlaylistUrl);
+      Playlist downloadedPlaylist = audioDownloadVM.listOfPlaylist[0];
+
+      expect(downloadedPlaylist.id, 'PLzwWSJNcZTMRB9ILve6fEIS_OHGrV5R2o');
+      expect(downloadedPlaylist.title, testPlaylistTitle);
+      expect(downloadedPlaylist.url, testPlaylistUrl);
+      expect(downloadedPlaylist.downloadPath, testPlaylistDir);
 
       expect(audioDownloadVM.isDownloading, false);
       expect(audioDownloadVM.downloadProgress, 1.0);
       expect(audioDownloadVM.lastSecondDownloadSpeed, 0);
       expect(audioDownloadVM.isHighQuality, false);
 
-      // Check if there are two files in the directory
+      // downloadedAudioLst contains added Audio^s
+      checkDownloadedAudios(
+        downloadedAudioOne: downloadedPlaylist.downloadedAudioLst[0],
+        downloadedAudioTwo: downloadedPlaylist.downloadedAudioLst[1],
+      );
+
+      // playableAudioLst contains inserted at list start Audio^s
+      checkDownloadedAudios(
+        downloadedAudioOne: downloadedPlaylist.playableAudioLst[1],
+        downloadedAudioTwo: downloadedPlaylist.playableAudioLst[0],
+      );
+
+      // Checking if there are 3 files in the directory (2 mp3 and 1 json)
       final List<FileSystemEntity> files =
           directory.listSync(recursive: false, followLinks: false);
-      expect(files.length, 3);
 
-      // You can add more checks here to validate the downloaded files
+      expect(files.length, 3);
 
       deletePlaylistDownloadDir(directory);
     });
   });
+}
+
+void checkDownloadedAudios({
+  required Audio downloadedAudioOne,
+  required Audio downloadedAudioTwo,
+}) {
+  expect(downloadedAudioOne.originalVideoTitle,
+      "English conversation: Tea or coffee?");
+  expect(downloadedAudioOne.validVideoTitle,
+      "English conversation - Tea or coffee");
+  expect(downloadedAudioOne.videoUrl,
+      "https://www.youtube.com/watch?v=X9s0hsOw3Uc");
+  expect(downloadedAudioOne.videoUploadDate,
+      DateTime.parse("2023-03-22T00:00:00.000"));
+  expect(downloadedAudioOne.audioDuration, const Duration(milliseconds: 24000));
+  expect(downloadedAudioOne.isMusicQuality, false);
+  expect(downloadedAudioOne.audioFileName,
+      "230406-English conversation - Tea or coffee 23-03-22.mp3");
+  expect(downloadedAudioOne.audioFileSize, 143076);
+
+  expect(downloadedAudioTwo.originalVideoTitle, "Innovation (Short Film)");
+  expect(downloadedAudioTwo.validVideoTitle, "Innovation (Short Film)");
+  expect(downloadedAudioTwo.videoUrl,
+      "https://www.youtube.com/watch?v=0lTH9cCod4M");
+  expect(downloadedAudioTwo.videoUploadDate,
+      DateTime.parse("2020-01-07T00:00:00.000"));
+  expect(downloadedAudioTwo.audioDuration, const Duration(milliseconds: 49000));
+  expect(downloadedAudioTwo.isMusicQuality, false);
+  expect(downloadedAudioTwo.audioFileName,
+      "230406-Innovation (Short Film) 20-01-07.mp3");
+  expect(downloadedAudioTwo.audioFileSize, 295404);
 }
 
 void deletePlaylistDownloadDir(Directory directory) {
