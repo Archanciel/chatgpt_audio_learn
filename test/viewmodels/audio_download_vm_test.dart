@@ -40,7 +40,7 @@ void main() {
       expect(audioDownloadVM.isHighQuality, false);
     });
 
-    testWidgets('Playlist 2 short audios',
+    testWidgets('Playlist 2 short audios: playlist dir not exist',
         (WidgetTester tester) async {
       late AudioDownloadVM audioDownloadVM;
       final Directory directory = Directory(testPlaylistDir);
