@@ -243,8 +243,8 @@ void checkDownloadedAudios({
   required String downloadFileNamePrefix,
 }) {
   checkDownloadedAudioOne(
-    downloadedAudioOne,
-    downloadFileNamePrefix,
+    downloadedAudio: downloadedAudioOne,
+    downloadFileNamePrefix: downloadFileNamePrefix,
   );
 
   expect(downloadedAudioTwo.originalVideoTitle, "Innovation (Short Film)");
