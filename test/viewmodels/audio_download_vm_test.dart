@@ -10,6 +10,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:provider/provider.dart';
 
+final String todayDownloadFileNamePrefix =
+    Audio.downloadDatePrefixFormatter.format(DateTime.now());
+
 void main() {
   const String testPlaylistId = 'PLzwWSJNcZTMRB9ILve6fEIS_OHGrV5R2o';
   const String testPlaylistUrl =
@@ -94,12 +97,14 @@ void main() {
       checkDownloadedAudios(
         downloadedAudioOne: downloadedPlaylist.downloadedAudioLst[0],
         downloadedAudioTwo: downloadedPlaylist.downloadedAudioLst[1],
+        downloadFileNamePrefix: todayDownloadFileNamePrefix,
       );
 
       // playableAudioLst contains inserted at list start Audio^s
       checkDownloadedAudios(
         downloadedAudioOne: downloadedPlaylist.playableAudioLst[1],
         downloadedAudioTwo: downloadedPlaylist.playableAudioLst[0],
+        downloadFileNamePrefix: todayDownloadFileNamePrefix,
       );
 
       // Checking if there are 3 files in the directory (2 mp3 and 1 json)
@@ -148,8 +153,14 @@ void main() {
       expect(downloadedAudioLstBeforeDownload.length, 1);
       expect(playableAudioLstBeforeDownload.length, 1);
 
-      checkDownloadedAudioOne(downloadedAudioLstBeforeDownload[0]);
-      checkDownloadedAudioOne(playableAudioLstBeforeDownload[0]);
+      checkDownloadedAudioOne(
+        downloadedAudio: downloadedAudioLstBeforeDownload[0],
+        downloadFileNamePrefix: '230406',
+      );
+      checkDownloadedAudioOne(
+        downloadedAudio: playableAudioLstBeforeDownload[0],
+        downloadFileNamePrefix: '230406',
+      );
 
       // await tester.pumpWidget(MyApp());
       await tester.pumpWidget(ChangeNotifierProvider(
@@ -192,12 +203,14 @@ void main() {
       checkDownloadedAudios(
         downloadedAudioOne: downloadedPlaylist.downloadedAudioLst[0],
         downloadedAudioTwo: downloadedPlaylist.downloadedAudioLst[1],
+        downloadFileNamePrefix: '230406',
       );
 
       // playableAudioLst contains inserted at list start Audio^s
       checkDownloadedAudios(
         downloadedAudioOne: downloadedPlaylist.playableAudioLst[1],
         downloadedAudioTwo: downloadedPlaylist.playableAudioLst[0],
+        downloadFileNamePrefix: '230406',
       );
 
       // Checking if there are 3 files in the directory (1 mp3 and 1 json)
@@ -227,8 +240,12 @@ void checkDownloadedPlaylist({
 void checkDownloadedAudios({
   required Audio downloadedAudioOne,
   required Audio downloadedAudioTwo,
+  required String downloadFileNamePrefix,
 }) {
-  checkDownloadedAudioOne(downloadedAudioOne);
+  checkDownloadedAudioOne(
+    downloadedAudioOne,
+    downloadFileNamePrefix,
+  );
 
   expect(downloadedAudioTwo.originalVideoTitle, "Innovation (Short Film)");
   expect(downloadedAudioTwo.validVideoTitle, "Innovation (Short Film)");
@@ -239,24 +256,27 @@ void checkDownloadedAudios({
   expect(downloadedAudioTwo.audioDuration, const Duration(milliseconds: 49000));
   expect(downloadedAudioTwo.isMusicQuality, false);
   expect(downloadedAudioTwo.audioFileName,
-      "230406-Innovation (Short Film) 20-01-07.mp3");
+      "${todayDownloadFileNamePrefix}-Innovation (Short Film) 20-01-07.mp3");
   expect(downloadedAudioTwo.audioFileSize, 295404);
 }
 
-void checkDownloadedAudioOne(Audio downloadedAudioOne) {
-  expect(downloadedAudioOne.originalVideoTitle,
+void checkDownloadedAudioOne({
+  required Audio downloadedAudio,
+  required String downloadFileNamePrefix,
+}) {
+  expect(downloadedAudio.originalVideoTitle,
       "English conversation: Tea or coffee?");
-  expect(downloadedAudioOne.validVideoTitle,
+  expect(downloadedAudio.validVideoTitle,
       "English conversation - Tea or coffee");
-  expect(downloadedAudioOne.videoUrl,
+  expect(downloadedAudio.videoUrl,
       "https://www.youtube.com/watch?v=X9s0hsOw3Uc");
-  expect(downloadedAudioOne.videoUploadDate,
+  expect(downloadedAudio.videoUploadDate,
       DateTime.parse("2023-03-22T00:00:00.000"));
-  expect(downloadedAudioOne.audioDuration, const Duration(milliseconds: 24000));
-  expect(downloadedAudioOne.isMusicQuality, false);
-  expect(downloadedAudioOne.audioFileName,
-      "230406-English conversation - Tea or coffee 23-03-22.mp3");
-  expect(downloadedAudioOne.audioFileSize, 143076);
+  expect(downloadedAudio.audioDuration, const Duration(milliseconds: 24000));
+  expect(downloadedAudio.isMusicQuality, false);
+  expect(downloadedAudio.audioFileName,
+      "${downloadFileNamePrefix}-English conversation - Tea or coffee 23-03-22.mp3");
+  expect(downloadedAudio.audioFileSize, 143076);
 }
 
 void deletePlaylistDownloadDir(Directory directory) {

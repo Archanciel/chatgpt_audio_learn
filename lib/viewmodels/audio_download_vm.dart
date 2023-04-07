@@ -82,30 +82,44 @@ class AudioDownloadVM extends ChangeNotifier {
 
     // get Youtube playlist
 
-    Playlist savedPlaylist;
+    Playlist currentPlaylist;
     String? playlistId;
     yt.Playlist youtubePlaylist;
 
     if (_listOfPlaylist.isNotEmpty) {
-      savedPlaylist = _listOfPlaylist.firstWhere(
-          (element) => element.url == playlistToDownload.url,
-          orElse: () => Playlist(url: 'not found'));
+      int savedPlaylistIdx;
+      Playlist savedPlaylist;
 
-      if (savedPlaylist.url == 'not found') {
-        // playlist was never downloaded
+      savedPlaylistIdx = _listOfPlaylist
+          .indexWhere((element) => element.url == playlistToDownload.url);
 
+      if (savedPlaylistIdx == -1) {
+        // playlist was never downloaded or was deleted and recreated
         playlistId = yt.PlaylistId.parsePlaylistId(playlistToDownload.url);
         youtubePlaylist = await _youtubeExplode.playlists.get(playlistId);
 
-        savedPlaylist = await _obtainPlaylist(
+        currentPlaylist = await _obtainPlaylist(
           playlistToDownload: playlistToDownload,
           youtubePlaylist: youtubePlaylist,
         );
+
+        // checking if current playlist was deleted and recreated
+        savedPlaylistIdx = _listOfPlaylist
+            .indexWhere((element) => element.title == currentPlaylist.title);
+
+        if (savedPlaylistIdx != -1) {
+          // current playlist was deleted and recreated since it has the
+          // same title
+          savedPlaylist = _listOfPlaylist[savedPlaylistIdx];
+          currentPlaylist.downloadedAudioLst = savedPlaylist.downloadedAudioLst;
+          currentPlaylist.playableAudioLst = savedPlaylist.playableAudioLst;
+          _listOfPlaylist[savedPlaylistIdx] = currentPlaylist;
+        }
       } else {
         // playlist was already downloaded and so is stored in
         // a playlist json file
-
-        playlistId = yt.PlaylistId.parsePlaylistId(savedPlaylist.url);
+        currentPlaylist = _listOfPlaylist[savedPlaylistIdx];
+        playlistId = yt.PlaylistId.parsePlaylistId(currentPlaylist.url);
         youtubePlaylist = await _youtubeExplode.playlists.get(playlistId);
       }
     } else {
@@ -114,7 +128,7 @@ class AudioDownloadVM extends ChangeNotifier {
       playlistId = yt.PlaylistId.parsePlaylistId(playlistToDownload.url);
       youtubePlaylist = await _youtubeExplode.playlists.get(playlistId);
 
-      savedPlaylist = await _obtainPlaylist(
+      currentPlaylist = await _obtainPlaylist(
         playlistToDownload: playlistToDownload,
         youtubePlaylist: youtubePlaylist,
       );
@@ -122,12 +136,12 @@ class AudioDownloadVM extends ChangeNotifier {
 
     // get already downloaded audio file names
     String playlistDownloadFilePathName =
-        savedPlaylist.getPlaylistDownloadFilePathName();
+        currentPlaylist.getPlaylistDownloadFilePathName();
 
     final List<String> downloadedAudioValidVideoTitleLst =
         await _getPlaylistDownloadedAudioValidVideoTitleLst(
             playlistPathFileName: playlistDownloadFilePathName,
-            uiPlaylist: savedPlaylist);
+            uiPlaylist: currentPlaylist);
 
     await for (yt.Video youtubeVideo
         in _youtubeExplode.playlists.getVideos(playlistId)) {
@@ -138,7 +152,7 @@ class AudioDownloadVM extends ChangeNotifier {
       audioUploadDate ??= DateTime(00, 1, 1);
 
       final Audio audio = Audio(
-        enclosingPlaylist: savedPlaylist,
+        enclosingPlaylist: currentPlaylist,
         originalVideoTitle: youtubeVideo.title,
         videoUrl: youtubeVideo.url,
         audioDownloadDateTime: DateTime.now(),
@@ -152,7 +166,7 @@ class AudioDownloadVM extends ChangeNotifier {
           (validVideoTitle) => validVideoTitle.contains(audio.validVideoTitle));
 
       if (alreadyDownloaded) {
-        print('${audio.audioFileName} already downloaded');
+        // print('${audio.audioFileName} already downloaded');
 
         // avoids that the last downloaded audio download
         // informations remain displayed until all videos referenced
@@ -180,11 +194,11 @@ class AudioDownloadVM extends ChangeNotifier {
 
       audio.downloadDuration = stopwatch.elapsed;
 
-      savedPlaylist.addDownloadedAudio(audio);
-      savedPlaylist.insertAtStartPlayableAudio(audio);
+      currentPlaylist.addDownloadedAudio(audio);
+      currentPlaylist.insertAtStartPlayableAudio(audio);
 
       JsonDataService.saveToFile(
-        model: savedPlaylist,
+        model: currentPlaylist,
         path: playlistDownloadFilePathName,
       );
 

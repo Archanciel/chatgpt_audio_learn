@@ -8,7 +8,8 @@ const String kDownloadAppDir = '/storage/emulated/0/Download/audio';
 
 // files in this local test dir are stored in project test_data dir updated
 // on GitHub
-const String kDownloadAppTestDir = "C:\\Users\\Jean-Pierre\\Development\\Flutter\\chatgpt_audio_learn\\test\\data\\audio";
+const String kDownloadAppTestDir =
+    "C:\\Users\\Jean-Pierre\\Development\\Flutter\\chatgpt_audio_learn\\test\\data\\audio";
 
 const String kDefaultJsonFileName = 'circadian.json';
 const double kVerticalFieldDistance = 23.0;
@@ -23,6 +24,8 @@ DateFormat frenchDateTimeFormat = DateFormat("dd-MM-yyyy HH:mm");
 //     'C:\\Users\\Jean-Pierre\\Downloads\\Audio';
 // const String kUniquePlaylistUrl =
 //     'https://youtube.com/playlist?list=PLzwWSJNcZTMTB9iwbu77FGokc3WsoxuV0';
+// const String recreated_playlist_url =
+//     "https://youtube.com/playlist?list=PLzwWSJNcZTMSC7066rTK-HGohI3kVNgod";
 // const String kUniquePlaylistTitle = 'to_delete';
 // const bool kDeleteAppDir = false;
 
