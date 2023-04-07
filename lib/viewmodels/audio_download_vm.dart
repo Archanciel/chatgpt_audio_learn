@@ -81,19 +81,18 @@ class AudioDownloadVM extends ChangeNotifier {
     _youtubeExplode = yt.YoutubeExplode();
 
     // get Youtube playlist
-
     Playlist currentPlaylist;
     String? playlistId;
     yt.Playlist youtubePlaylist;
 
     if (_listOfPlaylist.isNotEmpty) {
-      int savedPlaylistIdx;
+      int savedPlaylistIndex;
       Playlist savedPlaylist;
 
-      savedPlaylistIdx = _listOfPlaylist
+      savedPlaylistIndex = _listOfPlaylist
           .indexWhere((element) => element.url == playlistToDownload.url);
 
-      if (savedPlaylistIdx == -1) {
+      if (savedPlaylistIndex == -1) {
         // playlist was never downloaded or was deleted and recreated
         playlistId = yt.PlaylistId.parsePlaylistId(playlistToDownload.url);
         youtubePlaylist = await _youtubeExplode.playlists.get(playlistId);
@@ -104,21 +103,21 @@ class AudioDownloadVM extends ChangeNotifier {
         );
 
         // checking if current playlist was deleted and recreated
-        savedPlaylistIdx = _listOfPlaylist
+        savedPlaylistIndex = _listOfPlaylist
             .indexWhere((element) => element.title == currentPlaylist.title);
 
-        if (savedPlaylistIdx != -1) {
+        if (savedPlaylistIndex != -1) {
           // current playlist was deleted and recreated since it has the
           // same title
-          savedPlaylist = _listOfPlaylist[savedPlaylistIdx];
+          savedPlaylist = _listOfPlaylist[savedPlaylistIndex];
           currentPlaylist.downloadedAudioLst = savedPlaylist.downloadedAudioLst;
           currentPlaylist.playableAudioLst = savedPlaylist.playableAudioLst;
-          _listOfPlaylist[savedPlaylistIdx] = currentPlaylist;
+          _listOfPlaylist[savedPlaylistIndex] = currentPlaylist;
         }
       } else {
         // playlist was already downloaded and so is stored in
         // a playlist json file
-        currentPlaylist = _listOfPlaylist[savedPlaylistIdx];
+        currentPlaylist = _listOfPlaylist[savedPlaylistIndex];
         playlistId = yt.PlaylistId.parsePlaylistId(currentPlaylist.url);
         youtubePlaylist = await _youtubeExplode.playlists.get(playlistId);
       }
