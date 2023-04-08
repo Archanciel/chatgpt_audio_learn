@@ -1,12 +1,13 @@
 import 'package:chatgpt_audio_learn/main.dart';
-import 'package:chatgpt_audio_learn/main_expandable_list_full.dart';
 import 'package:chatgpt_audio_learn/models/playlist.dart';
 import 'package:chatgpt_audio_learn/viewmodels/audio_player_vm.dart';
 import 'package:chatgpt_audio_learn/viewmodels/language_provider.dart';
+import 'package:chatgpt_audio_learn/viewmodels/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+  
 import 'package:chatgpt_audio_learn/models/audio.dart';
 import 'package:chatgpt_audio_learn/viewmodels/audio_download_vm.dart';
 import 'package:youtube_explode_dart/src/youtube_explode_base.dart';
@@ -165,6 +166,9 @@ void main() {
               home: Scaffold(
                 body: MyHomePage(),
               ),
+              locale: languageProvider.currentLocale,
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              supportedLocales: AppLocalizations.supportedLocales,
             );
           }),
         ),
