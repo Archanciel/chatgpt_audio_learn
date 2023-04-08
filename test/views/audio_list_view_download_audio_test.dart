@@ -12,10 +12,10 @@ import 'package:chatgpt_audio_learn/viewmodels/theme_provider.dart';
 import 'package:chatgpt_audio_learn/models/audio.dart';
 import 'package:chatgpt_audio_learn/viewmodels/audio_download_vm.dart';
 
-class MockAudioViewModel extends ChangeNotifier implements AudioDownloadVM {
-  List<Playlist> _playlistLst = [];
+class MockAudioDownloadVM extends ChangeNotifier implements AudioDownloadVM {
+  final List<Playlist> _playlistLst = [];
 
-  MockAudioViewModel() {
+  MockAudioDownloadVM() {
     _playlistLst.add(Playlist(url: 'https://example.com/playlist1'));
   }
 
@@ -103,10 +103,10 @@ class MockAudioViewModel extends ChangeNotifier implements AudioDownloadVM {
 
 void main() {
   group('AudioListView', () {
-    late MockAudioViewModel mockAudioViewModel;
+    late MockAudioDownloadVM mockAudioViewModel;
 
     setUp(() {
-      mockAudioViewModel = MockAudioViewModel();
+      mockAudioViewModel = MockAudioDownloadVM();
     });
 
     testWidgets('displays list of audios', (WidgetTester tester) async {
