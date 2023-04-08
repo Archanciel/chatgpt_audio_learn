@@ -1,16 +1,16 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
+import 'package:youtube_explode_dart/src/youtube_explode_base.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+  
 import 'package:chatgpt_audio_learn/main.dart';
 import 'package:chatgpt_audio_learn/models/playlist.dart';
 import 'package:chatgpt_audio_learn/viewmodels/audio_player_vm.dart';
 import 'package:chatgpt_audio_learn/viewmodels/language_provider.dart';
 import 'package:chatgpt_audio_learn/viewmodels/theme_provider.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-  
 import 'package:chatgpt_audio_learn/models/audio.dart';
 import 'package:chatgpt_audio_learn/viewmodels/audio_download_vm.dart';
-import 'package:youtube_explode_dart/src/youtube_explode_base.dart';
 
 class MockAudioViewModel extends ChangeNotifier implements AudioDownloadVM {
   List<Audio> audioLst = [];
@@ -163,7 +163,7 @@ void main() {
                       ),
                     )
                   : ThemeData.light(),
-              home: Scaffold(
+              home: const Scaffold(
                 body: MyHomePage(),
               ),
               locale: languageProvider.currentLocale,
