@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_explode_dart/src/youtube_explode_base.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-  
+
 import 'package:chatgpt_audio_learn/main.dart';
 import 'package:chatgpt_audio_learn/models/playlist.dart';
 import 'package:chatgpt_audio_learn/viewmodels/audio_player_vm.dart';
@@ -13,17 +13,16 @@ import 'package:chatgpt_audio_learn/models/audio.dart';
 import 'package:chatgpt_audio_learn/viewmodels/audio_download_vm.dart';
 
 class MockAudioViewModel extends ChangeNotifier implements AudioDownloadVM {
-  List<Audio> audioLst = [];
-  List<Playlist> playlistLst = [];
+  List<Playlist> _playlistLst = [];
 
   MockAudioViewModel() {
-    playlistLst.add(Playlist(url: 'https://example.com/playlist1'));
+    _playlistLst.add(Playlist(url: 'https://example.com/playlist1'));
   }
 
   @override
   Future<void> downloadPlaylistAudios(
       {required Playlist playlistToDownload}) async {
-    audioLst = [
+    List<Audio> audioLst = [
       Audio(
           enclosingPlaylist: playlistToDownload,
           originalVideoTitle: 'Audio 1',
@@ -47,6 +46,19 @@ class MockAudioViewModel extends ChangeNotifier implements AudioDownloadVM {
           audioDuration: const Duration(minutes: 2, seconds: 15)),
     ];
 
+    int i = 1;
+    int speed = 100000;
+    int size = 900000;
+
+    for (Audio audio in audioLst) {
+      audio.audioDownloadSpeed = speed * i;
+      audio.audioFileSize = size * i;
+      i++;
+    }
+
+    _playlistLst[0].downloadedAudioLst = audioLst;
+    _playlistLst[0].playableAudioLst = audioLst;
+
     notifyListeners();
   }
 
@@ -61,7 +73,7 @@ class MockAudioViewModel extends ChangeNotifier implements AudioDownloadVM {
 
   @override
   // TODO: implement currentDownloadingAudio
-  Audio get currentDownloadingAudio => audioLst[0];
+  Audio get currentDownloadingAudio => _playlistLst[0].downloadedAudioLst[0];
 
   @override
   // TODO: implement downloadProgress
@@ -69,7 +81,7 @@ class MockAudioViewModel extends ChangeNotifier implements AudioDownloadVM {
 
   @override
   // TODO: implement isDownloading
-  bool get isDownloading => true;
+  bool get isDownloading => false;
 
   @override
   // TODO: implement isHighQuality
@@ -81,7 +93,7 @@ class MockAudioViewModel extends ChangeNotifier implements AudioDownloadVM {
 
   @override
   // TODO: implement listOfPlaylist
-  List<Playlist> get listOfPlaylist => throw UnimplementedError();
+  List<Playlist> get listOfPlaylist => _playlistLst;
 
   @override
   void setAudioQuality({required bool isHighQuality}) {
@@ -176,16 +188,21 @@ void main() {
 
       // Wait for the audios to be loaded
       await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('downLoadButton')));
+      await tester.pumpAndSettle();
 
       // Verify that all the audios are displayed
       expect(find.text('Audio 1'), findsOneWidget);
-      expect(find.text('3:42'), findsOneWidget);
+      expect(find.text('0:03:42. Size 900 Ko. Downloaded at 100 Ko/sec'),
+          findsOneWidget);
 
       expect(find.text('Audio 2'), findsOneWidget);
-      expect(find.text('5:21'), findsOneWidget);
+      expect(find.text('0:05:21. Size 1.80 Mo. Downloaded at 200 Ko/sec'),
+          findsOneWidget);
 
       expect(find.text('Audio 3'), findsOneWidget);
-      expect(find.text('2:15'), findsOneWidget);
+      expect(find.text('0:02:15. Size 2.70 Mo. Downloaded at 300 Ko/sec'),
+          findsOneWidget);
     });
   });
 }

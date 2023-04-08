@@ -81,6 +81,7 @@ class _AudioListViewState extends State<AudioListView> {
             Consumer<AudioDownloadVM>(
               builder: (context, audioDownloadVM, child) {
                 return ElevatedButton(
+                  key: Key('downLoadButton'),
                   onPressed: audioDownloadVM.isDownloading
                       ? null
                       : () {
