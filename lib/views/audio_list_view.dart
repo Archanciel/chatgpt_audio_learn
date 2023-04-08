@@ -17,8 +17,6 @@ import '../models/audio.dart';
 import '../viewmodels/audio_download_vm.dart';
 import '../viewmodels/audio_player_vm.dart';
 
-enum ViewModelType { youtube, justAudio }
-
 class AudioListView extends StatefulWidget {
   @override
   State<AudioListView> createState() => _AudioListViewState();
