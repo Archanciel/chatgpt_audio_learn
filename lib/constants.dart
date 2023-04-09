@@ -20,8 +20,8 @@ DateFormat englishDateTimeFormat = DateFormat("yyyy-MM-dd HH:mm");
 DateFormat frenchDateTimeFormat = DateFormat("dd-MM-yyyy HH:mm");
 
 // to_delete playlist url
-// const String kDownloadAppDirWindows =
-//     'C:\\Users\\Jean-Pierre\\Downloads\\Audio';
+const String kDownloadAppDirWindows =
+    'C:\\Users\\Jean-Pierre\\Downloads\\Audio';
 // const String kUniquePlaylistUrl =
 //     'https://youtube.com/playlist?list=PLzwWSJNcZTMTB9iwbu77FGokc3WsoxuV0';
 // const String recreated_playlist_url =
@@ -31,7 +31,7 @@ DateFormat frenchDateTimeFormat = DateFormat("dd-MM-yyyy HH:mm");
 
 // files in this local test dir are stored in project test_data dir updated
 // on GitHub
-const String kDownloadAppDirWindows = "C:\\Users\\Jean-Pierre\\Development\\Flutter\\chatgpt_audio_learn\\test\\data\\audio";
+const String kDownloadAppTestDirWindows = "C:\\Users\\Jean-Pierre\\Development\\Flutter\\chatgpt_audio_learn\\test\\data\\audio";
 const String kUniquePlaylistUrl =
     'https://youtube.com/playlist?list=PLzwWSJNcZTMRB9ILve6fEIS_OHGrV5R2o';
 const String kUniquePlaylistTitle = 'audio_learn_test_download_2_small_videos';

@@ -26,7 +26,7 @@ class AudioDownloadVM extends ChangeNotifier {
   set youtubeExplode(yt.YoutubeExplode youtubeExplode) =>
       _youtubeExplode = youtubeExplode;
 
-  String _playlistHomePath = DirUtil.getPlaylistDownloadHomePath();
+  late String _playlistHomePath;
 
   bool _isDownloading = false;
   bool get isDownloading => _isDownloading;
@@ -43,7 +43,8 @@ class AudioDownloadVM extends ChangeNotifier {
   bool _isHighQuality = false;
   bool get isHighQuality => _isHighQuality;
 
-  AudioDownloadVM() {
+  AudioDownloadVM({bool isTest = false}) {
+    _playlistHomePath = DirUtil.getPlaylistDownloadHomePath(isTest: isTest);
     // Should load all the playlists, not only the audio_learn or to_delete
     // playlist !
     _loadTemporaryUniquePlaylist();
@@ -229,7 +230,7 @@ class AudioDownloadVM extends ChangeNotifier {
     final String playlistTitle = youtubePlaylist.title;
     savedPlaylist.title = playlistTitle;
     final String playlistDownloadPath =
-        '${DirUtil.getPlaylistDownloadHomePath()}${Platform.pathSeparator}$playlistTitle';
+        '$_playlistHomePath${Platform.pathSeparator}$playlistTitle';
 
     // ensure playlist audio download dir exists
     await DirUtil.createDirIfNotExist(pathStr: playlistDownloadPath);

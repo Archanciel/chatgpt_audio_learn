@@ -37,7 +37,7 @@ void main() {
         directory.deleteSync(recursive: true);
       }
 
-      final AudioDownloadVM audioDownloadVM = AudioDownloadVM();
+      final AudioDownloadVM audioDownloadVM = AudioDownloadVM(isTest: true);
 
       expect(audioDownloadVM.listOfPlaylist, []);
       expect(audioDownloadVM.listOfPlaylist, []);
@@ -59,7 +59,7 @@ void main() {
       // await tester.pumpWidget(MyApp());
       await tester.pumpWidget(ChangeNotifierProvider(
         create: (BuildContext context) {
-          audioDownloadVM = AudioDownloadVM();
+          audioDownloadVM = AudioDownloadVM(isTest: true);
           return audioDownloadVM;
         },
         child: MaterialApp(home: DownloadPlaylistPage()),
@@ -133,7 +133,7 @@ void main() {
         targetFileName: '$testPlaylistTitle.json',
       );
 
-      AudioDownloadVM audioDownloadVMbeforeDownload = AudioDownloadVM();
+      AudioDownloadVM audioDownloadVMbeforeDownload = AudioDownloadVM(isTest: true);
       Playlist downloadedPlaylistBeforeDownload =
           audioDownloadVMbeforeDownload.listOfPlaylist[0];
 
@@ -165,7 +165,7 @@ void main() {
       // await tester.pumpWidget(MyApp());
       await tester.pumpWidget(ChangeNotifierProvider(
         create: (BuildContext context) {
-          audioDownloadVM = AudioDownloadVM();
+          audioDownloadVM = AudioDownloadVM(isTest: true);
           return audioDownloadVM;
         },
         child: MaterialApp(home: DownloadPlaylistPage()),

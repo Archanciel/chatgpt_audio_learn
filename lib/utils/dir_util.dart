@@ -5,7 +5,11 @@ import '../constants.dart';
 class DirUtil {
   static String getPlaylistDownloadHomePath({bool isTest = false}) {
     if (Platform.isWindows) {
-      return kDownloadAppDirWindows;
+      if (isTest) {
+        return kDownloadAppTestDirWindows;
+      } else {
+        return kDownloadAppDirWindows;
+      }
     } else {
       if (isTest) {
         return kDownloadAppTestDir;
