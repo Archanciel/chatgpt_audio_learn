@@ -11,11 +11,6 @@ const String kDownloadAppDir = '/storage/emulated/0/Download/audio';
 const String kDownloadAppTestDir =
     "C:\\Users\\Jean-Pierre\\Development\\Flutter\\chatgpt_audio_learn\\test\\data\\audio";
 
-const String kDefaultJsonFileName = 'circadian.json';
-const double kVerticalFieldDistance = 23.0;
-const double kVerticalFieldDistanceAddSubScreen = 1.0;
-const double kResetButtonBottomDistance = 5.0;
-
 DateFormat englishDateTimeFormat = DateFormat("yyyy-MM-dd HH:mm");
 DateFormat frenchDateTimeFormat = DateFormat("dd-MM-yyyy HH:mm");
 
