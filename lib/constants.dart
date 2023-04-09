@@ -30,7 +30,6 @@ const String kDownloadAppTestDir =
 // files in this local test dir are stored in project test_data dir updated
 // on GitHub
 const String kDownloadAppTestDirWindows = "C:\\Users\\Jean-Pierre\\Development\\Flutter\\chatgpt_audio_learn\\test\\data\\audio";
-// const String kUniquePlaylistTitle = 'audio_learn_test_download_2_small_videos';
 const bool kDeleteAppDir = false;
 
 // audio_learn
