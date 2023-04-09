@@ -16,7 +16,7 @@ class MockAudioDownloadVM extends ChangeNotifier implements AudioDownloadVM {
   final List<Playlist> _playlistLst = [];
 
   MockAudioDownloadVM() {
-    _playlistLst.add(Playlist(url: 'https://example.com/playlist1'));
+    _playlistLst.add(Playlist(url: 'https://mockurl.com'));
   }
 
   @override
@@ -185,6 +185,9 @@ void main() {
           }),
         ),
       );
+
+      TextField urlTextField = tester.widget(find.byKey(const Key('playlistUrlTextField')));
+      expect(urlTextField.controller!.text, 'https://mockurl.com');
 
       // Wait for the audios to be loaded
       await tester.pumpAndSettle();
