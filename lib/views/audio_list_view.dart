@@ -23,8 +23,7 @@ class AudioListView extends StatefulWidget {
 }
 
 class _AudioListViewState extends State<AudioListView> {
-  final TextEditingController _textEditingController =
-      TextEditingController(text: kUniquePlaylistUrl);
+  final TextEditingController _textEditingController = TextEditingController();
 
   final AudioPlayerVM _audioPlayerViwModel = AudioPlayerVM();
 
@@ -60,6 +59,7 @@ class _AudioListViewState extends State<AudioListView> {
   Widget build(BuildContext context) {
     final AudioDownloadVM audioDownloadViewModel =
         Provider.of<AudioDownloadVM>(context);
+    _textEditingController.text = audioDownloadViewModel.listOfPlaylist[0].url;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -67,6 +67,7 @@ class _AudioListViewState extends State<AudioListView> {
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: TextField(
+            key: const Key('playlistUrlTextField'),
             controller: _textEditingController,
             decoration: const InputDecoration(
               labelText: 'Youtube playlist link',
@@ -81,7 +82,7 @@ class _AudioListViewState extends State<AudioListView> {
             Consumer<AudioDownloadVM>(
               builder: (context, audioDownloadVM, child) {
                 return ElevatedButton(
-                  key: Key('downLoadButton'),
+                  key: const Key('downLoadButton'),
                   onPressed: audioDownloadVM.isDownloading
                       ? null
                       : () {
@@ -143,7 +144,7 @@ class _AudioListViewState extends State<AudioListView> {
                     Text(
                       audioDownloadVM
                           .currentDownloadingAudio.originalVideoTitle,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 10.0),
                     LinearProgressIndicator(
