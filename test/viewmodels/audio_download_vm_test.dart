@@ -285,6 +285,14 @@ void main() {
         child: MaterialApp(home: DownloadPlaylistPage()),
       ));
 
+      String recreatedPlaylistWithSameTitleUrl =
+          'https://youtube.com/playlist?list=PLzwWSJNcZTMSwrDOAZEPf0u6YvrKGNnvC';
+
+      await tester.enterText(
+        find.byKey(const Key('playlistUrlTextField')),
+        recreatedPlaylistWithSameTitleUrl,
+      );
+
       await tester.tap(find.byType(ElevatedButton));
       await tester.pump();
 
@@ -412,23 +420,35 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class DownloadPlaylistPage extends StatelessWidget {
+class DownloadPlaylistPage extends StatefulWidget {
+  @override
+  State<DownloadPlaylistPage> createState() => _DownloadPlaylistPageState();
+}
+
+class _DownloadPlaylistPageState extends State<DownloadPlaylistPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Download Playlist Audios')),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Provider.of<AudioDownloadVM>(context, listen: false)
-                .downloadPlaylistAudios(
-              playlistToDownload: Playlist(
-                url:
-                    'https://youtube.com/playlist?list=PLzwWSJNcZTMRB9ILve6fEIS_OHGrV5R2o',
-              ),
-            );
-          },
-          child: const Text('Download Playlist Audios'),
+        child: Column(
+          children: [
+            const TextField(
+              key: Key('playlistUrlTextField'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Provider.of<AudioDownloadVM>(context, listen: false)
+                    .downloadPlaylistAudios(
+                  playlistToDownload: Playlist(
+                    url:
+                        'https://youtube.com/playlist?list=PLzwWSJNcZTMRB9ILve6fEIS_OHGrV5R2o',
+                  ),
+                );
+              },
+              child: const Text('Download Playlist Audios'),
+            ),
+          ],
         ),
       ),
     );
