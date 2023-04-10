@@ -227,6 +227,8 @@ void main() {
 
       deletePlaylistDownloadDir(directory);
     });
+  });
+  group('Download recreated playlist with short audios', () {
     testWidgets(
         'Recreated playlist 2 new short audios: initial playlist 1st and 2nd audio were already downloaded and were deleted',
         (WidgetTester tester) async {
@@ -426,6 +428,11 @@ class DownloadPlaylistPage extends StatefulWidget {
 }
 
 class _DownloadPlaylistPageState extends State<DownloadPlaylistPage> {
+  TextEditingController _urlController = TextEditingController(
+    text:
+        'https://youtube.com/playlist?list=PLzwWSJNcZTMRB9ILve6fEIS_OHGrV5R2o',
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -433,16 +440,16 @@ class _DownloadPlaylistPageState extends State<DownloadPlaylistPage> {
       body: Center(
         child: Column(
           children: [
-            const TextField(
-              key: Key('playlistUrlTextField'),
+            TextField(
+              key: const Key('playlistUrlTextField'),
+              controller: _urlController,
             ),
             ElevatedButton(
               onPressed: () {
                 Provider.of<AudioDownloadVM>(context, listen: false)
                     .downloadPlaylistAudios(
                   playlistToDownload: Playlist(
-                    url:
-                        'https://youtube.com/playlist?list=PLzwWSJNcZTMRB9ILve6fEIS_OHGrV5R2o',
+                    url: _urlController.text,
                   ),
                 );
               },
