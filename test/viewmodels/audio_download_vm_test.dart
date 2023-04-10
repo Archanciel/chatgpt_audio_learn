@@ -84,10 +84,10 @@ void main() {
 
       checkDownloadedPlaylist(
         downloadedPlaylist: downloadedPlaylist,
-        testPlaylistId: testPlaylistId,
-        testPlaylistTitle: testPlaylistTitle,
-        testPlaylistUrl: testPlaylistUrl,
-        testPlaylistDir: testPlaylistDir,
+        playlistId: testPlaylistId,
+        playlistTitle: testPlaylistTitle,
+        playlistUrl: testPlaylistUrl,
+        playlistDir: testPlaylistDir,
       );
 
       expect(audioDownloadVM.isDownloading, false);
@@ -142,10 +142,10 @@ void main() {
 
       checkDownloadedPlaylist(
         downloadedPlaylist: downloadedPlaylistBeforeDownload,
-        testPlaylistId: testPlaylistId,
-        testPlaylistTitle: testPlaylistTitle,
-        testPlaylistUrl: testPlaylistUrl,
-        testPlaylistDir: testPlaylistDir,
+        playlistId: testPlaylistId,
+        playlistTitle: testPlaylistTitle,
+        playlistUrl: testPlaylistUrl,
+        playlistDir: testPlaylistDir,
       );
 
       List<Audio> downloadedAudioLstBeforeDownload =
@@ -192,10 +192,10 @@ void main() {
 
       checkDownloadedPlaylist(
         downloadedPlaylist: downloadedPlaylist,
-        testPlaylistId: testPlaylistId,
-        testPlaylistTitle: testPlaylistTitle,
-        testPlaylistUrl: testPlaylistUrl,
-        testPlaylistDir: testPlaylistDir,
+        playlistId: testPlaylistId,
+        playlistTitle: testPlaylistTitle,
+        playlistUrl: testPlaylistUrl,
+        playlistDir: testPlaylistDir,
       );
 
       expect(audioDownloadVM.isDownloading, false);
@@ -253,10 +253,10 @@ void main() {
 
       checkDownloadedPlaylist(
         downloadedPlaylist: downloadedPlaylistBeforeDownload,
-        testPlaylistId: testPlaylistId,
-        testPlaylistTitle: testPlaylistTitle,
-        testPlaylistUrl: testPlaylistUrl,
-        testPlaylistDir: testPlaylistDir,
+        playlistId: testPlaylistId,
+        playlistTitle: testPlaylistTitle,
+        playlistUrl: testPlaylistUrl,
+        playlistDir: testPlaylistDir,
       );
 
       List<Audio> downloadedAudioLstBeforeDownload =
@@ -287,7 +287,8 @@ void main() {
         child: MaterialApp(home: DownloadPlaylistPage()),
       ));
 
-      String recreatedPlaylistWithSameTitleUrl =
+      const String recreatedPlaylistId = 'PLzwWSJNcZTMSwrDOAZEPf0u6YvrKGNnvC';
+      const String recreatedPlaylistWithSameTitleUrl = 
           'https://youtube.com/playlist?list=PLzwWSJNcZTMSwrDOAZEPf0u6YvrKGNnvC';
 
       await tester.enterText(
@@ -312,10 +313,10 @@ void main() {
 
       checkDownloadedPlaylist(
         downloadedPlaylist: downloadedPlaylist,
-        testPlaylistId: testPlaylistId,
-        testPlaylistTitle: testPlaylistTitle,
-        testPlaylistUrl: testPlaylistUrl,
-        testPlaylistDir: testPlaylistDir,
+        playlistId: recreatedPlaylistId,
+        playlistTitle: testPlaylistTitle,
+        playlistUrl: recreatedPlaylistWithSameTitleUrl,
+        playlistDir: testPlaylistDir,
       );
 
       expect(audioDownloadVM.isDownloading, false);
@@ -332,8 +333,8 @@ void main() {
 
       // playableAudioLst contains inserted at list start Audio^s
       checkDownloadedAudios(
-        downloadedAudioOne: downloadedPlaylist.playableAudioLst[1],
-        downloadedAudioTwo: downloadedPlaylist.playableAudioLst[0],
+        downloadedAudioOne: downloadedPlaylist.playableAudioLst[3],
+        downloadedAudioTwo: downloadedPlaylist.playableAudioLst[2],
         downloadFileNamePrefix: '230406',
       );
 
@@ -341,7 +342,7 @@ void main() {
       final List<FileSystemEntity> files =
           directory.listSync(recursive: false, followLinks: false);
 
-      expect(files.length, 2);
+      expect(files.length, 3);
 
       deletePlaylistDownloadDir(directory);
     });
@@ -350,15 +351,15 @@ void main() {
 
 void checkDownloadedPlaylist({
   required Playlist downloadedPlaylist,
-  required String testPlaylistId,
-  required String testPlaylistTitle,
-  required String testPlaylistUrl,
-  required String testPlaylistDir,
+  required String playlistId,
+  required String playlistTitle,
+  required String playlistUrl,
+  required String playlistDir,
 }) {
-  expect(downloadedPlaylist.id, testPlaylistId);
-  expect(downloadedPlaylist.title, testPlaylistTitle);
-  expect(downloadedPlaylist.url, testPlaylistUrl);
-  expect(downloadedPlaylist.downloadPath, testPlaylistDir);
+  expect(downloadedPlaylist.id, playlistId);
+  expect(downloadedPlaylist.title, playlistTitle);
+  expect(downloadedPlaylist.url, playlistUrl);
+  expect(downloadedPlaylist.downloadPath, playlistDir);
 }
 
 void checkDownloadedAudios({
