@@ -37,7 +37,8 @@ void main() {
         directory.deleteSync(recursive: true);
       }
 
-      final AudioDownloadVM audioDownloadVM = AudioDownloadVM(testPlayListTitle: testPlaylistTitle);
+      final AudioDownloadVM audioDownloadVM =
+          AudioDownloadVM(testPlayListTitle: testPlaylistTitle);
 
       expect(audioDownloadVM.listOfPlaylist, []);
       expect(audioDownloadVM.listOfPlaylist, []);
@@ -59,7 +60,8 @@ void main() {
       // await tester.pumpWidget(MyApp());
       await tester.pumpWidget(ChangeNotifierProvider(
         create: (BuildContext context) {
-          audioDownloadVM = AudioDownloadVM(testPlayListTitle: testPlaylistTitle);
+          audioDownloadVM =
+              AudioDownloadVM(testPlayListTitle: testPlaylistTitle);
           return audioDownloadVM;
         },
         child: MaterialApp(home: DownloadPlaylistPage()),
@@ -133,7 +135,8 @@ void main() {
         targetFileName: '$testPlaylistTitle.json',
       );
 
-      AudioDownloadVM audioDownloadVMbeforeDownload = AudioDownloadVM(testPlayListTitle: testPlaylistTitle);
+      AudioDownloadVM audioDownloadVMbeforeDownload =
+          AudioDownloadVM(testPlayListTitle: testPlaylistTitle);
       Playlist downloadedPlaylistBeforeDownload =
           audioDownloadVMbeforeDownload.listOfPlaylist[0];
 
@@ -165,7 +168,118 @@ void main() {
       // await tester.pumpWidget(MyApp());
       await tester.pumpWidget(ChangeNotifierProvider(
         create: (BuildContext context) {
-          audioDownloadVM = AudioDownloadVM(testPlayListTitle: testPlaylistTitle);
+          audioDownloadVM =
+              AudioDownloadVM(testPlayListTitle: testPlaylistTitle);
+          return audioDownloadVM;
+        },
+        child: MaterialApp(home: DownloadPlaylistPage()),
+      ));
+
+      await tester.tap(find.byType(ElevatedButton));
+      await tester.pump();
+
+      // Add a delay to allow the download to finish. 5 seconds is ok
+      // when running the audio_download_vm_test only.
+      // Waiting 5 seconds only causes MissingPluginException
+      // 'No implementation found for method $method on channel $name'
+      // when all tsts are run. 7 seconds solve the problem.
+      await Future.delayed(const Duration(seconds: secondsDelay));
+      await tester.pump();
+
+      expect(directory.existsSync(), true);
+
+      Playlist downloadedPlaylist = audioDownloadVM.listOfPlaylist[0];
+
+      checkDownloadedPlaylist(
+        downloadedPlaylist: downloadedPlaylist,
+        testPlaylistId: testPlaylistId,
+        testPlaylistTitle: testPlaylistTitle,
+        testPlaylistUrl: testPlaylistUrl,
+        testPlaylistDir: testPlaylistDir,
+      );
+
+      expect(audioDownloadVM.isDownloading, false);
+      expect(audioDownloadVM.downloadProgress, 1.0);
+      expect(audioDownloadVM.lastSecondDownloadSpeed, 0);
+      expect(audioDownloadVM.isHighQuality, false);
+
+      // downloadedAudioLst contains added Audio^s
+      checkDownloadedAudios(
+        downloadedAudioOne: downloadedPlaylist.downloadedAudioLst[0],
+        downloadedAudioTwo: downloadedPlaylist.downloadedAudioLst[1],
+        downloadFileNamePrefix: '230406',
+        todayFileNamePrefix: todayDownloadFileNamePrefix,
+      );
+
+      // playableAudioLst contains inserted at list start Audio^s
+      checkDownloadedAudios(
+        downloadedAudioOne: downloadedPlaylist.playableAudioLst[1],
+        downloadedAudioTwo: downloadedPlaylist.playableAudioLst[0],
+        downloadFileNamePrefix: '230406',
+        todayFileNamePrefix: todayDownloadFileNamePrefix,
+      );
+
+      // Checking if there are 3 files in the directory (1 mp3 and 1 json)
+      final List<FileSystemEntity> files =
+          directory.listSync(recursive: false, followLinks: false);
+
+      expect(files.length, 2);
+
+      deletePlaylistDownloadDir(directory);
+    });
+    testWidgets(
+        'Recreated playlist 2 new short audios: initial playlist 1st and 2nd audio were already downloaded and were deleted',
+        (WidgetTester tester) async {
+      late AudioDownloadVM audioDownloadVM;
+      final Directory directory = Directory(testPlaylistDir);
+
+      deletePlaylistDownloadDir(directory);
+
+      expect(directory.existsSync(), false);
+
+      await DirUtil.createDirIfNotExist(pathStr: testPlaylistDir);
+      await DirUtil.copyFileToDirectory(
+        sourceFilePathName: "${testPlaylistDir}_saved\\$testPlaylistTitle.json",
+        targetDirectoryPath: testPlaylistDir,
+        targetFileName: '$testPlaylistTitle.json',
+      );
+
+      AudioDownloadVM audioDownloadVMbeforeDownload =
+          AudioDownloadVM(testPlayListTitle: testPlaylistTitle);
+      Playlist downloadedPlaylistBeforeDownload =
+          audioDownloadVMbeforeDownload.listOfPlaylist[0];
+
+      checkDownloadedPlaylist(
+        downloadedPlaylist: downloadedPlaylistBeforeDownload,
+        testPlaylistId: testPlaylistId,
+        testPlaylistTitle: testPlaylistTitle,
+        testPlaylistUrl: testPlaylistUrl,
+        testPlaylistDir: testPlaylistDir,
+      );
+
+      List<Audio> downloadedAudioLstBeforeDownload =
+          downloadedPlaylistBeforeDownload.downloadedAudioLst;
+      List<Audio> playableAudioLstBeforeDownload =
+          downloadedPlaylistBeforeDownload.playableAudioLst;
+
+      checkDownloadedAudios(
+        downloadedAudioOne: downloadedAudioLstBeforeDownload[0],
+        downloadedAudioTwo: downloadedAudioLstBeforeDownload[1],
+        downloadFileNamePrefix: '230406',
+      );
+
+      // playableAudioLst contains inserted at list start Audio^s
+      checkDownloadedAudios(
+        downloadedAudioOne: playableAudioLstBeforeDownload[1],
+        downloadedAudioTwo: playableAudioLstBeforeDownload[0],
+        downloadFileNamePrefix: '230406',
+      );
+
+      // await tester.pumpWidget(MyApp());
+      await tester.pumpWidget(ChangeNotifierProvider(
+        create: (BuildContext context) {
+          audioDownloadVM =
+              AudioDownloadVM(testPlayListTitle: testPlaylistTitle);
           return audioDownloadVM;
         },
         child: MaterialApp(home: DownloadPlaylistPage()),
@@ -241,6 +355,7 @@ void checkDownloadedAudios({
   required Audio downloadedAudioOne,
   required Audio downloadedAudioTwo,
   required String downloadFileNamePrefix,
+  String? todayFileNamePrefix,
 }) {
   checkDownloadedAudioOne(
     downloadedAudio: downloadedAudioOne,
@@ -256,7 +371,7 @@ void checkDownloadedAudios({
   expect(downloadedAudioTwo.audioDuration, const Duration(milliseconds: 49000));
   expect(downloadedAudioTwo.isMusicQuality, false);
   expect(downloadedAudioTwo.audioFileName,
-      "${todayDownloadFileNamePrefix}-Innovation (Short Film) 20-01-07.mp3");
+      "${todayFileNamePrefix ?? downloadFileNamePrefix}-Innovation (Short Film) 20-01-07.mp3");
   expect(downloadedAudioTwo.audioFileSize, 295404);
 }
 
@@ -266,10 +381,10 @@ void checkDownloadedAudioOne({
 }) {
   expect(downloadedAudio.originalVideoTitle,
       "English conversation: Tea or coffee?");
-  expect(downloadedAudio.validVideoTitle,
-      "English conversation - Tea or coffee");
-  expect(downloadedAudio.videoUrl,
-      "https://www.youtube.com/watch?v=X9s0hsOw3Uc");
+  expect(
+      downloadedAudio.validVideoTitle, "English conversation - Tea or coffee");
+  expect(
+      downloadedAudio.videoUrl, "https://www.youtube.com/watch?v=X9s0hsOw3Uc");
   expect(downloadedAudio.videoUploadDate,
       DateTime.parse("2023-03-22T00:00:00.000"));
   expect(downloadedAudio.audioDuration, const Duration(milliseconds: 24000));
