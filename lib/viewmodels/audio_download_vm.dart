@@ -96,46 +96,33 @@ class AudioDownloadVM extends ChangeNotifier {
     playlistId = yt.PlaylistId.parsePlaylistId(playlistToDownload.url);
     youtubePlaylist = await _youtubeExplode.playlists.get(playlistId);
 
-    if (_listOfPlaylist.isNotEmpty) {
-      int savedPlaylistIndex;
-      Playlist savedPlaylist;
+    int savedPlaylistIndex = _listOfPlaylist
+        .indexWhere((element) => element.url == playlistToDownload.url);
 
-      savedPlaylistIndex = _listOfPlaylist
-          .indexWhere((element) => element.url == playlistToDownload.url);
-
-      if (savedPlaylistIndex == -1) {
-        // playlist was never downloaded or was deleted and recreated
-
-        currentPlaylist = await _obtainPlaylist(
-          playlistToDownload: playlistToDownload,
-          youtubePlaylist: youtubePlaylist,
-        );
-
-        // checking if current playlist was deleted and recreated
-        savedPlaylistIndex = _listOfPlaylist
-            .indexWhere((element) => element.title == currentPlaylist.title);
-
-        if (savedPlaylistIndex != -1) {
-          // current playlist was deleted and recreated since it has the
-          // same title
-          savedPlaylist = _listOfPlaylist[savedPlaylistIndex];
-          currentPlaylist.downloadedAudioLst = savedPlaylist.downloadedAudioLst;
-          currentPlaylist.playableAudioLst = savedPlaylist.playableAudioLst;
-          _listOfPlaylist[savedPlaylistIndex] = currentPlaylist;
-        }
-      } else {
-        // playlist was already downloaded and so is stored in
-        // a playlist json file
-        currentPlaylist = _listOfPlaylist[savedPlaylistIndex];
-      }
-    } else {
-      // situation in which the app downloads playlists for the first
-      // time
+    if (savedPlaylistIndex == -1) {
+      // playlist was never downloaded or was deleted and recreated
 
       currentPlaylist = await _obtainPlaylist(
         playlistToDownload: playlistToDownload,
         youtubePlaylist: youtubePlaylist,
       );
+
+      // checking if current playlist was deleted and recreated
+      savedPlaylistIndex = _listOfPlaylist
+          .indexWhere((element) => element.title == currentPlaylist.title);
+
+      if (savedPlaylistIndex != -1) {
+        // current playlist was deleted and recreated since it has the
+        // same title
+        Playlist savedPlaylist = _listOfPlaylist[savedPlaylistIndex];
+        currentPlaylist.downloadedAudioLst = savedPlaylist.downloadedAudioLst;
+        currentPlaylist.playableAudioLst = savedPlaylist.playableAudioLst;
+        _listOfPlaylist[savedPlaylistIndex] = currentPlaylist;
+      }
+    } else {
+      // playlist was already downloaded and so is stored in
+      // a playlist json file
+      currentPlaylist = _listOfPlaylist[savedPlaylistIndex];
     }
 
     // get already downloaded audio file names
