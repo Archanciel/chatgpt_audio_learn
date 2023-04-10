@@ -229,6 +229,13 @@ void main() {
     });
   });
   group('Download recreated playlist with short audios', () {
+    /// This test is used to test recreating the playlist with the
+    /// same name. Recreating a playlist with an identical name avoids
+    /// to loose time removing from the original playlist the referenced 
+    /// videos. The recreated playlist audios are downloaded in the same 
+    /// dir than the original playlist, The original playlist json file is 
+    /// updated with the recreated playlist id and url as well with the 
+    /// newly downloaded audios.
     testWidgets(
         'Recreated playlist 2 new short audios: initial playlist 1st and 2nd audio were already downloaded and were deleted',
         (WidgetTester tester) async {

@@ -93,6 +93,9 @@ class AudioDownloadVM extends ChangeNotifier {
     String? playlistId;
     yt.Playlist youtubePlaylist;
 
+    playlistId = yt.PlaylistId.parsePlaylistId(playlistToDownload.url);
+    youtubePlaylist = await _youtubeExplode.playlists.get(playlistId);
+
     if (_listOfPlaylist.isNotEmpty) {
       int savedPlaylistIndex;
       Playlist savedPlaylist;
@@ -102,8 +105,6 @@ class AudioDownloadVM extends ChangeNotifier {
 
       if (savedPlaylistIndex == -1) {
         // playlist was never downloaded or was deleted and recreated
-        playlistId = yt.PlaylistId.parsePlaylistId(playlistToDownload.url);
-        youtubePlaylist = await _youtubeExplode.playlists.get(playlistId);
 
         currentPlaylist = await _obtainPlaylist(
           playlistToDownload: playlistToDownload,
@@ -126,14 +127,10 @@ class AudioDownloadVM extends ChangeNotifier {
         // playlist was already downloaded and so is stored in
         // a playlist json file
         currentPlaylist = _listOfPlaylist[savedPlaylistIndex];
-        playlistId = yt.PlaylistId.parsePlaylistId(currentPlaylist.url);
-        youtubePlaylist = await _youtubeExplode.playlists.get(playlistId);
       }
     } else {
       // situation in which the app downloads playlists for the first
       // time
-      playlistId = yt.PlaylistId.parsePlaylistId(playlistToDownload.url);
-      youtubePlaylist = await _youtubeExplode.playlists.get(playlistId);
 
       currentPlaylist = await _obtainPlaylist(
         playlistToDownload: playlistToDownload,
