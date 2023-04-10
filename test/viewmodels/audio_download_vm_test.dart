@@ -288,7 +288,7 @@ void main() {
       ));
 
       const String recreatedPlaylistId = 'PLzwWSJNcZTMSwrDOAZEPf0u6YvrKGNnvC';
-      const String recreatedPlaylistWithSameTitleUrl = 
+      const String recreatedPlaylistWithSameTitleUrl =
           'https://youtube.com/playlist?list=PLzwWSJNcZTMSwrDOAZEPf0u6YvrKGNnvC';
 
       await tester.enterText(
@@ -331,12 +331,18 @@ void main() {
         downloadFileNamePrefix: '230406',
       );
 
+      expect(downloadedPlaylist.downloadedAudioLst[2].audioFileName, '$todayDownloadFileNamePrefix-Really short video 16-05-12.mp3');
+      expect(downloadedPlaylist.downloadedAudioLst[3].audioFileName, '$todayDownloadFileNamePrefix-morning _ cinematic video 19-03-06.mp3');
+
       // playableAudioLst contains inserted at list start Audio^s
       checkDownloadedAudios(
         downloadedAudioOne: downloadedPlaylist.playableAudioLst[3],
         downloadedAudioTwo: downloadedPlaylist.playableAudioLst[2],
         downloadFileNamePrefix: '230406',
       );
+
+      expect(downloadedPlaylist.playableAudioLst[1].audioFileName, '$todayDownloadFileNamePrefix-Really short video 16-05-12.mp3');
+      expect(downloadedPlaylist.playableAudioLst[0].audioFileName, '$todayDownloadFileNamePrefix-morning _ cinematic video 19-03-06.mp3');
 
       // Checking if there are 3 files in the directory (1 mp3 and 1 json)
       final List<FileSystemEntity> files =
