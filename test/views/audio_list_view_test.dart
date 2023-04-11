@@ -19,7 +19,9 @@ class MockAudioDownloadVM extends ChangeNotifier implements AudioDownloadVM {
   }
 
   @override
-  Future<void> downloadPlaylistAudios({required String playlistUrl}) async {
+  Future<void> downloadPlaylistAudios({
+    required String playlistUrl,
+  }) async {
     List<Audio> audioLst = [
       Audio(
           enclosingPlaylist: Playlist(url: playlistUrl),

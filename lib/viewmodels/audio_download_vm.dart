@@ -266,13 +266,18 @@ class AudioDownloadVM extends ChangeNotifier {
 
     final int audioFileSize = audioStreamInfo.size.totalBytes;
     audio.audioFileSize = audioFileSize;
+
+    await _youtubeDownloadAudioFile(audio, audioStreamInfo, audioFileSize);
+  }
+
+  Future<void> _youtubeDownloadAudioFile(Audio audio, yt.AudioOnlyStreamInfo audioStreamInfo, int audioFileSize) async {
     final File file = File(audio.filePathName);
     final IOSink audioFileSink = file.openWrite();
     final Stream<List<int>> audioStream =
         _youtubeExplode.videos.streamsClient.get(audioStreamInfo);
     int totalBytesDownloaded = 0;
     int previousSecondBytesDownloaded = 0;
-
+    
     Duration updateInterval = const Duration(seconds: 1);
     DateTime lastUpdate = DateTime.now();
     Timer timer = Timer.periodic(updateInterval, (timer) {
@@ -283,27 +288,29 @@ class AudioDownloadVM extends ChangeNotifier {
         lastUpdate = DateTime.now();
       }
     });
-
+    
     await for (var byteChunk in audioStream) {
       totalBytesDownloaded += byteChunk.length;
-
-      // Vérifiez si le délai a été dépassé avant de mettre à jour la progression
+    
+      // Vérifiez si le délai a été dépassé avant de mettre à jour la
+      // progression
       if (DateTime.now().difference(lastUpdate) >= updateInterval) {
         _updateDownloadProgress(totalBytesDownloaded / audioFileSize,
             totalBytesDownloaded - previousSecondBytesDownloaded);
         previousSecondBytesDownloaded = totalBytesDownloaded;
         lastUpdate = DateTime.now();
       }
-
+    
       audioFileSink.add(byteChunk);
     }
-
-    // Assurez-vous de mettre à jour la progression une dernière fois à 100% avant de terminer
+    
+    // Assurez-vous de mettre à jour la progression une dernière fois
+    // à 100% avant de terminer
     _updateDownloadProgress(1.0, 0);
-
+    
     // Annulez le Timer pour éviter les appels inutiles
     timer.cancel();
-
+    
     await audioFileSink.flush();
     await audioFileSink.close();
   }
