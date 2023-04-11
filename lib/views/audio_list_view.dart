@@ -59,7 +59,12 @@ class _AudioListViewState extends State<AudioListView> {
   Widget build(BuildContext context) {
     final AudioDownloadVM audioDownloadViewModel =
         Provider.of<AudioDownloadVM>(context);
-    _textEditingController.text = audioDownloadViewModel.listOfPlaylist[0].url;
+    if (_textEditingController.text.isEmpty) {
+      _textEditingController.text =
+          (audioDownloadViewModel.listOfPlaylist.isNotEmpty)
+              ? audioDownloadViewModel.listOfPlaylist[0].url
+              : '';
+    }
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,

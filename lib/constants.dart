@@ -15,22 +15,22 @@ const String kDownloadAppTestDir =
     "C:\\Users\\Jean-Pierre\\Development\\Flutter\\chatgpt_audio_learn\\test\\data\\audio";
 
 // to_delete
-// const String kDownloadAppDirWindows =
-//     'C:\\Users\\Jean-Pierre\\Downloads\\Audio';
 // const String kUniquePlaylistUrl =
 //     'https://youtube.com/playlist?list=PLzwWSJNcZTMTB9iwbu77FGokc3WsoxuV0';
 // const String recreated_playlist_url =
-//     "https://youtube.com/playlist?list=PLzwWSJNcZTMSC7066rTK-HGohI3kVNgod";
+//     "https://youtube.com/playlist?list=PLzwWSJNcZTMQp-I5fnRlCUY3ig7VY5Ihi";
+const String kUniquePlaylistUrl =
+    "https://youtube.com/playlist?list=PLzwWSJNcZTMQp-I5fnRlCUY3ig7VY5Ihi";
 
 // This constant must be available in order for AudioDownloaderVM to
 // be able to load the unique playlist json file.
-// const String kUniquePlaylistTitle = 'to_delete';
-// const bool kDeleteAppDir = false;
+const String kUniquePlaylistTitle = 'to_delete';
+const bool kDeleteAppDir = false;
 
 // files in this local test dir are stored in project test_data dir updated
 // on GitHub
 const String kDownloadAppTestDirWindows = "C:\\Users\\Jean-Pierre\\Development\\Flutter\\chatgpt_audio_learn\\test\\data\\audio";
-const bool kDeleteAppDir = false;
+// const bool kDeleteAppDir = false;
 
 // audio_learn
 // const String kUniquePlaylistUrl =
@@ -38,7 +38,7 @@ const bool kDeleteAppDir = false;
 //
 // This constant must be available in order for AudioDownloaderVM to
 // be able to load the unique playlist json file.
-const String kUniquePlaylistTitle = 'audio_learn';
+// const String kUniquePlaylistTitle = 'audio_learn';
 // const bool kDeleteAppDir = false;
 
 const double kAudioDefaultSpeed = 1.25;

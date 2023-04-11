@@ -197,7 +197,8 @@ void main() {
       tempFile.writeAsStringSync(jsonEncode({'test': 'data'}));
 
       try {
-        // Try to load a MyClass instance from the temporary file, which should throw an exception
+        // Try to load a MyClass instance from the temporary file, which
+        // should throw an exception
         JsonDataService.loadFromFile(
             jsonPathFileName: 'temp.json', type: Audio);
       } catch (e) {

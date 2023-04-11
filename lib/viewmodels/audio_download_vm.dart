@@ -96,12 +96,12 @@ class AudioDownloadVM extends ChangeNotifier {
     playlistId = yt.PlaylistId.parsePlaylistId(playlistUrl);
     youtubePlaylist = await _youtubeExplode.playlists.get(playlistId);
 
-    int savedPlaylistIndex =
+    int existingPlaylistIndex =
         _listOfPlaylist.indexWhere((element) => element.url == playlistUrl);
 
-    if (savedPlaylistIndex == -1) {
+    if (existingPlaylistIndex == -1) {
       // playlist was never downloaded or was deleted and recreated, which
-      // modifies its URL
+      // associates it to a new url
 
       currentPlaylist = await _createPlaylist(
         playlistUrl: playlistUrl,
@@ -109,21 +109,23 @@ class AudioDownloadVM extends ChangeNotifier {
       );
 
       // checking if current playlist was deleted and recreated
-      savedPlaylistIndex = _listOfPlaylist
+      existingPlaylistIndex = _listOfPlaylist
           .indexWhere((element) => element.title == currentPlaylist.title);
 
-      if (savedPlaylistIndex != -1) {
-        // current playlist was deleted and recreated since it has the
-        // same title
-        Playlist savedPlaylist = _listOfPlaylist[savedPlaylistIndex];
-        currentPlaylist.downloadedAudioLst = savedPlaylist.downloadedAudioLst;
-        currentPlaylist.playableAudioLst = savedPlaylist.playableAudioLst;
-        _listOfPlaylist[savedPlaylistIndex] = currentPlaylist;
+      if (existingPlaylistIndex != -1) {
+        // current playlist was deleted and recreated since it is referenced
+        // in the _listOfPlaylist and has the same title than the recreated
+        // polaylist
+        Playlist existingPlaylist = _listOfPlaylist[existingPlaylistIndex];
+        currentPlaylist.downloadedAudioLst =
+            existingPlaylist.downloadedAudioLst;
+        currentPlaylist.playableAudioLst = existingPlaylist.playableAudioLst;
+        _listOfPlaylist[existingPlaylistIndex] = currentPlaylist;
       }
     } else {
       // playlist was already downloaded and so is stored in
       // a playlist json file
-      currentPlaylist = _listOfPlaylist[savedPlaylistIndex];
+      currentPlaylist = _listOfPlaylist[existingPlaylistIndex];
     }
 
     // get already downloaded audio file names
@@ -132,8 +134,7 @@ class AudioDownloadVM extends ChangeNotifier {
 
     final List<String> downloadedAudioValidVideoTitleLst =
         await _getPlaylistDownloadedAudioValidVideoTitleLst(
-            playlistPathFileName: playlistDownloadFilePathName,
-            uiPlaylist: currentPlaylist);
+            currentPlaylist: currentPlaylist);
 
     await for (yt.Video youtubeVideo
         in _youtubeExplode.playlists.getVideos(playlistId)) {
@@ -232,25 +233,16 @@ class AudioDownloadVM extends ChangeNotifier {
     return playlist;
   }
 
-  /// this method must be refactored
+  /// Returns an empty list if the passed playlist was created or
+  /// recreated.
   Future<List<String>> _getPlaylistDownloadedAudioValidVideoTitleLst({
-    required String playlistPathFileName,
-    required Playlist uiPlaylist,
+    required Playlist currentPlaylist,
   }) async {
-    bool jsonFileExists = await File(playlistPathFileName).exists();
+    List<Audio> playlistDownloadedAudioLst = currentPlaylist.downloadedAudioLst;
     List<String> validAudioVideoTitleLst = [];
 
-    if (jsonFileExists) {
-      Playlist playlist = JsonDataService.loadFromFile(
-          jsonPathFileName: playlistPathFileName, type: Playlist);
-      List<Audio> playlistDownloadedAudioLst = playlist.downloadedAudioLst;
-
-      for (Audio downloadedAudio in playlistDownloadedAudioLst) {
-        validAudioVideoTitleLst.add(downloadedAudio.validVideoTitle);
-      }
-
-      uiPlaylist.downloadedAudioLst = playlist.downloadedAudioLst;
-      uiPlaylist.playableAudioLst = playlist.playableAudioLst;
+    for (Audio downloadedAudio in playlistDownloadedAudioLst) {
+      validAudioVideoTitleLst.add(downloadedAudio.validVideoTitle);
     }
 
     return validAudioVideoTitleLst;
