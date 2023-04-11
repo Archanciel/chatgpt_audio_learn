@@ -88,12 +88,9 @@ class _AudioListViewState extends State<AudioListView> {
                       : () {
                           final String playlistUrl =
                               _textEditingController.text.trim();
-                          Playlist playlistToDownload =
-                              Playlist(url: playlistUrl);
-
                           if (playlistUrl.isNotEmpty) {
                             audioDownloadVM.downloadPlaylistAudios(
-                              playlistToDownload: playlistToDownload,
+                              playlistUrl: playlistUrl,
                             );
                           }
                         },

@@ -30,10 +30,7 @@ class DownloadPlaylistPage extends StatelessWidget {
           onPressed: () {
             Provider.of<AudioDownloadVM>(context, listen: false)
                 .downloadPlaylistAudios(
-              playlistToDownload: Playlist(
-                url:
-                    'https://youtube.com/playlist?list=PLzwWSJNcZTMRB9ILve6fEIS_OHGrV5R2o',
-              ),
+              playlistUrl: 'https://youtube.com/playlist?list=PLzwWSJNcZTMRB9ILve6fEIS_OHGrV5R2o',
             );
           },
           child: const Text('Download Playlist Audios'),

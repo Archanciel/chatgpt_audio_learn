@@ -84,7 +84,7 @@ class AudioDownloadVM extends ChangeNotifier {
   /// Downloads the audio of the videos referenced in the passed
   /// playlist.
   Future<void> downloadPlaylistAudios({
-    required Playlist playlistToDownload,
+    required String playlistUrl,
   }) async {
     _youtubeExplode = yt.YoutubeExplode();
 
@@ -93,17 +93,18 @@ class AudioDownloadVM extends ChangeNotifier {
     String? playlistId;
     yt.Playlist youtubePlaylist;
 
-    playlistId = yt.PlaylistId.parsePlaylistId(playlistToDownload.url);
+    playlistId = yt.PlaylistId.parsePlaylistId(playlistUrl);
     youtubePlaylist = await _youtubeExplode.playlists.get(playlistId);
 
-    int savedPlaylistIndex = _listOfPlaylist
-        .indexWhere((element) => element.url == playlistToDownload.url);
+    int savedPlaylistIndex =
+        _listOfPlaylist.indexWhere((element) => element.url == playlistUrl);
 
     if (savedPlaylistIndex == -1) {
-      // playlist was never downloaded or was deleted and recreated
+      // playlist was never downloaded or was deleted and recreated, which
+      // modifies its URL
 
-      currentPlaylist = await _obtainPlaylist(
-        playlistToDownload: playlistToDownload,
+      currentPlaylist = await _createPlaylist(
+        playlistUrl: playlistUrl,
         youtubePlaylist: youtubePlaylist,
       );
 
@@ -209,26 +210,26 @@ class AudioDownloadVM extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Playlist> _obtainPlaylist({
-    required Playlist playlistToDownload,
+  Future<Playlist> _createPlaylist({
+    required String playlistUrl,
     required yt.Playlist youtubePlaylist,
   }) async {
-    Playlist savedPlaylist = playlistToDownload;
-    _listOfPlaylist.add(savedPlaylist);
+    Playlist playlist = Playlist(url: playlistUrl);
+    _listOfPlaylist.add(playlist);
 
-    savedPlaylist.id = youtubePlaylist.id.toString();
+    playlist.id = youtubePlaylist.id.toString();
 
     final String playlistTitle = youtubePlaylist.title;
-    savedPlaylist.title = playlistTitle;
+    playlist.title = playlistTitle;
     final String playlistDownloadPath =
         '$_playlistHomePath${Platform.pathSeparator}$playlistTitle';
 
     // ensure playlist audio download dir exists
     await DirUtil.createDirIfNotExist(pathStr: playlistDownloadPath);
 
-    savedPlaylist.downloadPath = playlistDownloadPath;
+    playlist.downloadPath = playlistDownloadPath;
 
-    return savedPlaylist;
+    return playlist;
   }
 
   /// this method must be refactored

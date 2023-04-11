@@ -19,25 +19,24 @@ class MockAudioDownloadVM extends ChangeNotifier implements AudioDownloadVM {
   }
 
   @override
-  Future<void> downloadPlaylistAudios(
-      {required Playlist playlistToDownload}) async {
+  Future<void> downloadPlaylistAudios({required String playlistUrl}) async {
     List<Audio> audioLst = [
       Audio(
-          enclosingPlaylist: playlistToDownload,
+          enclosingPlaylist: Playlist(url: playlistUrl),
           originalVideoTitle: 'Audio 1',
           videoUrl: 'https://example.com/video2',
           audioDownloadDateTime: DateTime(2023, 3, 25),
           videoUploadDate: DateTime.now(),
           audioDuration: const Duration(minutes: 3, seconds: 42)),
       Audio(
-          enclosingPlaylist: playlistToDownload,
+          enclosingPlaylist: Playlist(url: playlistUrl),
           originalVideoTitle: 'Audio 2',
           videoUrl: 'https://example.com/video2',
           audioDownloadDateTime: DateTime(2023, 3, 25),
           videoUploadDate: DateTime.now(),
           audioDuration: const Duration(minutes: 5, seconds: 21)),
       Audio(
-          enclosingPlaylist: playlistToDownload,
+          enclosingPlaylist: Playlist(url: playlistUrl),
           originalVideoTitle: 'Audio 3',
           videoUrl: 'https://example.com/video2',
           audioDownloadDateTime: DateTime(2023, 3, 25),

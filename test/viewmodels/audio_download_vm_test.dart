@@ -231,10 +231,10 @@ void main() {
   group('Download recreated playlist with short audios', () {
     /// This test is used to test recreating the playlist with the
     /// same name. Recreating a playlist with an identical name avoids
-    /// to loose time removing from the original playlist the referenced 
-    /// videos. The recreated playlist audios are downloaded in the same 
-    /// dir than the original playlist, The original playlist json file is 
-    /// updated with the recreated playlist id and url as well with the 
+    /// to loose time removing from the original playlist the referenced
+    /// videos. The recreated playlist audios are downloaded in the same
+    /// dir than the original playlist, The original playlist json file is
+    /// updated with the recreated playlist id and url as well with the
     /// newly downloaded audios.
     testWidgets(
         'Recreated playlist 2 new short audios: initial playlist 1st and 2nd audio were already downloaded and were deleted',
@@ -338,8 +338,10 @@ void main() {
         downloadFileNamePrefix: '230406',
       );
 
-      expect(downloadedPlaylist.downloadedAudioLst[2].audioFileName, '$todayDownloadFileNamePrefix-Really short video 16-05-12.mp3');
-      expect(downloadedPlaylist.downloadedAudioLst[3].audioFileName, '$todayDownloadFileNamePrefix-morning _ cinematic video 19-03-06.mp3');
+      expect(downloadedPlaylist.downloadedAudioLst[2].audioFileName,
+          '$todayDownloadFileNamePrefix-Really short video 16-05-12.mp3');
+      expect(downloadedPlaylist.downloadedAudioLst[3].audioFileName,
+          '$todayDownloadFileNamePrefix-morning _ cinematic video 19-03-06.mp3');
 
       // playableAudioLst contains inserted at list start Audio^s
       checkDownloadedAudios(
@@ -348,8 +350,10 @@ void main() {
         downloadFileNamePrefix: '230406',
       );
 
-      expect(downloadedPlaylist.playableAudioLst[1].audioFileName, '$todayDownloadFileNamePrefix-Really short video 16-05-12.mp3');
-      expect(downloadedPlaylist.playableAudioLst[0].audioFileName, '$todayDownloadFileNamePrefix-morning _ cinematic video 19-03-06.mp3');
+      expect(downloadedPlaylist.playableAudioLst[1].audioFileName,
+          '$todayDownloadFileNamePrefix-Really short video 16-05-12.mp3');
+      expect(downloadedPlaylist.playableAudioLst[0].audioFileName,
+          '$todayDownloadFileNamePrefix-morning _ cinematic video 19-03-06.mp3');
 
       // Checking if there are 3 files in the directory (1 mp3 and 1 json)
       final List<FileSystemEntity> files =
@@ -462,9 +466,7 @@ class _DownloadPlaylistPageState extends State<DownloadPlaylistPage> {
               onPressed: () {
                 Provider.of<AudioDownloadVM>(context, listen: false)
                     .downloadPlaylistAudios(
-                  playlistToDownload: Playlist(
-                    url: _urlController.text,
-                  ),
+                  playlistUrl: _urlController.text,
                 );
               },
               child: const Text('Download Playlist Audios'),
