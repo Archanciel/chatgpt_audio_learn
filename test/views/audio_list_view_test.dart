@@ -8,14 +8,24 @@ import 'package:provider/provider.dart';
 import 'package:chatgpt_audio_learn/viewmodels/theme_provider.dart';
 import 'package:chatgpt_audio_learn/viewmodels/language_provider.dart';
 import 'package:chatgpt_audio_learn/main.dart';
-import 'package:youtube_explode_dart/src/youtube_explode_base.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart' as yt;
 
 class MockAudioDownloadVM extends ChangeNotifier implements AudioDownloadVM {
   final List<Playlist> _playlistLst = [];
 
   MockAudioDownloadVM() {
     _playlistLst.add(Playlist(url: 'https://mockurl.com'));
+  }
+
+  @override
+  Future<void> youtubeDownloadAudioFile(
+    Audio audio,
+    yt.AudioOnlyStreamInfo audioStreamInfo,
+    int audioFileSize,
+  ) async {
+    // does not physically download anything
+    print('***** mock downloading ${audio.validVideoTitle}');
   }
 
   @override
@@ -63,7 +73,7 @@ class MockAudioDownloadVM extends ChangeNotifier implements AudioDownloadVM {
   }
 
   @override
-  late YoutubeExplode youtubeExplode;
+  late yt.YoutubeExplode youtubeExplode;
 
   @override
   void addNewPlaylist(Playlist playlist) {

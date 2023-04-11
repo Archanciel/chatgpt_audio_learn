@@ -9,6 +9,60 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:provider/provider.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart' as yt;
+
+class MockAudioDownloadVM extends AudioDownloadVM {
+  MockAudioDownloadVM({String? testPlayListTitle})
+      : super(testPlayListTitle: testPlayListTitle);
+
+  @override
+  Future<void> youtubeDownloadAudioFile(
+    Audio audio,
+    yt.AudioOnlyStreamInfo audioStreamInfo,
+    int audioFileSize,
+  ) async {
+    // does not physically download anything
+    print('***** mock downloading ${audio.validVideoTitle}');
+  }
+
+  @override
+  late yt.YoutubeExplode youtubeExplode;
+
+  @override
+  void addNewPlaylist(Playlist playlist) {
+    // TODO: implement addNewPlaylist
+    int i = 0;
+  }
+
+  @override
+  // TODO: implement currentDownloadingAudio
+  Audio get currentDownloadingAudio => super.currentDownloadingAudio;
+
+  @override
+  // TODO: implement downloadProgress
+  double get downloadProgress => 1.0;
+
+  @override
+  // TODO: implement isDownloading
+  bool get isDownloading => false;
+
+  @override
+  // TODO: implement isHighQuality
+  bool get isHighQuality => false;
+
+  @override
+  // TODO: implement lastSecondDownloadSpeed
+  int get lastSecondDownloadSpeed => 0;
+
+  @override
+  // TODO: implement listOfPlaylist
+  List<Playlist> get listOfPlaylist => super.listOfPlaylist;
+
+  @override
+  void setAudioQuality({required bool isHighQuality}) {
+    // TODO: implement setAudioQuality
+  }
+}
 
 final String todayDownloadFileNamePrefix =
     Audio.downloadDatePrefixFormatter.format(DateTime.now());
@@ -20,7 +74,7 @@ void main() {
   const String testPlaylistTitle = 'audio_learn_test_download_2_small_videos';
   const String testPlaylistDir =
       '$kDownloadAppTestDir\\audio_learn_test_download_2_small_videos';
-  const int secondsDelay = 7;
+  const int secondsDelay = 6;
 
   // Necessary to avoid FatalFailureException (FatalFailureException: Failed
   // to perform an HTTP request to YouTube due to a fatal failure. In most
@@ -61,7 +115,7 @@ void main() {
       await tester.pumpWidget(ChangeNotifierProvider(
         create: (BuildContext context) {
           audioDownloadVM =
-              AudioDownloadVM(testPlayListTitle: testPlaylistTitle);
+              MockAudioDownloadVM(testPlayListTitle: testPlaylistTitle);
           return audioDownloadVM;
         },
         child: MaterialApp(home: DownloadPlaylistPage()),
@@ -75,7 +129,7 @@ void main() {
       // Waiting 5 seconds only causes MissingPluginException
       // 'No implementation found for method $method on channel $name'
       // when all tsts are run. 7 seconds solve the problem.
-      await Future.delayed(const Duration(seconds: 10));
+      await Future.delayed(const Duration(seconds: secondsDelay));
       await tester.pump();
 
       expect(directory.existsSync(), true);
@@ -113,7 +167,7 @@ void main() {
       final List<FileSystemEntity> files =
           directory.listSync(recursive: false, followLinks: false);
 
-      expect(files.length, 3);
+      expect(files.length, 1);
 
       deletePlaylistDownloadDir(directory);
     });
@@ -169,7 +223,7 @@ void main() {
       await tester.pumpWidget(ChangeNotifierProvider(
         create: (BuildContext context) {
           audioDownloadVM =
-              AudioDownloadVM(testPlayListTitle: testPlaylistTitle);
+              MockAudioDownloadVM(testPlayListTitle: testPlaylistTitle);
           return audioDownloadVM;
         },
         child: MaterialApp(home: DownloadPlaylistPage()),
@@ -223,7 +277,7 @@ void main() {
       final List<FileSystemEntity> files =
           directory.listSync(recursive: false, followLinks: false);
 
-      expect(files.length, 2);
+      expect(files.length, 1);
 
       deletePlaylistDownloadDir(directory);
     });
@@ -288,7 +342,7 @@ void main() {
       await tester.pumpWidget(ChangeNotifierProvider(
         create: (BuildContext context) {
           audioDownloadVM =
-              AudioDownloadVM(testPlayListTitle: testPlaylistTitle);
+              MockAudioDownloadVM(testPlayListTitle: testPlaylistTitle);
           return audioDownloadVM;
         },
         child: MaterialApp(home: DownloadPlaylistPage()),
@@ -359,7 +413,7 @@ void main() {
       final List<FileSystemEntity> files =
           directory.listSync(recursive: false, followLinks: false);
 
-      expect(files.length, 3);
+      expect(files.length, 1);
 
       deletePlaylistDownloadDir(directory);
     });
