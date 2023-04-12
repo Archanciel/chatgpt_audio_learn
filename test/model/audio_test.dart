@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:chatgpt_audio_learn/models/audio.dart';
+import 'package:chatgpt_audio_learn/models/playlist.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -61,6 +64,48 @@ void main() {
           Audio.replaceUnauthorizedDirOrFileNameChars(videoTitle);
 
       expect(actualFileName, expectedFileName);
+    });
+  });
+  group('Audio static methods', () {
+    test('buildDownloadDatePrefix', () {
+      DateTime downloadDate = DateTime(2023, 4, 3);
+      String expectedPrefix = '230403-';
+
+      String actualPrefix = Audio.buildDownloadDatePrefix(downloadDate);
+
+      expect(actualPrefix, expectedPrefix);
+    });
+
+    test('buildUploadDateSuffix', () {
+      DateTime uploadDate = DateTime(2023, 4, 3);
+      String expectedSuffix = '23-04-03';
+
+      String actualSuffix = Audio.buildUploadDateSuffix(uploadDate);
+
+      expect(actualSuffix, expectedSuffix);
+    });
+  });
+  group('Audio filePathName getter', () {
+    test('filePathName', () {
+      Playlist playlist = Playlist(
+        url: 'https://www.youtube.com/playlist?list=test_playlist_id',
+      );
+      playlist.title = 'Test Playlist';
+      playlist.downloadPath = 'download_path';
+
+      Audio audio = Audio(
+          enclosingPlaylist: playlist,
+          originalVideoTitle: 'C',
+          videoUrl: 'https://example.com/video1',
+          audioDownloadDateTime: DateTime(2023, 3, 17),
+          videoUploadDate: DateTime(2023, 4, 12));
+
+      playlist.addDownloadedAudio(audio);
+
+      String expectedFilePathName = "download_path\\230317-C 23-04-12.mp3";
+      String actualFilePathName = audio.filePathName;
+
+      expect(actualFilePathName, expectedFilePathName);
     });
   });
 }
