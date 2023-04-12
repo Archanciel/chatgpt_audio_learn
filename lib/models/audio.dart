@@ -211,6 +211,6 @@ class Audio {
     // ends with '?' has already been downloaded using
     // replaceUnauthorizedDirOrFileNameChars(videoTitle) + '.mp3' can be executed
     // if validFileName.trim() is NOT done.
-    return validFileName.trim();
+    return validFileName;
   }
 }
