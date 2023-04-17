@@ -1,0 +1,36 @@
+{
+  "id": "PLzwWSJNcZTMQp-I5fnRlCUY3ig7VY5Ihi",
+  "title": "to_delete",
+  "url": "https://youtube.com/playlist?list=PLzwWSJNcZTMQp-I5fnRlCUY3ig7VY5Ihi",
+  "downloadPath": "C:\\Users\\Jean-Pierre\\Downloads\\Audio\\to_delete",
+  "downloadedAudioLst": [
+    {
+      "originalVideoTitle": "Keanu Reeves fight training for «JOHN WICK» | Behind The Scenes",
+      "validVideoTitle": "Keanu Reeves fight training for «JOHN WICK» _ Behind The Scenes",
+      "videoUrl": "https://www.youtube.com/watch?v=8bSuGBuoe8A",
+      "audioDownloadDateTime": "2023-04-12T18:43:20.074937",
+      "audioDownloadDurationMs": 1575,
+      "audioDownloadSpeed": 900674,
+      "videoUploadDate": "2023-03-10T00:00:00.000",
+      "audioDurationMs": 233000,
+      "isMusicQuality": false,
+      "audioFileName": "230412-Keanu Reeves fight training for «JOHN WICK» _ Behind The Scenes 23-03-10.mp3",
+      "audioFileSize": 1418645
+    }
+  ],
+  "playableAudioLst": [
+    {
+      "originalVideoTitle": "Keanu Reeves fight training for «JOHN WICK» | Behind The Scenes",
+      "validVideoTitle": "Keanu Reeves fight training for «JOHN WICK» _ Behind The Scenes",
+      "videoUrl": "https://www.youtube.com/watch?v=8bSuGBuoe8A",
+      "audioDownloadDateTime": "2023-04-12T18:43:20.074937",
+      "audioDownloadDurationMs": 1575,
+      "audioDownloadSpeed": 900674,
+      "videoUploadDate": "2023-03-10T00:00:00.000",
+      "audioDurationMs": 233000,
+      "isMusicQuality": false,
+      "audioFileName": "230412-Keanu Reeves fight training for «JOHN WICK» _ Behind The Scenes 23-03-10.mp3",
+      "audioFileSize": 1418645
+    }
+  ]
+}
