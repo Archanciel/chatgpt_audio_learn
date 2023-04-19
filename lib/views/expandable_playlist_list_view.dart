@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/list_model.dart';
-import '../viewmodels/list_vm.dart';
+import '../models/playlist.dart';
+import '../viewmodels/expandable_playlist_list_vm.dart';
 
-class ExpandableListView extends StatefulWidget {
+class ExpandablePlaylistListView extends StatefulWidget {
   @override
-  State<ExpandableListView> createState() => _ExpandableListViewState();
+  State<ExpandablePlaylistListView> createState() =>
+      _ExpandablePlaylistListViewState();
 }
 
-class _ExpandableListViewState extends State<ExpandableListView> {
+class _ExpandablePlaylistListViewState
+    extends State<ExpandablePlaylistListView> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -20,7 +22,8 @@ class _ExpandableListViewState extends State<ExpandableListView> {
               child: ElevatedButton(
                 key: const Key('toggle_button'),
                 onPressed: () {
-                  Provider.of<ListVM>(context, listen: false).toggleList();
+                  Provider.of<ExpandablePlaylistListVM>(context, listen: false)
+                      .toggleList();
                 },
                 child: const Text('Toggle List'),
               ),
@@ -28,9 +31,11 @@ class _ExpandableListViewState extends State<ExpandableListView> {
             Expanded(
               child: ElevatedButton(
                 key: const Key('delete_button'),
-                onPressed: Provider.of<ListVM>(context).isButton1Enabled
+                onPressed: Provider.of<ExpandablePlaylistListVM>(context)
+                        .isButton1Enabled
                     ? () {
-                        Provider.of<ListVM>(context, listen: false)
+                        Provider.of<ExpandablePlaylistListVM>(context,
+                                listen: false)
                             .deleteSelectedItem(context);
                       }
                     : null,
@@ -40,9 +45,11 @@ class _ExpandableListViewState extends State<ExpandableListView> {
             Expanded(
               child: IconButton(
                 key: const Key('move_up_button'),
-                onPressed: Provider.of<ListVM>(context).isButton2Enabled
+                onPressed: Provider.of<ExpandablePlaylistListVM>(context)
+                        .isButton2Enabled
                     ? () {
-                        Provider.of<ListVM>(context, listen: false)
+                        Provider.of<ExpandablePlaylistListVM>(context,
+                                listen: false)
                             .moveSelectedItemUp();
                       }
                     : null,
@@ -56,9 +63,11 @@ class _ExpandableListViewState extends State<ExpandableListView> {
             Expanded(
               child: IconButton(
                 key: const Key('move_down_button'),
-                onPressed: Provider.of<ListVM>(context).isButton3Enabled
+                onPressed: Provider.of<ExpandablePlaylistListVM>(context)
+                        .isButton3Enabled
                     ? () {
-                        Provider.of<ListVM>(context, listen: false)
+                        Provider.of<ExpandablePlaylistListVM>(context,
+                                listen: false)
                             .moveSelectedItemDown();
                       }
                     : null,
@@ -71,16 +80,16 @@ class _ExpandableListViewState extends State<ExpandableListView> {
             ),
           ],
         ),
-        Consumer<ListVM>(
+        Consumer<ExpandablePlaylistListVM>(
           builder: (context, listViewModel, child) {
             if (listViewModel.isListExpanded) {
               return Expanded(
                 child: ListView.builder(
                   itemCount: listViewModel.items.length,
                   itemBuilder: (context, index) {
-                    ListItem item = listViewModel.items[index];
+                    Playlist item = listViewModel.items[index];
                     return ListTile(
-                      title: Text(item.name),
+                      title: Text(item.url),
                       trailing: Checkbox(
                         value: item.isSelected,
                         onChanged: (value) {

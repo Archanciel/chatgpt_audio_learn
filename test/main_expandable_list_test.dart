@@ -1,6 +1,6 @@
 import 'package:chatgpt_audio_learn/main_expandable_list.dart';
-import 'package:chatgpt_audio_learn/viewmodels/list_vm.dart';
-import 'package:chatgpt_audio_learn/views/expandable_list_view.dart';
+import 'package:chatgpt_audio_learn/viewmodels/expandable_playlist_list_vm.dart';
+import 'package:chatgpt_audio_learn/views/expandable_playlist_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +13,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ListVM()),
+            ChangeNotifierProvider(create: (_) => ExpandablePlaylistListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -21,13 +21,13 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ExpandableListView(),
+              body: ExpandablePlaylistListView(),
             ),
           ),
         ),
       );
 
-      expect(find.byType(ExpandableListView), findsOneWidget);
+      expect(find.byType(ExpandablePlaylistListView), findsOneWidget);
     });
 
     testWidgets('should render ListViewWidget using MyApp',
@@ -40,14 +40,14 @@ void main() {
         ),
       );
 
-      expect(find.byType(ExpandableListView), findsOneWidget);
+      expect(find.byType(ExpandablePlaylistListView), findsOneWidget);
     });
 
     testWidgets('should toggle list on press', (WidgetTester tester) async {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ListVM()),
+            ChangeNotifierProvider(create: (_) => ExpandablePlaylistListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -55,7 +55,7 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ExpandableListView(),
+              body: ExpandablePlaylistListView(),
             ),
           ),
         ),
@@ -85,7 +85,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ListVM()),
+            ChangeNotifierProvider(create: (_) => ExpandablePlaylistListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -93,7 +93,7 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ExpandableListView(),
+              body: ExpandablePlaylistListView(),
             ),
           ),
         ),
@@ -174,7 +174,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ListVM()),
+            ChangeNotifierProvider(create: (_) => ExpandablePlaylistListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -182,7 +182,7 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ExpandableListView(),
+              body: ExpandablePlaylistListView(),
             ),
           ),
         ),
@@ -271,7 +271,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ListVM()),
+            ChangeNotifierProvider(create: (_) => ExpandablePlaylistListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -279,7 +279,7 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ExpandableListView(),
+              body: ExpandablePlaylistListView(),
             ),
           ),
         ),
@@ -375,7 +375,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ListVM()),
+            ChangeNotifierProvider(create: (_) => ExpandablePlaylistListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -383,7 +383,7 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ExpandableListView(),
+              body: ExpandablePlaylistListView(),
             ),
           ),
         ),
@@ -443,7 +443,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ListVM()),
+            ChangeNotifierProvider(create: (_) => ExpandablePlaylistListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -451,7 +451,7 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ExpandableListView(),
+              body: ExpandablePlaylistListView(),
             ),
           ),
         ),
@@ -462,12 +462,13 @@ void main() {
       await tester.tap(toggleButtonFinder);
       await tester.pump();
 
-      Finder listViewFinder = find.byType(ExpandableListView);
+      Finder listViewFinder = find.byType(ExpandablePlaylistListView);
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
-      ListVM listViewModel =
-          Provider.of<ListVM>(tester.element(listViewFinder), listen: false);
+      ExpandablePlaylistListVM listViewModel =
+          Provider.of<ExpandablePlaylistListVM>(tester.element(listViewFinder),
+              listen: false);
       expect(listViewModel.items.length, 10);
 
       // Verify that the Delete button is disabled
@@ -503,12 +504,13 @@ void main() {
       // length is 10 minus 1 and secondly verify that
       // the deleted ListTile is no longer displayed.
 
-      listViewFinder = find.byType(ExpandableListView);
+      listViewFinder = find.byType(ExpandablePlaylistListView);
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
-      listViewModel =
-          Provider.of<ListVM>(tester.element(listViewFinder), listen: false);
+      listViewModel = Provider.of<ExpandablePlaylistListVM>(
+          tester.element(listViewFinder),
+          listen: false);
       expect(listViewModel.items.length, 9);
 
       expect(find.widgetWithText(ListTile, itemToDeleteTextStr), findsNothing);
@@ -518,7 +520,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ListVM()),
+            ChangeNotifierProvider(create: (_) => ExpandablePlaylistListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -526,7 +528,7 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ExpandableListView(),
+              body: ExpandablePlaylistListView(),
             ),
           ),
         ),
@@ -537,12 +539,13 @@ void main() {
       await tester.tap(toggleButtonFinder);
       await tester.pump();
 
-      Finder listViewFinder = find.byType(ExpandableListView);
+      Finder listViewFinder = find.byType(ExpandablePlaylistListView);
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
-      ListVM listViewModel =
-          Provider.of<ListVM>(tester.element(listViewFinder), listen: false);
+      ExpandablePlaylistListVM listViewModel =
+          Provider.of<ExpandablePlaylistListVM>(tester.element(listViewFinder),
+              listen: false);
       expect(listViewModel.items.length, 10);
 
       // Find and select the ListTile to move'
@@ -567,14 +570,15 @@ void main() {
       await tester.tap(iconButtonFinder);
       await tester.pump();
 
-      listViewFinder = find.byType(ExpandableListView);
+      listViewFinder = find.byType(ExpandablePlaylistListView);
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
-      listViewModel =
-          Provider.of<ListVM>(tester.element(listViewFinder), listen: false);
-      expect(listViewModel.items[1].name, 'Item 3');
-      expect(listViewModel.items[2].name, 'Item 2');
+      listViewModel = Provider.of<ExpandablePlaylistListVM>(
+          tester.element(listViewFinder),
+          listen: false);
+      expect(listViewModel.items[1].url, 'Item 3');
+      expect(listViewModel.items[2].url, 'Item 2');
     });
 
     testWidgets('select and move down twice before last item',
@@ -582,7 +586,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ListVM()),
+            ChangeNotifierProvider(create: (_) => ExpandablePlaylistListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -590,7 +594,7 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ExpandableListView(),
+              body: ExpandablePlaylistListView(),
             ),
           ),
         ),
@@ -601,12 +605,13 @@ void main() {
       await tester.tap(toggleButtonFinder);
       await tester.pump();
 
-      Finder listViewFinder = find.byType(ExpandableListView);
+      Finder listViewFinder = find.byType(ExpandablePlaylistListView);
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
-      ListVM listViewModel =
-          Provider.of<ListVM>(tester.element(listViewFinder), listen: false);
+      ExpandablePlaylistListVM listViewModel =
+          Provider.of<ExpandablePlaylistListVM>(tester.element(listViewFinder),
+              listen: false);
       expect(listViewModel.items.length, 10);
 
       // Find and select the ListTile to move'
@@ -633,21 +638,22 @@ void main() {
       await tester.tap(iconButtonFinder);
       await tester.pump();
 
-      listViewFinder = find.byType(ExpandableListView);
+      listViewFinder = find.byType(ExpandablePlaylistListView);
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
-      listViewModel =
-          Provider.of<ListVM>(tester.element(listViewFinder), listen: false);
-      expect(listViewModel.items[0].name, 'Item 9');
-      expect(listViewModel.items[9].name, 'Item 10');
+      listViewModel = Provider.of<ExpandablePlaylistListVM>(
+          tester.element(listViewFinder),
+          listen: false);
+      expect(listViewModel.items[0].url, 'Item 9');
+      expect(listViewModel.items[9].url, 'Item 10');
     });
 
     testWidgets('select and move up item', (WidgetTester tester) async {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ListVM()),
+            ChangeNotifierProvider(create: (_) => ExpandablePlaylistListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -655,7 +661,7 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ExpandableListView(),
+              body: ExpandablePlaylistListView(),
             ),
           ),
         ),
@@ -666,12 +672,13 @@ void main() {
       await tester.tap(toggleButtonFinder);
       await tester.pump();
 
-      Finder listViewFinder = find.byType(ExpandableListView);
+      Finder listViewFinder = find.byType(ExpandablePlaylistListView);
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
-      ListVM listViewModel =
-          Provider.of<ListVM>(tester.element(listViewFinder), listen: false);
+      ExpandablePlaylistListVM listViewModel =
+          Provider.of<ExpandablePlaylistListVM>(tester.element(listViewFinder),
+              listen: false);
       expect(listViewModel.items.length, 10);
 
       // Find and select the ListTile to move'
@@ -696,14 +703,15 @@ void main() {
       await tester.tap(iconButtonFinder);
       await tester.pump();
 
-      listViewFinder = find.byType(ExpandableListView);
+      listViewFinder = find.byType(ExpandablePlaylistListView);
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
-      listViewModel =
-          Provider.of<ListVM>(tester.element(listViewFinder), listen: false);
-      expect(listViewModel.items[3].name, 'Item 5');
-      expect(listViewModel.items[4].name, 'Item 4');
+      listViewModel = Provider.of<ExpandablePlaylistListVM>(
+          tester.element(listViewFinder),
+          listen: false);
+      expect(listViewModel.items[3].url, 'Item 5');
+      expect(listViewModel.items[4].url, 'Item 4');
     });
 
     testWidgets('select and move up twice first item',
@@ -711,7 +719,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ListVM()),
+            ChangeNotifierProvider(create: (_) => ExpandablePlaylistListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -719,7 +727,7 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ExpandableListView(),
+              body: ExpandablePlaylistListView(),
             ),
           ),
         ),
@@ -730,12 +738,13 @@ void main() {
       await tester.tap(toggleButtonFinder);
       await tester.pump();
 
-      Finder listViewFinder = find.byType(ExpandableListView);
+      Finder listViewFinder = find.byType(ExpandablePlaylistListView);
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
-      ListVM listViewModel =
-          Provider.of<ListVM>(tester.element(listViewFinder), listen: false);
+      ExpandablePlaylistListVM listViewModel =
+          Provider.of<ExpandablePlaylistListVM>(tester.element(listViewFinder),
+              listen: false);
       expect(listViewModel.items.length, 10);
 
       // Find and select the ListTile to move'
@@ -762,14 +771,15 @@ void main() {
       await tester.tap(iconButtonFinder);
       await tester.pump();
 
-      listViewFinder = find.byType(ExpandableListView);
+      listViewFinder = find.byType(ExpandablePlaylistListView);
 
       // tester.element(listViewFinder) returns a StatefulElement
       // which is a BuildContext
-      listViewModel =
-          Provider.of<ListVM>(tester.element(listViewFinder), listen: false);
-      expect(listViewModel.items[0].name, 'Item 2');
-      expect(listViewModel.items[8].name, 'Item 1');
+      listViewModel = Provider.of<ExpandablePlaylistListVM>(
+          tester.element(listViewFinder),
+          listen: false);
+      expect(listViewModel.items[0].url, 'Item 2');
+      expect(listViewModel.items[8].url, 'Item 1');
     });
   });
 }

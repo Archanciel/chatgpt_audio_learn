@@ -8,6 +8,7 @@ class Playlist {
   String title = '';
   String url;
   String downloadPath = '';
+  bool isSelected;
 
   // Contains audio videos currently referrenced in the Youtube
   // playlist.
@@ -24,6 +25,7 @@ class Playlist {
 
   Playlist({
     required this.url,
+    this.isSelected = false,
   });
 
   /// This constructor requires all instance variables
@@ -32,6 +34,7 @@ class Playlist {
     required this.title,
     required this.url,
     required this.downloadPath,
+    required this.isSelected,
   });
   // Factory constructor: creates an instance of Playlist from a JSON object
   factory Playlist.fromJson(Map<String, dynamic> json) {
@@ -40,6 +43,7 @@ class Playlist {
       title: json['title'],
       url: json['url'],
       downloadPath: json['downloadPath'],
+      isSelected: json['isSelected'],
     );
 
     // Deserialize the Audio instances in the downloadedAudioLst and playableAudioLst
@@ -71,6 +75,7 @@ class Playlist {
           downloadedAudioLst.map((audio) => audio.toJson()).toList(),
       'playableAudioLst':
           playableAudioLst.map((audio) => audio.toJson()).toList(),
+      'isSelected': isSelected,
     };
   }
 
