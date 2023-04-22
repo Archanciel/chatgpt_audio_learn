@@ -27,6 +27,8 @@ class MapOfListProvider with ChangeNotifier {
     selectedKeys.forEach((key, _) {
       values.addAll(mapOfList[key]!);
     });
+    values.sort(); // Sort the values before returning them
+
     return values;
   }
 }
