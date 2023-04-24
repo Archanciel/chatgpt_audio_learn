@@ -54,10 +54,10 @@ class MyApp extends StatelessWidget {
                   Positioned(
                     top: 100,
                     left: 100,
-                    child: Tooltip(
+                    child: CustomTooltip(
                       message: tooltipNotifier.message,
+                      onClose: tooltipNotifier.hideTooltip,
                       child: Icon(Icons.info),
-                      preferBelow: false,
                     ),
                   ),
               ],
@@ -69,5 +69,47 @@ class MyApp extends StatelessWidget {
   }
 }
 
-/* En fait, ToolTip n'est pas adapté à ce que je souhaite: lorsque je clicke sur le bouton dans cet exemple, le ToolTipNotifier est correctment utilisé. Mais je veux que le message s'affiche immédiatement au-dessus de l'icône, et pas seulement après que j'aie appuyé longuement sur l'icône.
-*/
+class CustomTooltip extends StatelessWidget {
+  final String message;
+  final Widget child;
+  final VoidCallback onClose;
+
+  const CustomTooltip({
+    Key? key,
+    required this.message,
+    required this.child,
+    required this.onClose,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        GestureDetector(
+          onTap: onClose,
+          child: Container(
+            color: Colors.transparent,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+        ),
+        Positioned.fill(
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: Column(
+              children: [
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(message),
+                  ),
+                ),
+                child,
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
