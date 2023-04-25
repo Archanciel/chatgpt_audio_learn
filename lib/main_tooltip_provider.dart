@@ -4,28 +4,30 @@ import 'package:provider/provider.dart';
 void main() {
   runApp(
     ChangeNotifierProvider(
-      create: (context) => TooltipNotifier(),
+      create: (context) => MessageVM(),
       child: MyApp(),
     ),
   );
 }
 
-class TooltipNotifier extends ChangeNotifier {
-  bool _shouldShowTooltip = false;
+class MessageVM extends ChangeNotifier {
+  bool _shouldDisplayMessage = false;
   String _message = '';
 
-  bool get shouldShowTooltip => _shouldShowTooltip;
+  bool get shouldShowTooltip => _shouldDisplayMessage;
   String get message => _message;
 
-  void showTooltip(String message) {
-    _shouldShowTooltip = true;
+  void displayMessage(String message) {
+    _shouldDisplayMessage = true;
     _message = message;
+
     notifyListeners();
   }
 
-  void hideTooltip() {
-    _shouldShowTooltip = false;
+  void hideMessage() {
+    _shouldDisplayMessage = false;
     _message = '';
+
     notifyListeners();
   }
 }
@@ -38,7 +40,7 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text('Exemple de Tooltip avec Provider'),
         ),
-        body: Consumer<TooltipNotifier>(
+        body: Consumer<MessageVM>(
           builder: (context, tooltipNotifier, child) {
             return Center(
               child: AspectRatio(
@@ -49,8 +51,8 @@ class MyApp extends StatelessWidget {
                       alignment: Alignment.center,
                       child: ElevatedButton(
                         onPressed: () {
-                          tooltipNotifier.showTooltip(
-                              'Message depuis le Provider');
+                          tooltipNotifier
+                              .displayMessage('Message depuis le Provider');
                         },
                         child: Text('Afficher le Tooltip'),
                       ),
@@ -59,9 +61,9 @@ class MyApp extends StatelessWidget {
                       Positioned(
                         top: 100,
                         left: 100,
-                        child: CustomTooltip(
+                        child: MessageIncluderWidget(
                           message: tooltipNotifier.message,
-                          onClose: tooltipNotifier.hideTooltip,
+                          hideMessageMethod: tooltipNotifier.hideMessage,
                           child: Icon(Icons.info),
                         ),
                       ),
@@ -76,17 +78,20 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class CustomTooltip extends StatelessWidget {
-  final String message;
-  final Widget child;
-  final VoidCallback onClose;
+class MessageIncluderWidget extends StatelessWidget {
+  final String _message;
+  final Widget _child;
+  final void Function() _hideMessageMethod;
 
-  const CustomTooltip({
+  const MessageIncluderWidget({
     Key? key,
-    required this.message,
-    required this.child,
-    required this.onClose,
-  }) : super(key: key);
+    required String message,
+    required Widget child,
+    required void Function() hideMessageMethod,
+  })  : _hideMessageMethod = hideMessageMethod,
+        _child = child,
+        _message = message,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +101,7 @@ class CustomTooltip extends StatelessWidget {
           width: 200,
           height: 100,
           child: GestureDetector(
-            onTap: onClose,
+            onTap: _hideMessageMethod,
             child: Container(
               color: Colors.transparent,
               width: double.infinity,
@@ -104,21 +109,14 @@ class CustomTooltip extends StatelessWidget {
             ),
           ),
         ),
-        Positioned.fill(
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: Column(
-              children: [
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(message),
-                  ),
-                ),
-                child,
-              ],
+        Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(_message),
             ),
-          ),
+            _child,
+          ],
         ),
       ],
     );
