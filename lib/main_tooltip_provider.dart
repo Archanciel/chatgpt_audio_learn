@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.info),
+                          const Icon(Icons.info),
                           ElevatedButton(
                             onPressed: () {
                               tooltipNotifier
