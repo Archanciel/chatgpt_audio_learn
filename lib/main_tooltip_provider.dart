@@ -14,7 +14,7 @@ class MessageVM extends ChangeNotifier {
   bool _shouldDisplayMessage = false;
   String _message = '';
 
-  bool get shouldShowTooltip => _shouldDisplayMessage;
+  bool get shouldDisplayMessage => _shouldDisplayMessage;
   String get message => _message;
 
   void displayMessage(String message) {
@@ -57,7 +57,7 @@ class MyApp extends StatelessWidget {
                         child: Text('Afficher le Tooltip'),
                       ),
                     ),
-                    if (tooltipNotifier.shouldShowTooltip)
+                    if (tooltipNotifier.shouldDisplayMessage)
                       Positioned(
                         top: 100,
                         left: 100,
@@ -97,18 +97,14 @@ class MessageIncluderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        SizedBox( // solves the Exception has occurred. FlutterError 
+        SizedBox( // solves the "Exception has occurred. FlutterError 
                   // (BoxConstraints forces an infinite width and infinite 
-                  // height.
-          width: 200,
-          height: 100,
+                  // height". Defines the size of the GestureDetector, i.e.
+                  // the region on which typing closes the message.
+          width: 400,
+          height: 200,
           child: GestureDetector(
             onTap: _hideMessageMethod,
-            child: Container(
-              color: Colors.transparent,
-              width: double.infinity,
-              height: double.infinity,
-            ),
           ),
         ),
         Column(
@@ -117,7 +113,6 @@ class MessageIncluderWidget extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Text(_message),
             ),
-            _child,
           ],
         ),
       ],
