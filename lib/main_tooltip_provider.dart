@@ -85,12 +85,16 @@ class CustomTooltip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        GestureDetector(
-          onTap: onClose,
-          child: Container(
-            color: Colors.transparent,
-            width: double.infinity,
-            height: double.infinity,
+        SizedBox(
+          width: 200,
+          height: 100,
+          child: GestureDetector(
+            onTap: onClose,
+            child: Container(
+              color: Colors.transparent,
+              width: double.infinity,
+              height: double.infinity,
+            ),
           ),
         ),
         Positioned.fill(
