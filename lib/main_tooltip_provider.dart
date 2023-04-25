@@ -61,10 +61,9 @@ class MyApp extends StatelessWidget {
                       Positioned(
                         top: 100,
                         left: 100,
-                        child: MessageIncluderWidget(
+                        child: MessageWidget(
                           message: tooltipNotifier.message,
                           hideMessageMethod: tooltipNotifier.hideMessage,
-                          child: Icon(Icons.info),
                         ),
                       ),
                   ],
@@ -78,18 +77,15 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MessageIncluderWidget extends StatelessWidget {
+class MessageWidget extends StatelessWidget {
   final String _message;
-  final Widget _child;
   final void Function() _hideMessageMethod;
 
-  const MessageIncluderWidget({
+  const MessageWidget({
     Key? key,
     required String message,
-    required Widget child,
     required void Function() hideMessageMethod,
   })  : _hideMessageMethod = hideMessageMethod,
-        _child = child,
         _message = message,
         super(key: key);
 
