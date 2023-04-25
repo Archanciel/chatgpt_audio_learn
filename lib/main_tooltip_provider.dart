@@ -97,7 +97,9 @@ class MessageIncluderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        SizedBox(
+        SizedBox( // solves the Exception has occurred. FlutterError 
+                  // (BoxConstraints forces an infinite width and infinite 
+                  // height.
           width: 200,
           height: 100,
           child: GestureDetector(
