@@ -49,17 +49,23 @@ class MyApp extends StatelessWidget {
                   children: [
                     Align(
                       alignment: Alignment.center,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          tooltipNotifier
-                              .displayMessage('Message depuis le Provider');
-                        },
-                        child: Text('Afficher le Tooltip'),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.info),
+                          ElevatedButton(
+                            onPressed: () {
+                              tooltipNotifier
+                                  .displayMessage('Message depuis le Provider');
+                            },
+                            child: Text('Afficher le Tooltip'),
+                          ),
+                        ],
                       ),
                     ),
                     if (tooltipNotifier.shouldDisplayMessage)
                       Positioned(
-                        top: 100,
+                        top: 120,
                         left: 100,
                         child: MessageWidget(
                           message: tooltipNotifier.message,
