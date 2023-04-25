@@ -40,27 +40,34 @@ class MyApp extends StatelessWidget {
         ),
         body: Consumer<TooltipNotifier>(
           builder: (context, tooltipNotifier, child) {
-            return Stack(
-              children: [
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      tooltipNotifier.showTooltip('Message depuis le Provider');
-                    },
-                    child: Text('Afficher le Tooltip'),
-                  ),
-                ),
-                if (tooltipNotifier.shouldShowTooltip)
-                  Positioned(
-                    top: 100,
-                    left: 100,
-                    child: CustomTooltip(
-                      message: tooltipNotifier.message,
-                      onClose: tooltipNotifier.hideTooltip,
-                      child: Icon(Icons.info),
+            return Center(
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          tooltipNotifier.showTooltip(
+                              'Message depuis le Provider');
+                        },
+                        child: Text('Afficher le Tooltip'),
+                      ),
                     ),
-                  ),
-              ],
+                    if (tooltipNotifier.shouldShowTooltip)
+                      Positioned(
+                        top: 100,
+                        left: 100,
+                        child: CustomTooltip(
+                          message: tooltipNotifier.message,
+                          onClose: tooltipNotifier.hideTooltip,
+                          child: Icon(Icons.info),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
             );
           },
         ),
@@ -85,12 +92,16 @@ class CustomTooltip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        GestureDetector(
-          onTap: onClose,
-          child: Container(
-            color: Colors.transparent,
-            width: double.infinity,
-            height: double.infinity,
+        SizedBox(
+          width: 200,
+          height: 100,
+          child: GestureDetector(
+            onTap: onClose,
+            child: Container(
+              color: Colors.transparent,
+              width: double.infinity,
+              height: double.infinity,
+            ),
           ),
         ),
         Positioned.fill(
