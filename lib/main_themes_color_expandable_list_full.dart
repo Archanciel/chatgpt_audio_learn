@@ -6,10 +6,19 @@ enum ThemeMode {
   light,
   dark,
   blue,
+  violet,
   red,
   green,
   yellow,
 }
+
+  int violetColor = 0xff66194D;
+  MaterialColor materialVioletColor = MaterialColor(
+    violetColor,
+    {
+      500: Color(violetColor),
+    },
+  );
 
 class ThemeProvider extends ChangeNotifier {
   ThemeMode _themeMode = ThemeMode.light;
@@ -29,6 +38,8 @@ class ThemeProvider extends ChangeNotifier {
         return ThemeData.dark();
       case ThemeMode.blue:
         return ThemeData(primarySwatch: Colors.blue);
+      case ThemeMode.violet:
+        return ThemeData(primarySwatch: Colors.purple);  
       case ThemeMode.red:
         return ThemeData(primarySwatch: Colors.red);
       case ThemeMode.green:
@@ -78,6 +89,10 @@ class MyApp extends StatelessWidget {
                       const PopupMenuItem<ThemeMode>(
                         value: ThemeMode.blue,
                         child: Text('Blue'),
+                      ),
+                      const PopupMenuItem<ThemeMode>(
+                        value: ThemeMode.violet,
+                        child: Text('Violet'),
                       ),
                       const PopupMenuItem<ThemeMode>(
                         value: ThemeMode.red,
