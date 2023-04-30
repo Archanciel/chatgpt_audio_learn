@@ -616,7 +616,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(title: const Text('Sort and Filter Dialog')),
-        body: Center(child: MyHomePage()),
+        body: const Center(child: MyHomePage()),
       ),
     );
   }
@@ -669,190 +669,232 @@ class _SortAndFilterDialogState extends State<SortAndFilterDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Sort and Filter Options'),
-      content: Container(
-        width: double.maxFinite,
-        height: 800,
-        child: DraggableScrollableSheet(
-          initialChildSize: 1,
-          minChildSize: 1,
-          maxChildSize: 1,
-          builder: (BuildContext context, ScrollController scrollController) {
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text('Sort By:'),
-                  DropdownButton<String>(
-                    value: _selectedSortingOption,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _selectedSortingOption = newValue!;
-                      });
-                    },
-                    items: <String>[
-                      'Video Upload Date',
-                      'Download Date',
-                      'Title',
-                      'Duration',
-                      'Download Duration',
-                      'Download Speed',
-                      'File Size',
-                      'Music Quality',
-                      'Video URL',
-                      'Enclosing Playlist',
-                      'Audio Download DateTime',
-                    ].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                  Row(
-                    children: [
-                      const Text('Sort Ascending:'),
-                      Checkbox(
-                        value: _sortAscending,
-                        onChanged: (bool? newValue) {
-                          setState(() {
-                            _sortAscending = newValue!;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  const Divider(),
-                  const Text('Filter Options:'),
-                  const Text('Audio Title Substring:'),
-                  TextField(
-                    onChanged: (value) {
-                      _audioTitleSubString = value;
-                    },
-                  ),
-                  Row(
-                    children: [
-                      const Text('Music Quality:'),
-                      Checkbox(
-                        value: _filterMusicQuality,
-                        onChanged: (bool? newValue) {
-                          setState(() {
-                            _filterMusicQuality = newValue!;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text('Start downl date'),
-                      IconButton(
-                        icon: const Icon(Icons.calendar_today),
-                        onPressed: () async {
-                          _startDownloadDateTime = (await showDatePicker(
-                            context: context,
-                            initialDate: _startDownloadDateTime,
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime.now(),
-                          ))!;
-                          _startDownloadDateTimeController.text =
-                              DateFormat('dd-MM-yyyy').format(_startDownloadDateTime);
-                        },
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      SizedBox(
-                        width: 80,
-                        child: TextField(
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          decoration: const InputDecoration(
-                            hintText: '',
-                            // isDense: true,
-                            contentPadding: EdgeInsets.symmetric(
-                              vertical: 0,
-                              horizontal: 5,),
+    return Center(
+      child: AlertDialog(
+        title: const Text('Sort and Filter Options'),
+        content: SizedBox(
+          width: double.maxFinite,
+          height: 800,
+          child: DraggableScrollableSheet(
+            initialChildSize: 1,
+            minChildSize: 1,
+            maxChildSize: 1,
+            builder: (BuildContext context, ScrollController scrollController) {
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('Sort By:'),
+                    DropdownButton<String>(
+                      value: _selectedSortingOption,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedSortingOption = newValue!;
+                        });
+                      },
+                      items: <String>[
+                        'Video Upload Date',
+                        'Download Date',
+                        'Title',
+                        'Duration',
+                        'Download Duration',
+                        'Download Speed',
+                        'File Size',
+                        'Music Quality',
+                        'Video URL',
+                        'Enclosing Playlist',
+                        'Audio Download DateTime',
+                      ].map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                    Row(
+                      children: [
+                        const Text('Sort Ascending:'),
+                        Checkbox(
+                          value: _sortAscending,
+                          onChanged: (bool? newValue) {
+                            setState(() {
+                              _sortAscending = newValue!;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    const Divider(),
+                    const Text('Filter Options:'),
+                    const Text('Audio Title Substring:'),
+                    TextField(
+                      onChanged: (value) {
+                        _audioTitleSubString = value;
+                      },
+                    ),
+                    Row(
+                      children: [
+                        const Text('Music Quality:'),
+                        Checkbox(
+                          value: _filterMusicQuality,
+                          onChanged: (bool? newValue) {
+                            setState(() {
+                              _filterMusicQuality = newValue!;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                          width: 120,
+                          child: Text('Start downl date'),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.calendar_today),
+                          onPressed: () async {
+                            DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: _startDownloadDateTime,
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime.now(),
+                            );
+
+                            if (pickedDate != null) {
+                              // Add this check
+                              _startDownloadDateTime = pickedDate;
+                              _startDownloadDateTimeController.text =
+                                  DateFormat('dd-MM-yyyy')
+                                      .format(_startDownloadDateTime);
+                            }
+                          },
+                        ),
+                        SizedBox(
+                          width: 80,
+                          child: TextField(
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            decoration: const InputDecoration(
+                              hintText: '',
+                              isDense:
+                                  true, // You can try adding isDense: true to better align the text vertically
+                              contentPadding: EdgeInsets.fromLTRB(0, 5, 0, 0),
                               border: InputBorder.none,
+                            ),
+                            controller: _startDownloadDateTimeController,
+                            keyboardType: TextInputType.number,
                           ),
-                          controller: _startDownloadDateTimeController,
-                          keyboardType: TextInputType.number,
-                          maxLength: 9,
                         ),
-                      ),
-                    ],
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      _endDownloadDateTime = (await showDatePicker(
-                        context: context,
-                        initialDate: _endDownloadDateTime,
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime.now(),
-                      ))!;
-                    },
-                    child: const Text('End downl date'),
-                  ),
-                  const Text('File Size Range (bytes):'),
-                  Row(
-                    children: [
-                      const Text('Start:'),
-                      SizedBox(
-                        width: 50,
-                        child: TextField(
-                          controller: _startFileSizeController,
-                          keyboardType: TextInputType.number,
-                          maxLength: 9,
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                          width: 120,
+                          child: Text('End downl date'),
                         ),
-                      ),
-                      const SizedBox(width: 20),
-                      const Text('End:'),
-                      SizedBox(
-                        width: 50,
-                        child: TextField(
-                          controller: _endFileSizeController,
-                          keyboardType: TextInputType.number,
-                          maxLength: 9,
+                        IconButton(
+                          icon: const Icon(Icons.calendar_today),
+                          onPressed: () async {
+                            DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: _endDownloadDateTime,
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime.now(),
+                            );
+
+                            if (pickedDate != null) {
+                              // Add this check
+                              _endDownloadDateTime = pickedDate;
+                              _endDownloadDateTimeController.text =
+                                  DateFormat('dd-MM-yyyy')
+                                      .format(_endDownloadDateTime);
+                            }
+                          },
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          },
+                        SizedBox(
+                          width: 80,
+                          child: TextField(
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            decoration: const InputDecoration(
+                              hintText: '',
+                              isDense:
+                                  true, // You can try adding isDense: true to better align the text vertically
+                              contentPadding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                              border: InputBorder.none,
+                            ),
+                            controller: _endDownloadDateTimeController,
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Text('File Size Range (bytes):'),
+                    Row(
+                      children: [
+                        const Text('Start:'),
+                        SizedBox(
+                          width: 50,
+                          child: TextField(
+                            controller: _startFileSizeController,
+                            keyboardType: TextInputType.number,
+                            maxLength: 9,
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        const Text('End:'),
+                        SizedBox(
+                          width: 50,
+                          child: TextField(
+                            controller: _endFileSizeController,
+                            keyboardType: TextInputType.number,
+                            maxLength: 9,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              // Apply sorting and filtering options
+              print('Sorting option: $_selectedSortingOption');
+              print('Sort ascending: $_sortAscending');
+              print('Filter by music quality: $_filterMusicQuality');
+              print('Audio title substring: $_audioTitleSubString');
+              print(
+                  'Start download date: ${_startDownloadDateTime.toIso8601String()}');
+              print(
+                  'End download date: ${_endDownloadDateTime.toIso8601String()}');
+              print(
+                  'File size range: ${_startFileSizeController.text} - ${_endFileSizeController.text}');
+              Navigator.of(context).pop();
+            },
+            child: const Text('Apply'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Cancel'),
+          ),
+        ],
       ),
-      actions: [
-        ElevatedButton(
-          onPressed: () {
-            // Apply sorting and filtering options
-            print('Sorting option: $_selectedSortingOption');
-            print('Sort ascending: $_sortAscending');
-            print('Filter by music quality: $_filterMusicQuality');
-            print('Audio title substring: $_audioTitleSubString');
-            print(
-                'Start download date: ${_startDownloadDateTime.toIso8601String()}');
-            print(
-                'End download date: ${_endDownloadDateTime.toIso8601String()}');
-            print(
-                'File size range: ${_startFileSizeController.text} - ${_endFileSizeController.text}');
-            Navigator.of(context).pop();
-          },
-          child: const Text('Apply'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text('Cancel'),
-        ),
-      ],
     );
   }
 }
