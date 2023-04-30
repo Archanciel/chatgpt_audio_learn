@@ -632,7 +632,7 @@ class MyHomePage extends StatelessWidget {
         showDialog(
           context: context,
           builder: (BuildContext context) {
-            return SortAndFilterDialog();
+            return const SortAndFilterDialog();
           },
         );
       },
@@ -642,6 +642,8 @@ class MyHomePage extends StatelessWidget {
 }
 
 class SortAndFilterDialog extends StatefulWidget {
+  const SortAndFilterDialog({super.key});
+
   @override
   _SortAndFilterDialogState createState() => _SortAndFilterDialogState();
 }
@@ -650,17 +652,19 @@ class _SortAndFilterDialogState extends State<SortAndFilterDialog> {
   String _selectedSortingOption = 'Video Upload Date';
   bool _sortAscending = true;
   bool _filterMusicQuality = false;
-  TextEditingController _startFileSizeController = TextEditingController();
-  TextEditingController _endFileSizeController = TextEditingController();
-  TextEditingController _audioTitleSubStringController =
+  final TextEditingController _startFileSizeController =
       TextEditingController();
-  TextEditingController _startDownloadDateTimeController =
+  final TextEditingController _endFileSizeController = TextEditingController();
+  final TextEditingController _audioTitleSubStringController =
       TextEditingController();
-  TextEditingController _endDownloadDateTimeController =
+  final TextEditingController _startDownloadDateTimeController =
       TextEditingController();
-  TextEditingController _startUploadDateTimeController =
+  final TextEditingController _endDownloadDateTimeController =
       TextEditingController();
-  TextEditingController _endUploadDateTimeController = TextEditingController();
+  final TextEditingController _startUploadDateTimeController =
+      TextEditingController();
+  final TextEditingController _endUploadDateTimeController =
+      TextEditingController();
   String? _audioTitleSubString;
   DateTime _startDownloadDateTime = DateTime.now();
   DateTime _endDownloadDateTime = DateTime.now();
@@ -684,7 +688,13 @@ class _SortAndFilterDialogState extends State<SortAndFilterDialog> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Sort By:'),
+                    const Text(
+                      'Sort By:',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     DropdownButton<String>(
                       value: _selectedSortingOption,
                       onChanged: (String? newValue) {
@@ -725,9 +735,29 @@ class _SortAndFilterDialogState extends State<SortAndFilterDialog> {
                       ],
                     ),
                     const Divider(),
-                    const Text('Filter Options:'),
+                    const Text(
+                      'Filter Options:',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
                     const Text('Audio Title Substring:'),
                     TextField(
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      decoration: const InputDecoration(
+                        hintText: '',
+                        isDense:
+                            true, // You can try adding isDense: true to better align the text vertically
+                        contentPadding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                        border: InputBorder.none,
+                      ),
+                      controller: _audioTitleSubStringController,
+                      keyboardType: TextInputType.text,
                       onChanged: (value) {
                         _audioTitleSubString = value;
                       },
@@ -839,6 +869,100 @@ class _SortAndFilterDialogState extends State<SortAndFilterDialog> {
                         ),
                       ],
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                          width: 120,
+                          child: Text('Start upl date'),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.calendar_today),
+                          onPressed: () async {
+                            DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: _startUploadDateTime,
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime.now(),
+                            );
+
+                            if (pickedDate != null) {
+                              // Add this check
+                              _startUploadDateTime = pickedDate;
+                              _startUploadDateTimeController.text =
+                                  DateFormat('dd-MM-yyyy')
+                                      .format(_startUploadDateTime);
+                            }
+                          },
+                        ),
+                        SizedBox(
+                          width: 80,
+                          child: TextField(
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            decoration: const InputDecoration(
+                              hintText: '',
+                              isDense:
+                                  true, // You can try adding isDense: true to better align the text vertically
+                              contentPadding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                              border: InputBorder.none,
+                            ),
+                            controller: _startUploadDateTimeController,
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                          width: 120,
+                          child: Text('End downl date'),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.calendar_today),
+                          onPressed: () async {
+                            DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: _endUploadDateTime,
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime.now(),
+                            );
+
+                            if (pickedDate != null) {
+                              // Add this check
+                              _endUploadDateTime = pickedDate;
+                              _endUploadDateTimeController.text =
+                                  DateFormat('dd-MM-yyyy')
+                                      .format(_endUploadDateTime);
+                            }
+                          },
+                        ),
+                        SizedBox(
+                          width: 80,
+                          child: TextField(
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            decoration: const InputDecoration(
+                              hintText: '',
+                              isDense:
+                                  true, // You can try adding isDense: true to better align the text vertically
+                              contentPadding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                              border: InputBorder.none,
+                            ),
+                            controller: _endUploadDateTimeController,
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+                      ],
+                    ),
                     const Text('File Size Range (bytes):'),
                     Row(
                       children: [
@@ -881,6 +1005,9 @@ class _SortAndFilterDialogState extends State<SortAndFilterDialog> {
                   'Start download date: ${_startDownloadDateTime.toIso8601String()}');
               print(
                   'End download date: ${_endDownloadDateTime.toIso8601String()}');
+              print(
+                  'Start upload date: ${_startUploadDateTime.toIso8601String()}');
+              print('End upload date: ${_endUploadDateTime.toIso8601String()}');
               print(
                   'File size range: ${_startFileSizeController.text} - ${_endFileSizeController.text}');
               Navigator.of(context).pop();
