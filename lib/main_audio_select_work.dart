@@ -490,34 +490,35 @@ List<Audio> sortAudioLstByMusicQuality({
   return audioLst;
 }
 
-List<Audio> sortAudioLstByVideoUrl({
+// Method not useful
+// List<Audio> sortAudioLstByVideoUrl({
+//   required List<Audio> audioLst,
+//   bool asc = true,
+// }) {
+//   if (asc) {
+//     audioLst.sort((a, b) {
+//       return a.videoUrl.compareTo(b.videoUrl);
+//     });
+//   } else {
+//     audioLst.sort((a, b) {
+//       return b.videoUrl.compareTo(a.videoUrl);
+//     });
+//   }
+
+//   return audioLst;
+// }
+
+List<Audio> sortAudioLstByEnclosingPlaylistTitle({
   required List<Audio> audioLst,
   bool asc = true,
 }) {
   if (asc) {
     audioLst.sort((a, b) {
-      return a.videoUrl.compareTo(b.videoUrl);
+      return a.enclosingPlaylist!.title.compareTo(b.enclosingPlaylist!.title);
     });
   } else {
     audioLst.sort((a, b) {
-      return b.videoUrl.compareTo(a.videoUrl);
-    });
-  }
-
-  return audioLst;
-}
-
-List<Audio> sortAudioLstByEnclosingPlaylist({
-  required List<Audio> audioLst,
-  bool asc = true,
-}) {
-  if (asc) {
-    audioLst.sort((a, b) {
-      return a.enclosingPlaylist!.url.compareTo(b.enclosingPlaylist!.url);
-    });
-  } else {
-    audioLst.sort((a, b) {
-      return b.enclosingPlaylist!.url.compareTo(a.enclosingPlaylist!.url);
+      return b.enclosingPlaylist!.title.compareTo(a.enclosingPlaylist!.title);
     });
   }
 
