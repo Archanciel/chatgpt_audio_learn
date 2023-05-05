@@ -177,78 +177,80 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 0.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            SizedBox(
+              height: 120,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Expanded(
-                    child: IconButton(
-                      iconSize: _audioIconSizeMedium,
-                      onPressed: () =>
-                          viewModel.seekBy(const Duration(minutes: -1)),
-                      icon: const Icon(Icons.fast_rewind),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: IconButton(
+                          iconSize: _audioIconSizeMedium,
+                          onPressed: () =>
+                              viewModel.seekBy(const Duration(minutes: -1)),
+                          icon: const Icon(Icons.fast_rewind),
+                        ),
+                      ),
+                      Expanded(
+                        child: IconButton(
+                          iconSize: _audioIconSizeSmaller,
+                          onPressed: () =>
+                              viewModel.seekBy(const Duration(seconds: -10)),
+                          icon: const Icon(Icons.fast_rewind),
+                        ),
+                      ),
+                      Expanded(
+                        child: IconButton(
+                          iconSize: _audioIconSizeSmaller,
+                          onPressed: () =>
+                              viewModel.seekBy(const Duration(seconds: 10)),
+                          icon: const Icon(Icons.fast_forward),
+                        ),
+                      ),
+                      Expanded(
+                        child: IconButton(
+                          iconSize: _audioIconSizeMedium,
+                          onPressed: () =>
+                              viewModel.seekBy(const Duration(minutes: 1)),
+                          icon: const Icon(Icons.fast_forward),
+                        ),
+                      ),
+                    ],
                   ),
-                  Expanded(
-                    child: IconButton(
-                      iconSize: _audioIconSizeSmaller,
-                      onPressed: () =>
-                          viewModel.seekBy(const Duration(seconds: -10)),
-                      icon: const Icon(Icons.fast_rewind),
-                    ),
-                  ),
-                  Expanded(
-                    child: IconButton(
-                      iconSize: _audioIconSizeSmaller,
-                      onPressed: () =>
-                          viewModel.seekBy(const Duration(seconds: 10)),
-                      icon: const Icon(Icons.fast_forward),
-                    ),
-                  ),
-                  Expanded(
-                    child: IconButton(
-                      iconSize: _audioIconSizeMedium,
-                      onPressed: () =>
-                          viewModel.seekBy(const Duration(minutes: 1)),
-                      icon: const Icon(Icons.fast_forward),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 0.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Expanded(
-                    child: Text(
-                      '1 m',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 20.0),
-                    ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      '10 s',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 18.0),
-                    ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      '10 s',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 18.0),
-                    ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      '1 m',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 20.0),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [
+                      Expanded(
+                        child: Text(
+                          '1 m',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 20.0),
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          '10 s',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 18.0),
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          '10 s',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 18.0),
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          '1 m',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 20.0),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
