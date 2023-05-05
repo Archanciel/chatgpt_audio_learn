@@ -69,6 +69,10 @@ class AudioPlayerScreen extends StatefulWidget {
 }
 
 class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
+  final double _audioIconSizeSmaller = 50;
+  final double _audioIconSizeMedium = 60;
+  final double _audioIconSizeLarge = 90;
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -78,11 +82,17 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
           title: const Text('Audio Player'),
         ),
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _buildSlider(),
-            _buildPositions(),
+            const SizedBox(height: 10.0),
+            Column(
+              children: [
+                const SizedBox(height: 16.0),
+                _buildSlider(),
+                _buildPositions(),
+              ],
+            ),
             _buildPlayButtons(),
             _buildPositionButtons()
           ],
@@ -135,26 +145,23 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
   Widget _buildPlayButtons() {
     return Consumer<AudioPlayerViewModel>(
       builder: (context, viewModel, child) {
-        double audioIconSizeSmaller = 50;
-        double audioIconSizeMedium = 60;
-        double audioIconSizeLarge = 90;
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             IconButton(
-              iconSize: audioIconSizeMedium,
+              iconSize: _audioIconSizeMedium,
               onPressed: () => viewModel.seekBy(const Duration(seconds: -10)),
               icon: const Icon(Icons.skip_previous),
             ),
             IconButton(
-              iconSize: audioIconSizeLarge,
+              iconSize: _audioIconSizeLarge,
               onPressed: viewModel.isPlaying
                   ? viewModel.pauseAudio
                   : viewModel.playAudio,
               icon: Icon(viewModel.isPlaying ? Icons.pause : Icons.play_arrow),
             ),
             IconButton(
-              iconSize: audioIconSizeMedium,
+              iconSize: _audioIconSizeMedium,
               onPressed: () => viewModel.seekBy(const Duration(seconds: 10)),
               icon: const Icon(Icons.skip_next),
             ),
@@ -167,9 +174,6 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
   Widget _buildPositionButtons() {
     return Consumer<AudioPlayerViewModel>(
       builder: (context, viewModel, child) {
-        double audioIconSizeSmaller = 50;
-        double audioIconSizeMedium = 60;
-        double audioIconSizeLarge = 90;
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -180,7 +184,7 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
                 children: [
                   Expanded(
                     child: IconButton(
-                      iconSize: audioIconSizeMedium,
+                      iconSize: _audioIconSizeMedium,
                       onPressed: () =>
                           viewModel.seekBy(const Duration(minutes: -1)),
                       icon: const Icon(Icons.fast_rewind),
@@ -188,7 +192,7 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
                   ),
                   Expanded(
                     child: IconButton(
-                      iconSize: audioIconSizeSmaller,
+                      iconSize: _audioIconSizeSmaller,
                       onPressed: () =>
                           viewModel.seekBy(const Duration(seconds: -10)),
                       icon: const Icon(Icons.fast_rewind),
@@ -196,7 +200,7 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
                   ),
                   Expanded(
                     child: IconButton(
-                      iconSize: audioIconSizeSmaller,
+                      iconSize: _audioIconSizeSmaller,
                       onPressed: () =>
                           viewModel.seekBy(const Duration(seconds: 10)),
                       icon: const Icon(Icons.fast_forward),
@@ -204,7 +208,7 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
                   ),
                   Expanded(
                     child: IconButton(
-                      iconSize: audioIconSizeMedium,
+                      iconSize: _audioIconSizeMedium,
                       onPressed: () =>
                           viewModel.seekBy(const Duration(minutes: 1)),
                       icon: const Icon(Icons.fast_forward),
