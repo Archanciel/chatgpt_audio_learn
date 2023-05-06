@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:audioplayers/audioplayers.dart';
 
 class AudioPlayerViewModel extends ChangeNotifier {
-  final String audioUrl;
+  final String audioPathFileName;
   late AudioPlayer _audioPlayer;
   Duration _duration = const Duration();
   Duration _position = const Duration();
@@ -12,28 +12,28 @@ class AudioPlayerViewModel extends ChangeNotifier {
   Duration get duration => _duration;
   Duration get remaining => _duration - _position;
 
-  AudioPlayerViewModel({required this.audioUrl}) {
+  AudioPlayerViewModel({required this.audioPathFileName}) {
     _audioPlayer = AudioPlayer();
     _initializePlayer();
   }
 
   void _initializePlayer() async {
-    // await _audioPlayer.setAsset(audioUrl);
+    await _audioPlayer.setSourceAsset(audioPathFileName);
     _audioPlayer.onDurationChanged.listen((duration) {
       _duration = duration;
       notifyListeners();
     });
 
-    // _audioPlayer.onAudioPositionChanged.listen((position) {
-    //   _position = position;
-    //   notifyListeners();
-    // });
+    _audioPlayer.onPositionChanged.listen((position) {
+      _position = position;
+      notifyListeners();
+    });
   }
 
   bool get isPlaying => _audioPlayer.state == PlayerState.playing;
 
   void playAudio() {
-    // _audioPlayer.play(audioUrl);
+    _audioPlayer.play(AssetSource(audioPathFileName));
     notifyListeners();
   }
 
@@ -52,6 +52,16 @@ class AudioPlayerViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void skipToStart() {
+    _audioPlayer.seek(Duration.zero);
+    notifyListeners();
+  }
+
+  void skipToEnd() {
+    _audioPlayer.seek(_duration);
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     _audioPlayer.dispose();
@@ -60,9 +70,9 @@ class AudioPlayerViewModel extends ChangeNotifier {
 }
 
 class AudioPlayerScreen extends StatefulWidget {
-  final String audioUrl;
+  final String audioPathFileName;
 
-  AudioPlayerScreen({required this.audioUrl});
+  AudioPlayerScreen({required this.audioPathFileName});
 
   @override
   _AudioPlayerScreenState createState() => _AudioPlayerScreenState();
@@ -76,7 +86,8 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => AudioPlayerViewModel(audioUrl: widget.audioUrl),
+      create: (_) =>
+          AudioPlayerViewModel(audioPathFileName: widget.audioPathFileName),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Audio Player'),
@@ -124,10 +135,14 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(_formatDuration(viewModel.position),
-                  style: const TextStyle(fontSize: 20.0)),
-              Text(_formatDuration(viewModel.remaining),
-                  style: const TextStyle(fontSize: 20.0)),
+              Text(
+                _formatDuration(viewModel.position),
+                style: const TextStyle(fontSize: 20.0),
+              ),
+              Text(
+                _formatDuration(viewModel.remaining),
+                style: const TextStyle(fontSize: 20.0),
+              ),
             ],
           ),
         );
@@ -150,7 +165,7 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
           children: [
             IconButton(
               iconSize: _audioIconSizeMedium,
-              onPressed: () => viewModel.seekBy(const Duration(seconds: -10)),
+              onPressed: () => viewModel.skipToStart(),
               icon: const Icon(Icons.skip_previous),
             ),
             IconButton(
@@ -162,7 +177,7 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
             ),
             IconButton(
               iconSize: _audioIconSizeMedium,
-              onPressed: () => viewModel.seekBy(const Duration(seconds: 10)),
+              onPressed: () => viewModel.skipToEnd(),
               icon: const Icon(Icons.skip_next),
             ),
           ],
@@ -182,42 +197,45 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: IconButton(
-                          iconSize: _audioIconSizeMedium,
-                          onPressed: () =>
-                              viewModel.seekBy(const Duration(minutes: -1)),
-                          icon: const Icon(Icons.fast_rewind),
+                  SizedBox(
+                    height: _audioIconSizeMedium - 7,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: IconButton(
+                            iconSize: _audioIconSizeMedium,
+                            onPressed: () =>
+                                viewModel.seekBy(const Duration(minutes: -1)),
+                            icon: const Icon(Icons.fast_rewind),
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          iconSize: _audioIconSizeSmaller,
-                          onPressed: () =>
-                              viewModel.seekBy(const Duration(seconds: -10)),
-                          icon: const Icon(Icons.fast_rewind),
+                        Expanded(
+                          child: IconButton(
+                            iconSize: _audioIconSizeMedium,
+                            onPressed: () =>
+                                viewModel.seekBy(const Duration(seconds: -10)),
+                            icon: const Icon(Icons.fast_rewind),
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          iconSize: _audioIconSizeSmaller,
-                          onPressed: () =>
-                              viewModel.seekBy(const Duration(seconds: 10)),
-                          icon: const Icon(Icons.fast_forward),
+                        Expanded(
+                          child: IconButton(
+                            iconSize: _audioIconSizeMedium,
+                            onPressed: () =>
+                                viewModel.seekBy(const Duration(seconds: 10)),
+                            icon: const Icon(Icons.fast_forward),
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          iconSize: _audioIconSizeMedium,
-                          onPressed: () =>
-                              viewModel.seekBy(const Duration(minutes: 1)),
-                          icon: const Icon(Icons.fast_forward),
+                        Expanded(
+                          child: IconButton(
+                            iconSize: _audioIconSizeMedium,
+                            onPressed: () =>
+                                viewModel.seekBy(const Duration(minutes: 1)),
+                            icon: const Icon(Icons.fast_forward),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -226,28 +244,28 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
                         child: Text(
                           '1 m',
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 20.0),
+                          style: TextStyle(fontSize: 21.0),
                         ),
                       ),
                       Expanded(
                         child: Text(
                           '10 s',
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 18.0),
+                          style: TextStyle(fontSize: 21.0),
                         ),
                       ),
                       Expanded(
                         child: Text(
                           '10 s',
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 18.0),
+                          style: TextStyle(fontSize: 21.0),
                         ),
                       ),
                       Expanded(
                         child: Text(
                           '1 m',
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 20.0),
+                          style: TextStyle(fontSize: 21.0),
                         ),
                       ),
                     ],
@@ -265,7 +283,7 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
 void main() {
   runApp(MaterialApp(
     home: AudioPlayerScreen(
-      audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+      audioPathFileName: 'audio/myAudio.mp3',
     ),
   ));
 }
