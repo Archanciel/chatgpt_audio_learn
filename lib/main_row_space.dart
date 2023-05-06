@@ -31,38 +31,42 @@ class AudioPlayerScreen extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: IconButton(
-                iconSize: _audioIconSizeMedium,
-                onPressed: () => print(''),
-                icon: const Icon(Icons.fast_rewind),
+        SizedBox(
+          height: _audioIconSizeMedium - 7,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: IconButton(
+                  iconSize: _audioIconSizeMedium,
+                  onPressed: () => print(''),
+                  icon: const Icon(Icons.fast_rewind),
+                ),
               ),
-            ),
-            Expanded(
-              child: IconButton(
-                iconSize: _audioIconSizeSmaller,
-                onPressed: () => print(''),
-                icon: const Icon(Icons.fast_rewind),
+              Expanded(
+                child: IconButton(
+                  iconSize: _audioIconSizeMedium,
+                  onPressed: () => print(''),
+                  icon: const Icon(Icons.fast_rewind),
+                ),
               ),
-            ),
-            Expanded(
-              child: IconButton(
-                iconSize: _audioIconSizeSmaller,
-                onPressed: () => print(''),
-                icon: const Icon(Icons.fast_forward),
+              Expanded(
+                child: IconButton(
+                  iconSize: _audioIconSizeMedium,
+                  onPressed: () => print(''),
+                  icon: const Icon(Icons.fast_forward),
+                ),
               ),
-            ),
-            Expanded(
-              child: IconButton(
-                iconSize: _audioIconSizeMedium,
-                onPressed: () => print(''),
-                icon: const Icon(Icons.fast_forward),
+              Expanded(
+                child: IconButton(
+                  iconSize: _audioIconSizeMedium,
+                  onPressed: () => print(''),
+                  icon: const Icon(Icons.fast_forward),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -71,28 +75,36 @@ class AudioPlayerScreen extends StatelessWidget {
               child: Text(
                 '1 m',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20.0),
+                style: TextStyle(
+                  fontSize: 21.0,
+                ),
               ),
             ),
             Expanded(
               child: Text(
                 '10 s',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18.0),
+                style: TextStyle(
+                  fontSize: 21.0,
+                ),
               ),
             ),
             Expanded(
               child: Text(
                 '10 s',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18.0),
+                style: TextStyle(
+                  fontSize: 21.0,
+                ),
               ),
             ),
             Expanded(
               child: Text(
                 '1 m',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20.0),
+                style: TextStyle(
+                  fontSize: 21.0,
+                ),
               ),
             ),
           ],
