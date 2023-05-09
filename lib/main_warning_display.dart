@@ -104,19 +104,19 @@ class MyHomePage extends StatelessWidget {
                     String updatedPlayListTitle =
                         warningMessageVM.updatedPlaylistTitle;
 
-
                     if (updatedPlayListTitle.isNotEmpty) {
                       WidgetsBinding.instance.addPostFrameCallback((_) {
-                      displayWarningDialog(
-                          context, 'Updated playlist: $updatedPlayListTitle');
+                        displayWarningDialog(
+                            context, 'Updated playlist: $updatedPlayListTitle');
                       });
                     }
                     return const SizedBox.shrink();
                   case WarningMessageType.errorMessage:
                     String errorMessage = warningMessageVM.errorMessage;
                     if (errorMessage.isNotEmpty) {
-                        displayWarningDialog(
-                            context, 'Error message: $errorMessage');
+                      // fails
+                      displayWarningDialog(
+                          context, 'Error message: $errorMessage');
                     }
 
                     return const SizedBox.shrink();
@@ -168,7 +168,8 @@ class MyHomePage extends StatelessWidget {
 class CustomFloatingActionButton extends StatelessWidget {
   final bool isUpdate;
   final WarningMessageVM warningMessageVM;
-  const CustomFloatingActionButton({super.key, 
+  const CustomFloatingActionButton({
+    super.key,
     required this.isUpdate,
     required this.warningMessageVM,
   });
