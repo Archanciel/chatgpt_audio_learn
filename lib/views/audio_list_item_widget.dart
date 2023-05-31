@@ -14,7 +14,7 @@ class AudioListItemWidget extends StatelessWidget {
   final void Function(Audio audio) onStopPressedFunction;
   final void Function(Audio audio) onPausePressedFunction;
 
-  AudioListItemWidget({
+  const AudioListItemWidget({super.key, 
     required this.audio,
     required this.onPlayPressedFunction,
     required this.onStopPressedFunction,

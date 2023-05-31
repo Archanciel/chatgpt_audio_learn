@@ -22,7 +22,7 @@ class DirUtil {
   static Future<void> createAppDirIfNotExist({
     bool isAppDirToBeDeleted = false,
   }) async {
-    String path = await DirUtil.getPlaylistDownloadHomePath();
+    String path = DirUtil.getPlaylistDownloadHomePath();
     final Directory directory = Directory(path);
 
     // using await directory.exists did delete dir only on second

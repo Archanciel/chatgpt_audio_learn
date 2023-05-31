@@ -15,25 +15,25 @@ void main() {
         validVideoTitle: "'title",
         videoUrl: 'videoUrl',
         audioDownloadDateTime: DateTime.now(),
-        audioDownloadDuration: Duration(seconds: 1),
+        audioDownloadDuration: const Duration(seconds: 1),
         audioDownloadSpeed: 1,
         videoUploadDate: DateTime.now(),
-        audioDuration: Duration(seconds: 1),
+        audioDuration: const Duration(seconds: 1),
         isMusicQuality: true,
         audioFileName: 'audioFileName',
         audioFileSize: 1,
       );
 
-      Audio avec_percent_title = Audio.fullConstructor(
+      Audio avecPercentTitle = Audio.fullConstructor(
         enclosingPlaylist: null,
         originalVideoTitle: "avec title",
         validVideoTitle: "avec title",
         videoUrl: 'videoUrl',
         audioDownloadDateTime: DateTime.now(),
-        audioDownloadDuration: Duration(seconds: 1),
+        audioDownloadDuration: const Duration(seconds: 1),
         audioDownloadSpeed: 1,
         videoUploadDate: DateTime.now(),
-        audioDuration: Duration(seconds: 1),
+        audioDuration: const Duration(seconds: 1),
         isMusicQuality: true,
         audioFileName: 'audioFileName',
         audioFileSize: 1,
@@ -45,10 +45,10 @@ void main() {
         validVideoTitle: "ÉPICURE - La mort n'est rien",
         videoUrl: 'videoUrl',
         audioDownloadDateTime: DateTime.now(),
-        audioDownloadDuration: Duration(seconds: 1),
+        audioDownloadDuration: const Duration(seconds: 1),
         audioDownloadSpeed: 1,
         videoUploadDate: DateTime.now(),
-        audioDuration: Duration(seconds: 1),
+        audioDuration: const Duration(seconds: 1),
         isMusicQuality: true,
         audioFileName: 'audioFileName',
         audioFileSize: 1,
@@ -60,70 +60,70 @@ void main() {
         validVideoTitle: "Échapper à l'illusion de l'esprit",
         videoUrl: 'videoUrl',
         audioDownloadDateTime: DateTime.now(),
-        audioDownloadDuration: Duration(seconds: 1),
+        audioDownloadDuration: const Duration(seconds: 1),
         audioDownloadSpeed: 1,
         videoUploadDate: DateTime.now(),
-        audioDuration: Duration(seconds: 1),
+        audioDuration: const Duration(seconds: 1),
         isMusicQuality: true,
         audioFileName: 'audioFileName',
         audioFileSize: 1,
       );
 
-      Audio a_lire_title = Audio.fullConstructor(
+      Audio aLireTitle = Audio.fullConstructor(
         enclosingPlaylist: null,
         originalVideoTitle: "à lire title",
         validVideoTitle: "à lire title",
         videoUrl: 'videoUrl',
         audioDownloadDateTime: DateTime.now(),
-        audioDownloadDuration: Duration(seconds: 1),
+        audioDownloadDuration: const Duration(seconds: 1),
         audioDownloadSpeed: 1,
         videoUploadDate: DateTime.now(),
-        audioDuration: Duration(seconds: 1),
+        audioDuration: const Duration(seconds: 1),
         isMusicQuality: false,
         audioFileName: 'audioFileName',
         audioFileSize: 1,
       );
 
-      Audio nine_title = Audio.fullConstructor(
+      Audio nineTitle = Audio.fullConstructor(
         enclosingPlaylist: null,
         originalVideoTitle: "9 title",
         validVideoTitle: "9 title",
         videoUrl: 'videoUrl',
         audioDownloadDateTime: DateTime.now(),
-        audioDownloadDuration: Duration(seconds: 1),
+        audioDownloadDuration: const Duration(seconds: 1),
         audioDownloadSpeed: 1,
         videoUploadDate: DateTime.now(),
         isMusicQuality: false,
-        audioDuration: Duration(seconds: 1),
+        audioDuration: const Duration(seconds: 1),
         audioFileName: 'audioFileName',
         audioFileSize: 1,
       );
 
       List<Audio?> audioLst = [
         title,
-        avec_percent_title,
+        avecPercentTitle,
         epicure,
         echapper,
-        a_lire_title,
-        nine_title,
+        aLireTitle,
+        nineTitle,
       ];
 
       List<Audio?> expectedResultForTitleAsc = [
-        nine_title,
+        nineTitle,
         epicure,
         echapper,
-        avec_percent_title,
-        a_lire_title,
+        avecPercentTitle,
+        aLireTitle,
         title,
       ];
 
       List<Audio?> expectedResultForTitleDesc = [
         title,
-        a_lire_title,
-        avec_percent_title,
+        aLireTitle,
+        avecPercentTitle,
         echapper,
         epicure,
-        nine_title,
+        nineTitle,
       ];
 
       List<Audio> sortedByTitleAsc = sortAudioLstBySortingOption(

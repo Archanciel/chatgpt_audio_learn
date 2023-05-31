@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AudioPlayerScreen extends StatelessWidget {
   final String audioUrl;
 
-  AudioPlayerScreen({required this.audioUrl});
+  const AudioPlayerScreen({super.key, required this.audioUrl});
 
   final double _audioIconSizeSmaller = 50;
 
@@ -68,9 +68,9 @@ class AudioPlayerScreen extends StatelessWidget {
             ],
           ),
         ),
-        Row(
+        const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             Expanded(
               child: Text(
                 '1 m',
@@ -115,7 +115,7 @@ class AudioPlayerScreen extends StatelessWidget {
 }
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     home: AudioPlayerScreen(
       audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
     ),

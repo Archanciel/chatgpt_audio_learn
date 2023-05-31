@@ -34,12 +34,14 @@ class MapOfListProvider with ChangeNotifier {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: Text('Map of List Display')),
-        body: Column(
+        appBar: AppBar(title: const Text('Map of List Display')),
+        body: const Column(
           children: [
             Expanded(child: MasterList()),
             Expanded(child: SubList()),
@@ -51,6 +53,8 @@ class MyApp extends StatelessWidget {
 }
 
 class MasterList extends StatelessWidget {
+  const MasterList({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Consumer<MapOfListProvider>(
@@ -77,6 +81,8 @@ class MasterList extends StatelessWidget {
 }
 
 class SubList extends StatelessWidget {
+  const SubList({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Consumer<MapOfListProvider>(
@@ -107,7 +113,7 @@ void main() {
   runApp(
     ChangeNotifierProvider(
       create: (context) => MapOfListProvider(),
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }

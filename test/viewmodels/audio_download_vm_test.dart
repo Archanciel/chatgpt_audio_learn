@@ -64,7 +64,7 @@ void main() {
               AudioDownloadVM(testPlayListTitle: testPlaylistTitle);
           return audioDownloadVM;
         },
-        child: MaterialApp(home: DownloadPlaylistPage()),
+        child: const MaterialApp(home: DownloadPlaylistPage()),
       ));
 
       await tester.tap(find.byType(ElevatedButton));
@@ -172,7 +172,7 @@ void main() {
               AudioDownloadVM(testPlayListTitle: testPlaylistTitle);
           return audioDownloadVM;
         },
-        child: MaterialApp(home: DownloadPlaylistPage()),
+        child: const MaterialApp(home: DownloadPlaylistPage()),
       ));
 
       await tester.tap(find.byType(ElevatedButton));
@@ -291,7 +291,7 @@ void main() {
               AudioDownloadVM(testPlayListTitle: testPlaylistTitle);
           return audioDownloadVM;
         },
-        child: MaterialApp(home: DownloadPlaylistPage()),
+        child: const MaterialApp(home: DownloadPlaylistPage()),
       ));
 
       const String recreatedPlaylistId = 'PLzwWSJNcZTMSwrDOAZEPf0u6YvrKGNnvC';
@@ -418,7 +418,7 @@ void checkDownloadedAudioOne({
   expect(downloadedAudio.audioDuration, const Duration(milliseconds: 24000));
   expect(downloadedAudio.isMusicQuality, false);
   expect(downloadedAudio.audioFileName,
-      "${downloadFileNamePrefix}-English conversation - Tea or coffee 23-03-22.mp3");
+      "$downloadFileNamePrefix-English conversation - Tea or coffee 23-03-22.mp3");
   expect(downloadedAudio.audioFileSize, 143076);
 }
 
@@ -429,24 +429,28 @@ void deletePlaylistDownloadDir(Directory directory) {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: ChangeNotifierProvider(
         create: (context) => AudioDownloadVM(),
-        child: DownloadPlaylistPage(),
+        child: const DownloadPlaylistPage(),
       ),
     );
   }
 }
 
 class DownloadPlaylistPage extends StatefulWidget {
+  const DownloadPlaylistPage({super.key});
+
   @override
   State<DownloadPlaylistPage> createState() => _DownloadPlaylistPageState();
 }
 
 class _DownloadPlaylistPageState extends State<DownloadPlaylistPage> {
-  TextEditingController _urlController = TextEditingController(
+  final TextEditingController _urlController = TextEditingController(
     text:
         'https://youtube.com/playlist?list=PLzwWSJNcZTMRB9ILve6fEIS_OHGrV5R2o',
   );

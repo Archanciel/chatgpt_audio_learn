@@ -150,7 +150,7 @@ class MyHomePage extends StatelessWidget {
         title: const Text('WARNING'),
         content: Text(
           message,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 13,
           ),
         ),

@@ -118,7 +118,7 @@ class MyHomePage extends StatelessWidget {
 class CustomFloatingActionButton extends StatelessWidget {
   bool isMinus;
   bool isInsideConsumer;
-  CustomFloatingActionButton({
+  CustomFloatingActionButton({super.key, 
     required this.isMinus,
     this.isInsideConsumer = false,
   });

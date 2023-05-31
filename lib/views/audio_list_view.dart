@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../constants.dart';
-import '../models/playlist.dart';
 import '../utils/ui_util.dart';
 import '../viewmodels/playlist_edit_vm.dart';
 import 'audio_list_item_widget.dart';
@@ -18,6 +17,8 @@ import '../viewmodels/audio_download_vm.dart';
 import '../viewmodels/audio_player_vm.dart';
 
 class AudioListView extends StatefulWidget {
+  const AudioListView({super.key});
+
   @override
   State<AudioListView> createState() => _AudioListViewState();
 }
@@ -136,7 +137,7 @@ class _AudioListViewState extends State<AudioListView> {
               String downloadProgressPercent =
                   '${(audioDownloadVM.downloadProgress * 100).toStringAsFixed(1)}%';
               String downloadFileSize =
-                  '${UiUtil.formatLargeIntValue(audioDownloadVM.currentDownloadingAudio.audioFileSize)}';
+                  UiUtil.formatLargeIntValue(audioDownloadVM.currentDownloadingAudio.audioFileSize);
               String downloadSpeed =
                   '${UiUtil.formatLargeIntValue(audioDownloadVM.lastSecondDownloadSpeed)}/sec';
               return Padding(

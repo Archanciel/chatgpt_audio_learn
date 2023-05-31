@@ -76,20 +76,18 @@ class MainApp extends StatelessWidget {
                         ),
                     elevatedButtonTheme: ElevatedButtonThemeData(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors
-                            .blue.shade700, // Set button color in dark mode
-                        onPrimary:
-                            Colors.white, // Set button text color in dark mode
+                        foregroundColor: Colors.white, backgroundColor: Colors
+                            .blue.shade700, // Set button text color in dark mode
                       ),
                     ),
                     textTheme: ThemeData.dark().textTheme.copyWith(
-                          bodyText2: ThemeData.dark()
+                          bodyMedium: ThemeData.dark()
                               .textTheme
-                              .bodyText2!
+                              .bodyMedium!
                               .copyWith(color: Colors.blue.shade700),
-                          subtitle1: ThemeData.dark()
+                          titleMedium: ThemeData.dark()
                               .textTheme
-                              .subtitle1!
+                              .titleMedium!
                               .copyWith(color: Colors.white),
                         ),
                     checkboxTheme: ThemeData.dark().checkboxTheme.copyWith(
@@ -183,7 +181,7 @@ class MyHomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: AudioListView(),
+      body: const AudioListView(),
     );
   }
 }

@@ -19,7 +19,7 @@ class PlaylistEditVM extends ChangeNotifier {
 // Authenticate with the YouTube Data API using a JSON file
   Future<AutoRefreshingAuthClient> authenticate() async {
     var path =
-        '${await DirUtil.getPlaylistDownloadHomePath()}${Platform.pathSeparator}$kSecretClientCodeJsonFileName';
+        '${DirUtil.getPlaylistDownloadHomePath()}${Platform.pathSeparator}$kSecretClientCodeJsonFileName';
     var jsonDataStr = File(path).readAsStringSync();
     Map<String, dynamic> jsonData = jsonDecode(jsonDataStr);
     var serviceAccountCredentials =

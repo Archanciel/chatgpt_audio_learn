@@ -5,6 +5,8 @@ import '../models/playlist.dart';
 import '../viewmodels/expandable_playlist_list_vm.dart';
 
 class ExpandablePlaylistListView extends StatefulWidget {
+  const ExpandablePlaylistListView({super.key});
+
   @override
   State<ExpandablePlaylistListView> createState() =>
       _ExpandablePlaylistListViewState();

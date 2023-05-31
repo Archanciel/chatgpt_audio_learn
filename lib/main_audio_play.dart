@@ -72,7 +72,7 @@ class AudioPlayerViewModel extends ChangeNotifier {
 class AudioPlayerScreen extends StatefulWidget {
   final String audioPathFileName;
 
-  AudioPlayerScreen({required this.audioPathFileName});
+  const AudioPlayerScreen({super.key, required this.audioPathFileName});
 
   @override
   _AudioPlayerScreenState createState() => _AudioPlayerScreenState();
@@ -237,9 +237,9 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
                       ],
                     ),
                   ),
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
+                    children: [
                       Expanded(
                         child: Text(
                           '1 m',
@@ -281,7 +281,7 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
 }
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     home: AudioPlayerScreen(
       audioPathFileName: 'audio/myAudio.mp3',
     ),

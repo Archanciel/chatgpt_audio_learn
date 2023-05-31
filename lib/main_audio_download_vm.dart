@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'models/playlist.dart';
 import 'viewmodels/audio_download_vm.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: ChangeNotifierProvider(
         create: (context) => AudioDownloadVM(),
-        child: DownloadPlaylistPage(),
+        child: const DownloadPlaylistPage(),
       ),
     );
   }
 }
 
 class DownloadPlaylistPage extends StatelessWidget {
+  const DownloadPlaylistPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -8,7 +8,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../constants.dart';
 import '../utils/ui_util.dart';
-import '../viewmodels/playlist_edit_vm.dart';
 import 'audio_list_item_widget.dart';
 import '../models/audio.dart';
 import '../viewmodels/audio_download_vm.dart';
@@ -127,7 +126,7 @@ class _PlaylistDownloadViewState extends State<PlaylistDownloadView> {
               String downloadProgressPercent =
                   '${(audioDownloadVM.downloadProgress * 100).toStringAsFixed(1)}%';
               String downloadFileSize =
-                  '${UiUtil.formatLargeIntValue(audioDownloadVM.currentDownloadingAudio.audioFileSize)}';
+                  UiUtil.formatLargeIntValue(audioDownloadVM.currentDownloadingAudio.audioFileSize);
               String downloadSpeed =
                   '${UiUtil.formatLargeIntValue(audioDownloadVM.lastSecondDownloadSpeed)}/sec';
               return Padding(

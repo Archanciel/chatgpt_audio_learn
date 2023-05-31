@@ -13,10 +13,12 @@ class ThemeProvider extends ChangeNotifier {
 }
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -46,7 +48,7 @@ class MyApp extends StatelessWidget {
                   ),
                 ],
               ),
-              body: ExpandableListView(),
+              body: const ExpandableListView(),
             ),
           );
         },
@@ -56,6 +58,8 @@ class MyApp extends StatelessWidget {
 }
 
 class ExpandableListView extends StatefulWidget {
+  const ExpandableListView({super.key});
+
   @override
   State<ExpandableListView> createState() => _ExpandableListViewState();
 }

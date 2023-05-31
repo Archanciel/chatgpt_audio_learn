@@ -5,7 +5,7 @@ void main() {
   runApp(
     ChangeNotifierProvider(
       create: (context) => MessageVM(),
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
@@ -33,12 +33,14 @@ class MessageVM extends ChangeNotifier {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Exemple de Tooltip avec Provider'),
+          title: const Text('Exemple de Tooltip avec Provider'),
         ),
         body: Consumer<MessageVM>(
           builder: (context, tooltipNotifier, child) {
@@ -58,7 +60,7 @@ class MyApp extends StatelessWidget {
                               tooltipNotifier
                                   .displayMessage('Message depuis le Provider');
                             },
-                            child: Text('Afficher le Tooltip'),
+                            child: const Text('Afficher le Tooltip'),
                           ),
                         ],
                       ),

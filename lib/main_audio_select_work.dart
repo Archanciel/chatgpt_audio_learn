@@ -52,7 +52,7 @@ class Audio {
     audioDownloadSpeed = (audioFileSize == 0 || audioDownloadDuration == null)
         ? 0
         : (audioFileSize / audioDownloadDuration!.inMicroseconds * 1000000)
-            .round() as int;
+            .round();
   }
 
   set downloadDuration(Duration downloadDuration) {
@@ -60,7 +60,7 @@ class Audio {
     audioDownloadSpeed = (audioFileSize == 0 || audioDownloadDuration == null)
         ? 0
         : (audioFileSize / audioDownloadDuration!.inMicroseconds * 1000000)
-            .round() as int;
+            .round();
   }
 
   // Speed at which the audio was downloaded in bytes per second
@@ -612,6 +612,8 @@ List<Audio> filterAudioLstByMusicQuality({
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -1028,5 +1030,5 @@ class _SortAndFilterDialogState extends State<SortAndFilterDialog> {
 }
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }

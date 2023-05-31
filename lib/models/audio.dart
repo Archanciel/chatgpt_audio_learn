@@ -53,7 +53,7 @@ class Audio {
     audioDownloadSpeed = (audioFileSize == 0 || audioDownloadDuration == null)
         ? 0
         : (audioFileSize / audioDownloadDuration!.inMicroseconds * 1000000)
-            .round() as int;
+            .round();
   }
 
   set downloadDuration(Duration downloadDuration) {
@@ -61,7 +61,7 @@ class Audio {
     audioDownloadSpeed = (audioFileSize == 0 || audioDownloadDuration == null)
         ? 0
         : (audioFileSize / audioDownloadDuration!.inMicroseconds * 1000000)
-            .round() as int;
+            .round();
   }
 
   // Speed at which the audio was downloaded in bytes per second

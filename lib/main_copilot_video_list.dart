@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Youtube Playlist'),
+          title: const Text('Youtube Playlist'),
         ),
         body: ListView.builder(
           itemCount: videoLst.length,

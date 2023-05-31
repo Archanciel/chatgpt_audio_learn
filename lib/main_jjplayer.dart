@@ -479,7 +479,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       //show the player view
                       _changePlayerViewVisibility();
 
-                      toast(context, "Playing:  " + item.data![index].title);
+                      toast(context, "Playing:  ${item.data![index].title}");
                       // Try to load audio from a source and catch any errors.
                       //  String? uri = item.data![index].uri;
                       // await _player.setAudioSource(AudioSource.uri(Uri.parse(uri!)));

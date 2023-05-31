@@ -5,10 +5,12 @@ import 'package:chatgpt_audio_learn/viewmodels/expandable_playlist_list_vm.dart'
 import 'package:chatgpt_audio_learn/views/expandable_playlist_list_view.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
           appBar: AppBar(
             title: const Text('MVVM Example'),
           ),
-          body: ExpandablePlaylistListView(),
+          body: const ExpandablePlaylistListView(),
         ),
       ),
     );

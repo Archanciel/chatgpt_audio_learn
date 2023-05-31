@@ -92,7 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     },
                   ),
                 ),
-                SizedBox(width: 20,),
+                const SizedBox(width: 20,),
                 CircleAvatar(
                   radius: 25,
                   child: IconButton(

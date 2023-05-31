@@ -21,7 +21,7 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ExpandablePlaylistListView(),
+              body: const ExpandablePlaylistListView(),
             ),
           ),
         ),
@@ -33,7 +33,7 @@ void main() {
     testWidgets('should render ListViewWidget using MyApp',
         (WidgetTester tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: MyApp(),
           ),
@@ -55,14 +55,14 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ExpandablePlaylistListView(),
+              body: const ExpandablePlaylistListView(),
             ),
           ),
         ),
       );
 
       // displaying the list
-      final Finder toggleButtonFinder = find.byKey(ValueKey('toggle_button'));
+      final Finder toggleButtonFinder = find.byKey(const ValueKey('toggle_button'));
       await tester.tap(toggleButtonFinder);
       await tester.pump();
 
@@ -93,14 +93,14 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ExpandablePlaylistListView(),
+              body: const ExpandablePlaylistListView(),
             ),
           ),
         ),
       );
 
       // displaying the list
-      final Finder toggleButtonFinder = find.byKey(ValueKey('toggle_button'));
+      final Finder toggleButtonFinder = find.byKey(const ValueKey('toggle_button'));
       await tester.tap(toggleButtonFinder);
       await tester.pump();
 
@@ -109,7 +109,7 @@ void main() {
       await tester.pump();
 
       // testing that the Delete button is disabled
-      Finder deleteButtonFinder = find.byKey(ValueKey('delete_button'));
+      Finder deleteButtonFinder = find.byKey(const ValueKey('delete_button'));
       expect(deleteButtonFinder, findsOneWidget);
       expect(
           tester.widget<ElevatedButton>(deleteButtonFinder).enabled, isFalse);
@@ -182,14 +182,14 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ExpandablePlaylistListView(),
+              body: const ExpandablePlaylistListView(),
             ),
           ),
         ),
       );
 
       // displaying the list
-      final Finder toggleButtonFinder = find.byKey(ValueKey('toggle_button'));
+      final Finder toggleButtonFinder = find.byKey(const ValueKey('toggle_button'));
       await tester.tap(toggleButtonFinder);
       await tester.pump();
 
@@ -218,7 +218,7 @@ void main() {
       await tester.pump();
 
       // testing that the Delete button is disabled
-      Finder deleteButtonFinder = find.byKey(ValueKey('delete_button'));
+      Finder deleteButtonFinder = find.byKey(const ValueKey('delete_button'));
       expect(deleteButtonFinder, findsOneWidget);
       expect(
           tester.widget<ElevatedButton>(deleteButtonFinder).enabled, isFalse);
@@ -279,14 +279,14 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ExpandablePlaylistListView(),
+              body: const ExpandablePlaylistListView(),
             ),
           ),
         ),
       );
 
       // displaying the list
-      final Finder toggleButtonFinder = find.byKey(ValueKey('toggle_button'));
+      final Finder toggleButtonFinder = find.byKey(const ValueKey('toggle_button'));
       await tester.tap(toggleButtonFinder);
       await tester.pump();
 
@@ -355,7 +355,7 @@ void main() {
       expect(firstListItemCheckbox.value, isFalse);
 
       // testing that the Delete button is now disabled
-      Finder deleteButtonFinder = find.byKey(ValueKey('delete_button'));
+      Finder deleteButtonFinder = find.byKey(const ValueKey('delete_button'));
       expect(deleteButtonFinder, findsOneWidget);
       expect(
           tester.widget<ElevatedButton>(deleteButtonFinder).enabled, isFalse);
@@ -383,14 +383,14 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ExpandablePlaylistListView(),
+              body: const ExpandablePlaylistListView(),
             ),
           ),
         ),
       );
 
       // displaying the list
-      final Finder toggleButtonFinder = find.byKey(ValueKey('toggle_button'));
+      final Finder toggleButtonFinder = find.byKey(const ValueKey('toggle_button'));
       await tester.tap(toggleButtonFinder);
       await tester.pump();
 
@@ -451,14 +451,14 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ExpandablePlaylistListView(),
+              body: const ExpandablePlaylistListView(),
             ),
           ),
         ),
       );
 
       // displaying the list
-      final Finder toggleButtonFinder = find.byKey(ValueKey('toggle_button'));
+      final Finder toggleButtonFinder = find.byKey(const ValueKey('toggle_button'));
       await tester.tap(toggleButtonFinder);
       await tester.pump();
 
@@ -528,14 +528,14 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ExpandablePlaylistListView(),
+              body: const ExpandablePlaylistListView(),
             ),
           ),
         ),
       );
 
       // displaying the list
-      final Finder toggleButtonFinder = find.byKey(ValueKey('toggle_button'));
+      final Finder toggleButtonFinder = find.byKey(const ValueKey('toggle_button'));
       await tester.tap(toggleButtonFinder);
       await tester.pump();
 
@@ -594,14 +594,14 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ExpandablePlaylistListView(),
+              body: const ExpandablePlaylistListView(),
             ),
           ),
         ),
       );
 
       // displaying the list
-      final Finder toggleButtonFinder = find.byKey(ValueKey('toggle_button'));
+      final Finder toggleButtonFinder = find.byKey(const ValueKey('toggle_button'));
       await tester.tap(toggleButtonFinder);
       await tester.pump();
 
@@ -661,14 +661,14 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ExpandablePlaylistListView(),
+              body: const ExpandablePlaylistListView(),
             ),
           ),
         ),
       );
 
       // displaying the list
-      final Finder toggleButtonFinder = find.byKey(ValueKey('toggle_button'));
+      final Finder toggleButtonFinder = find.byKey(const ValueKey('toggle_button'));
       await tester.tap(toggleButtonFinder);
       await tester.pump();
 
@@ -727,14 +727,14 @@ void main() {
               appBar: AppBar(
                 title: const Text('MVVM Example'),
               ),
-              body: ExpandablePlaylistListView(),
+              body: const ExpandablePlaylistListView(),
             ),
           ),
         ),
       );
 
       // displaying the list
-      final Finder toggleButtonFinder = find.byKey(ValueKey('toggle_button'));
+      final Finder toggleButtonFinder = find.byKey(const ValueKey('toggle_button'));
       await tester.tap(toggleButtonFinder);
       await tester.pump();
 
