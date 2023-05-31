@@ -21,13 +21,15 @@ class PlaylistProvider with ChangeNotifier {
 
   Playlist? selectedPlaylist;
 
-  void selectPlaylist(Playlist playlist) {
+  void selectPlaylist(Playlist? playlist) {
     selectedPlaylist = playlist;
     notifyListeners();
   }
 }
 
 class PlaylistDialog extends StatefulWidget {
+  const PlaylistDialog({super.key});
+
   @override
   _PlaylistDialogState createState() => _PlaylistDialogState();
 }
@@ -39,8 +41,8 @@ class _PlaylistDialogState extends State<PlaylistDialog> {
   Widget build(BuildContext context) {
     return Consumer<PlaylistProvider>(
       builder: (context, playlistProvider, _) => AlertDialog(
-        title: Text('Select a Playlist'),
-        content: Container(
+        title: const Text('Select a Playlist'),
+        content: SizedBox(
           width: double.maxFinite,
           child: ListView.builder(
             itemCount: playlistProvider.listOfPlaylist.length,
@@ -62,18 +64,19 @@ class _PlaylistDialogState extends State<PlaylistDialog> {
         actions: [
           ElevatedButton(
             onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
               if (_selectedPlaylist != null) {
                 playlistProvider.selectPlaylist(_selectedPlaylist!);
               }
               Navigator.of(context).pop();
             },
-            child: Text('Apply'),
+            child: const Text('Apply'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              playlistProvider.selectPlaylist(null);
+              Navigator.of(context).pop();
+            },
+            child: const Text('Cancel'),
           ),
         ],
       ),
@@ -91,27 +94,29 @@ class MyApp extends StatelessWidget {
         // <== Add this
         builder: (context) => Scaffold(
           appBar: AppBar(title: const Text('Map of List Display')),
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => PlaylistDialog(),
-                  ).then((_) {
-                    PlaylistProvider playlistProvider =
-                        Provider.of<PlaylistProvider>(context, listen: false);
-                    Playlist? selectedPlaylist =
-                        playlistProvider.selectedPlaylist;
-                    print(selectedPlaylist?.title ?? 'No playlist selected');
-                    // Now you can use selectedPlaylist here
-                  });
-                },
-                child: Text('Select one playlist'),
-              ),
-            ],
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => const PlaylistDialog(),
+                    ).then((_) {
+                      PlaylistProvider playlistProvider =
+                          Provider.of<PlaylistProvider>(context, listen: false);
+                      Playlist? selectedPlaylist =
+                          playlistProvider.selectedPlaylist;
+                      print(selectedPlaylist?.title ?? 'No playlist selected');
+                      // Now you can use selectedPlaylist here
+                    });
+                  },
+                  child: const Text('Select one playlist'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
