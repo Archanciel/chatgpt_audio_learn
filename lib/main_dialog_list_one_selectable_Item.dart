@@ -11,7 +11,7 @@ class Playlist {
   });
 }
 
-class PlaylistProvider with ChangeNotifier {
+class ExpandablePlaylistListVM with ChangeNotifier {
   List<Playlist> listOfPlaylist = [
     Playlist(id: 1, title: 'title1'),
     Playlist(id: 2, title: 'title2'),
@@ -27,19 +27,19 @@ class PlaylistProvider with ChangeNotifier {
   }
 }
 
-class PlaylistDialog extends StatefulWidget {
-  const PlaylistDialog({super.key});
+class PlaylistOneSelectedDialogWidget extends StatefulWidget {
+  const PlaylistOneSelectedDialogWidget({super.key});
 
   @override
-  _PlaylistDialogState createState() => _PlaylistDialogState();
+  _PlaylistOneSelectedDialogWidgetState createState() => _PlaylistOneSelectedDialogWidgetState();
 }
 
-class _PlaylistDialogState extends State<PlaylistDialog> {
+class _PlaylistOneSelectedDialogWidgetState extends State<PlaylistOneSelectedDialogWidget> {
   Playlist? _selectedPlaylist;
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<PlaylistProvider>(
+    return Consumer<ExpandablePlaylistListVM>(
       builder: (context, playlistProvider, _) => AlertDialog(
         title: const Text('Select a Playlist'),
         content: SizedBox(
@@ -103,12 +103,12 @@ class MyApp extends StatelessWidget {
                   onPressed: () {
                     showDialog(
                       context: context,
-                      builder: (context) => const PlaylistDialog(),
+                      builder: (context) => const PlaylistOneSelectedDialogWidget(),
                     ).then((_) {
-                      PlaylistProvider playlistProvider =
-                          Provider.of<PlaylistProvider>(context, listen: false);
+                      ExpandablePlaylistListVM expandablePlaylistVM =
+                          Provider.of<ExpandablePlaylistListVM>(context, listen: false);
                       Playlist? selectedPlaylist =
-                          playlistProvider.selectedPlaylist;
+                          expandablePlaylistVM.selectedPlaylist;
                       print(selectedPlaylist?.title ?? 'No playlist selected');
                       // Now you can use selectedPlaylist here
                     });
@@ -127,7 +127,7 @@ class MyApp extends StatelessWidget {
 void main() {
   runApp(
     ChangeNotifierProvider(
-      create: (context) => PlaylistProvider(),
+      create: (context) => ExpandablePlaylistListVM(),
       child: const MyApp(),
     ),
   );
