@@ -34,6 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool isPlaying = false;
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
+  final FocusNode _defaultTextFieldFocusNode = FocusNode();
 
   String formatTime(int seconds) {
     return '${(Duration(seconds: seconds))}'.split('.')[0].padLeft(8, '0');
@@ -42,6 +43,14 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+
+    // Add this line to request focus on the TextField after the build 
+    // method has been called
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusScope.of(context).requestFocus(
+        _defaultTextFieldFocusNode,
+      );
+    });
 
     player.onPlayerStateChanged.listen((state) {
       setState(() {
@@ -81,52 +90,40 @@ class _MyHomePageState extends State<MyHomePage> {
                     icon: Icon(
                       isPlaying ? Icons.pause : Icons.play_arrow,
                     ),
-                    onPressed: (){
-                      if(isPlaying)
-                        {
-                          player.pause();
-                        }
-                      else{
-                        player.play(AssetSource('theme_01.mp3'));
+                    onPressed: () {
+                      if (isPlaying) {
+                        player.pause();
+                      } else {
+                        // AssetSource setting works on Windows
+                        // as well as on Android
+                        //
+                        // pubspec.yaml assets setting:
+                        //
+                        // flutter:
+                        // uses-material-design: true
+                        // generate: true
+                        
+                        // assets:
+                        //   - assets/audio/
+                        player.play(AssetSource('audio/myAudio.mp3'));
                       }
                     },
                   ),
                 ),
-                const SizedBox(width: 20,),
+                const SizedBox(
+                  width: 20,
+                ),
                 CircleAvatar(
                   radius: 25,
                   child: IconButton(
-                    icon:const Icon(Icons.stop),
-                    onPressed: (){
+                    icon: const Icon(Icons.stop),
+                    onPressed: () {
                       player.stop();
                     },
                   ),
                 ),
-
-
               ],
             ),
-            // ElevatedButton(
-            //   onPressed: () {
-            //     player.play(AssetSource('theme_01.mp3'));
-            //   },
-            //   child: const Text('Play Audio'),
-            // ),
-            // ElevatedButton(
-            //     onPressed: () {
-            //       player.stop();
-            //     },
-            //     child: const Text('Stop Audio')),
-            // ElevatedButton(
-            //     onPressed: () {
-            //       player.pause();
-            //     },
-            //     child: const Text('Pause ')),
-            // ElevatedButton(
-            //     onPressed: () {
-            //       player.resume();
-            //     },
-            //     child: const Text('Resume')),
             Slider(
               min: 0,
               max: duration.inSeconds.toDouble(),
@@ -139,11 +136,22 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Container(
               padding: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Column(
                 children: [
-                  Text(formatTime(position.inSeconds)),
-                  Text(formatTime((duration - position).inSeconds)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(formatTime(position.inSeconds)),
+                      Text(formatTime((duration - position).inSeconds)),
+                    ],
+                  ),
+                  TextField(
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Enter your name',
+                    ),
+                    focusNode: _defaultTextFieldFocusNode,
+                  ),
                 ],
               ),
             ),
