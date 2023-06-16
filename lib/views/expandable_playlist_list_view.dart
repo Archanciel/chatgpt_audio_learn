@@ -14,10 +14,55 @@ class ExpandablePlaylistListView extends StatefulWidget {
 
 class _ExpandablePlaylistListViewState
     extends State<ExpandablePlaylistListView> {
+  final TextEditingController _playlistUrlController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: TextField(
+                key: const Key('playlistUrlTextField'),
+                controller: _playlistUrlController,
+                decoration: const InputDecoration(
+                  labelText: 'URL',
+                  hintText: 'Youtube playlist URL',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            const SizedBox(
+              width: 3.0,
+            ),
+            SizedBox(
+              width: 100.0,
+              child: ElevatedButton(
+                key: const Key('addPlaylistButton'),
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(11.0))),
+                  padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                    EdgeInsets.symmetric(horizontal: 3.0),
+                  ),
+                ),
+                onPressed: () {
+                  final String playlistUrl = _playlistUrlController.text.trim();
+                  if (playlistUrl.isNotEmpty) {
+                    Provider.of<ExpandablePlaylistListVM>(context,
+                            listen: false)
+                        .addItem(playlistUrl);
+                    _playlistUrlController.clear();
+                  }
+                },
+                child: Text('Add Playlist'),
+              ),
+            ),
+          ],
+        ),
         Row(
           children: <Widget>[
             Expanded(

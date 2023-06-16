@@ -21,17 +21,22 @@ class ExpandablePlaylistListVM extends ChangeNotifier {
   set isPlaylistSelected(bool value) => _isPlaylistSelected = value;
 
   final List<Playlist> items = [
-    Playlist(url: 'Item 1'),
-    Playlist(url: 'Item 2'),
-    Playlist(url: 'Item 3'),
-    Playlist(url: 'Item 4'),
-    Playlist(url: 'Item 5'),
-    Playlist(url: 'Item 6'),
-    Playlist(url: 'Item 7'),
-    Playlist(url: 'Item 8'),
-    Playlist(url: 'Item 9'),
-    Playlist(url: 'Item 10'),
+    // Playlist(url: 'Item 1'),
+    // Playlist(url: 'Item 2'),
+    // Playlist(url: 'Item 3'),
+    // Playlist(url: 'Item 4'),
+    // Playlist(url: 'Item 5'),
+    // Playlist(url: 'Item 6'),
+    // Playlist(url: 'Item 7'),
+    // Playlist(url: 'Item 8'),
+    // Playlist(url: 'Item 9'),
+    // Playlist(url: 'Item 10'),
   ];
+
+  void addItem(String url) {
+    items.add(Playlist(url: url));
+    notifyListeners();
+  }
 
   void toggleList() {
     _isListExpanded = !_isListExpanded;
