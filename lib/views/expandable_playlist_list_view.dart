@@ -46,7 +46,7 @@ class _ExpandablePlaylistListViewState
                       RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(11.0))),
                   padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                    EdgeInsets.symmetric(horizontal: 3.0),
+                    const EdgeInsets.symmetric(horizontal: 3.0),
                   ),
                 ),
                 onPressed: () {
@@ -58,7 +58,7 @@ class _ExpandablePlaylistListViewState
                     _playlistUrlController.clear();
                   }
                 },
-                child: Text('Add Playlist'),
+                child: const Text('Add Playlist'),
               ),
             ),
           ],
