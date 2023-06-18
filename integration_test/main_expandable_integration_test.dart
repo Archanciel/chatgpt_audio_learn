@@ -35,8 +35,8 @@ void main() {
     expect(find.byType(ListTile), findsNothing);
 
     // Add a new playlist
-    await tester.enterText(find.byKey(const Key('playlistUrlTextField')),
-        playlistUrl);
+    await tester.enterText(
+        find.byKey(const Key('playlistUrlTextField')), playlistUrl);
 
     TextField urlTextField =
         tester.widget(find.byKey(const Key('playlistUrlTextField')));
@@ -45,24 +45,25 @@ void main() {
     await tester.tap(find.byKey(const Key('addPlaylistButton')));
     await tester.pumpAndSettle();
 
-    // Check the value of the AlertDialog TextField
-    // TextField confirmUrlTextField =
-    //     tester.widget(find.byKey(const Key('playlistUrlConfirmationTextField')));
-    // expect(confirmUrlTextField.controller!.text, playlistUrl);
+    // Ensure the dialog is shown
+    expect(find.byType(AlertDialog), findsOneWidget);
 
-    // // Confirm the addition by tapping the confirmation button in the AlertDialog
-    // await tester.tap(find.byKey(const Key('addPlaylistConfirmDialogAddButton')));
-    // await tester.pumpAndSettle();
+    // Check the value of the AlertDialog TextField
+    TextField confirmUrlTextField = tester
+        .widget(find.byKey(const Key('playlistUrlConfirmationTextField')));
+    expect(confirmUrlTextField.controller!.text, playlistUrl);
+
+    // Confirm the addition by tapping the confirmation button in the AlertDialog
+    await tester
+        .tap(find.byKey(const Key('addPlaylistConfirmDialogAddButton')));
+    await tester.pumpAndSettle();
 
     // The list should have one item now
     expect(find.byType(ListTile), findsOneWidget);
 
     // Check if the added item is displayed correctly
     final playlistTile = find.byType(ListTile).first;
-    expect(
-        find.descendant(
-            of: playlistTile,
-            matching: find.text(playlistUrl)),
+    expect(find.descendant(of: playlistTile, matching: find.text(playlistUrl)),
         findsOneWidget);
   });
 }
