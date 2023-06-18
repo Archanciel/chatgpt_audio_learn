@@ -35,6 +35,7 @@ class ExpandablePlaylistListVM extends ChangeNotifier {
 
   void addItem(String url) {
     items.add(Playlist(url: url));
+    print('Added $url');
     notifyListeners();
   }
 

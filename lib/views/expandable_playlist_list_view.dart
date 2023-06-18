@@ -57,6 +57,58 @@ class _ExpandablePlaylistListViewState
                         .addItem(playlistUrl);
                     _playlistUrlController.clear();
                   }
+
+                  // showDialog<void>(
+                  //   context: context,
+                  //   barrierDismissible: true,
+                  //   builder: (BuildContext context) {
+                  //     return AlertDialog(
+                  //       title: const Text('Add Playlist'),
+                  //       content: SingleChildScrollView(
+                  //         child: ListBody(
+                  //           children: <Widget>[
+                  //             const Text(
+                  //                 'Are you sure you want to add this playlist?'),
+                  //             TextField(
+                  //               key: const Key(
+                  //                   'playlistUrlConfirmationTextField'),
+                  //               controller: _playlistUrlController,
+                  //               decoration: const InputDecoration(
+                  //                 labelText: 'URL',
+                  //                 hintText: 'Youtube playlist URL',
+                  //                 border: OutlineInputBorder(),
+                  //               ),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //       actions: [
+                  //         ElevatedButton(
+                  //           key: const Key('addPlaylistConfirmDialogAddButton'),
+                  //           onPressed: () {
+                  //             final String playlistUrl =
+                  //                 _playlistUrlController.text.trim();
+                  //             if (playlistUrl.isNotEmpty) {
+                  //               Provider.of<ExpandablePlaylistListVM>(context,
+                  //                       listen: false)
+                  //                   .addItem(playlistUrl);
+                  //               _playlistUrlController.clear();
+                  //             }
+                  //             Navigator.of(context).pop();
+                  //           },
+                  //           child: const Text('Add Playlist'),
+                  //         ),
+                  //         ElevatedButton(
+                  //           key: const Key('add_playlist_cancel_button'),
+                  //           onPressed: () {
+                  //             Navigator.of(context).pop();
+                  //           },
+                  //           child: const Text('Cancel'),
+                  //         ),
+                  //       ],
+                  //     );
+                  //   },
+                  // );
                 },
                 child: const Text('Add Playlist'),
               ),
@@ -129,6 +181,8 @@ class _ExpandablePlaylistListViewState
         ),
         Consumer<ExpandablePlaylistListVM>(
           builder: (context, listViewModel, child) {
+            print('isListExpanded: ${listViewModel.isListExpanded}');
+            print('items: ${listViewModel.items.length}');
             if (listViewModel.isListExpanded) {
               return Expanded(
                 child: ListView.builder(
