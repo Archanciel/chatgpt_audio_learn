@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:chatgpt_audio_learn/viewmodels/expandable_playlist_list_vm.dart';
 
@@ -20,6 +21,7 @@ void main() {
           ),
         ],
         child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
           home: Scaffold(body: ExpandablePlaylistListView()),
           // home: MyApp(), not working: notifyListeners() not called
           // home: Scaffold(body: MyApp()), not working: notifyListeners() not called
