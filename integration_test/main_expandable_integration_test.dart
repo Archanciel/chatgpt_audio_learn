@@ -1,4 +1,5 @@
 import 'package:chatgpt_audio_learn/main_expandable_list.dart';
+import 'package:chatgpt_audio_learn/views/expandable_playlist_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -14,14 +15,18 @@ void main() {
     const String playlistUrl = 'https://youtube.com/playlist?list=EXAMPLE';
 
     await tester.pumpWidget(
-      ChangeNotifierProvider(
-        create: (context) => ExpandablePlaylistListVM(),
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider<ExpandablePlaylistListVM>(
+            create: (context) => ExpandablePlaylistListVM(),
+          ),
+        ],
         child: const MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          home: MyApp(),
+          home: Scaffold(body: ExpandablePlaylistListView()),
         ),
       ),
     );
+    await tester.pumpAndSettle();
 
     // Ensure the list is initially hidden
     expect(find.byType(ListView), findsNothing);
