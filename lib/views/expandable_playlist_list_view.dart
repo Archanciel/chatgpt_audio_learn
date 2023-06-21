@@ -87,7 +87,7 @@ class _ExpandablePlaylistListViewState
                                     Provider.of<ExpandablePlaylistListVM>(
                                             alertDialogContext,
                                             listen: false)
-                                        .addItem(playlistUrl);
+                                        .addItemUsingYoutube(playlistUrl);
                                     _playlistUrlController.clear();
                                   }
                                   Navigator.of(context).pop();
@@ -179,8 +179,6 @@ class _ExpandablePlaylistListViewState
         ),
         Consumer<ExpandablePlaylistListVM>(
           builder: (context, listViewModel, child) {
-            print('isListExpanded: ${listViewModel.isListExpanded}');
-            print('items: ${listViewModel.items.length}');
             if (listViewModel.isListExpanded) {
               return Expanded(
                 child: ListView.builder(
