@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart' as yt;
 
 import '../models/playlist.dart';
 
@@ -35,6 +36,35 @@ class ExpandablePlaylistListVM extends ChangeNotifier {
 
   void addItem(String url) {
     items.add(Playlist(url: url));
+    print('Added $url');
+    notifyListeners();
+  }
+
+  Future<void> addItemUsingYoutube(String url) async {
+    String? playlistId;
+    yt.Playlist youtubePlaylist;
+    yt.YoutubeExplode youtubeExplode = yt.YoutubeExplode();
+
+    playlistId = yt.PlaylistId.parsePlaylistId(url);
+    print('playlistId: $playlistId');
+
+    try {
+      youtubePlaylist = await youtubeExplode.playlists.get(playlistId);
+    } catch (e) {
+      // _warningMessageVM.isPlaylistUrlInvalid = true;
+      print(e);
+
+      return;
+    }
+
+    print('youtubePlaylist: $youtubePlaylist');
+    
+    String playlistTitle = youtubePlaylist.title;
+
+    Playlist playlist = Playlist(url: url);
+    playlist.title = playlistTitle;
+    items.add(playlist);
+
     print('Added $url');
     notifyListeners();
   }
