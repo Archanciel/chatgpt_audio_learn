@@ -10,7 +10,7 @@ import 'package:chatgpt_audio_learn/viewmodels/expandable_playlist_list_vm.dart'
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets("Test adding playlist", (WidgetTester tester) async {
+  testWidgets("Test adding playlist NOT WORKING", (WidgetTester tester) async {
     const String playlistUrl = 'https://youtube.com/playlist?list=EXAMPLE';
 
     await tester.pumpWidget(
