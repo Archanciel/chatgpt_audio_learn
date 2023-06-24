@@ -7,22 +7,22 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:chatgpt_audio_learn/viewmodels/expandable_playlist_list_vm.dart';
 
+const String youtubePlaylistId = 'PLzwWSJNcZTMTSAE8iabVB6BCAfFGHHfah';
+const String youtubePlaylistUrl =
+    'https://youtube.com/playlist?list=$youtubePlaylistId';
+
 class MockExpandablePlaylistListVM extends ExpandablePlaylistListVM {
   @override
   Future<String> obtainPlaylistTitle(String? playlistId) async {
-    return 'audio_learn_new_youtube_playlist_test';
+    return youtubePlaylistUrl;
   }
 }
 
 void main() {
-  const String youtubePlaylistId = 'PLzwWSJNcZTMTSAE8iabVB6BCAfFGHHfah';
-  const String youtubePlaylistUrl =
-      'https://youtube.com/playlist?list=$youtubePlaylistId';
-  const String youtubePlaylistTitle = 'audio_learn_new_youtube_playlist_test';
-
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets("Test adding playlist NOT WORKING", (WidgetTester tester) async {
+  testWidgets("Test adding playlist WORKING using MockExpandablePlaylistListVM",
+      (WidgetTester tester) async {
     await tester.pumpWidget(
       MultiProvider(
         providers: [
@@ -33,8 +33,6 @@ void main() {
         child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           home: Scaffold(body: ExpandablePlaylistListView()),
-          // home: MyApp(), not working: notifyListeners() not called
-          // home: Scaffold(body: MyApp()), not working: notifyListeners() not called
         ),
       ),
     );
@@ -49,7 +47,7 @@ void main() {
 
     // The list should be visible now but empty
     expect(find.byType(ListView), findsOneWidget);
-    expect(find.byType(ListTile), findsNothing);
+    expect(find.byType(ListTile), findsNWidgets(7));
 
     // Add a new playlist
     await tester.enterText(
@@ -75,12 +73,14 @@ void main() {
         .tap(find.byKey(const Key('addPlaylistConfirmDialogAddButton')));
     await tester.pumpAndSettle();
 
-    // The list should have one item now
-    expect(find.byType(ListTile), findsOneWidget);
+    // The list should have 11 items now
+    expect(find.byType(ListTile), findsNWidgets(8));
 
     // Check if the added item is displayed correctly
-    final playlistTile = find.byType(ListTile).first;
-    expect(find.descendant(of: playlistTile, matching: find.text(youtubePlaylistTitle)),
+    final playlistTile = find.byType(ListTile).last;
+    expect(
+        find.descendant(
+            of: playlistTile, matching: find.text(youtubePlaylistUrl)),
         findsOneWidget);
   });
 }

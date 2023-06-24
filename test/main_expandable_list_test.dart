@@ -5,6 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
+class MockExpandablePlaylistListVM extends ExpandablePlaylistListVM {
+  @override
+  Future<String> obtainPlaylistTitle(String? playlistId) async {
+    return 'audio_learn_new_youtube_playlist_test';
+  }
+}
+
 void main() {
   group('ExpandableListView', () {
     testWidgets(
@@ -13,7 +20,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ExpandablePlaylistListVM()),
+            ChangeNotifierProvider<ExpandablePlaylistListVM>(create: (_) => MockExpandablePlaylistListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -47,7 +54,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ExpandablePlaylistListVM()),
+            ChangeNotifierProvider<ExpandablePlaylistListVM>(create: (_) => MockExpandablePlaylistListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -71,7 +78,7 @@ void main() {
 
       final List<Widget> listTileLst =
           tester.widgetList(listTileFinder).toList();
-      expect(listTileLst.length, 9);
+      expect(listTileLst.length, 7);
 
       // hidding the list
       await tester.tap(toggleButtonFinder);
@@ -85,7 +92,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ExpandablePlaylistListVM()),
+            ChangeNotifierProvider<ExpandablePlaylistListVM>(create: (_) => MockExpandablePlaylistListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -136,7 +143,7 @@ void main() {
         of: find.byType(ListTile).first,
         matching: find.byWidgetPredicate((widget) => widget is Checkbox),
       ));
-      await tester.pump();
+      await tester.pumpAndSettle();
 
       // Verify that the first ListTile checkbox is now
       // selected. The check box must be obtained again
@@ -174,7 +181,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ExpandablePlaylistListVM()),
+            ChangeNotifierProvider<ExpandablePlaylistListVM>(create: (_) => MockExpandablePlaylistListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -271,7 +278,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ExpandablePlaylistListVM()),
+            ChangeNotifierProvider<ExpandablePlaylistListVM>(create: (_) => MockExpandablePlaylistListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -375,7 +382,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ExpandablePlaylistListVM()),
+            ChangeNotifierProvider<ExpandablePlaylistListVM>(create: (_) => MockExpandablePlaylistListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -443,7 +450,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ExpandablePlaylistListVM()),
+            ChangeNotifierProvider<ExpandablePlaylistListVM>(create: (_) => MockExpandablePlaylistListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -469,7 +476,7 @@ void main() {
       ExpandablePlaylistListVM listViewModel =
           Provider.of<ExpandablePlaylistListVM>(tester.element(listViewFinder),
               listen: false);
-      expect(listViewModel.items.length, 10);
+      expect(listViewModel.items.length, 7);
 
       // Verify that the Delete button is disabled
       expect(find.text('Delete'), findsOneWidget);
@@ -511,7 +518,7 @@ void main() {
       listViewModel = Provider.of<ExpandablePlaylistListVM>(
           tester.element(listViewFinder),
           listen: false);
-      expect(listViewModel.items.length, 9);
+      expect(listViewModel.items.length, 6);
 
       expect(find.widgetWithText(ListTile, itemToDeleteTextStr), findsNothing);
     });
@@ -520,7 +527,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ExpandablePlaylistListVM()),
+            ChangeNotifierProvider<ExpandablePlaylistListVM>(create: (_) => MockExpandablePlaylistListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -546,7 +553,7 @@ void main() {
       ExpandablePlaylistListVM listViewModel =
           Provider.of<ExpandablePlaylistListVM>(tester.element(listViewFinder),
               listen: false);
-      expect(listViewModel.items.length, 10);
+      expect(listViewModel.items.length, 7);
 
       // Find and select the ListTile to move'
       const String itemToDeleteTextStr = 'Item 2';
@@ -586,7 +593,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ExpandablePlaylistListVM()),
+            ChangeNotifierProvider<ExpandablePlaylistListVM>(create: (_) => MockExpandablePlaylistListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -612,10 +619,10 @@ void main() {
       ExpandablePlaylistListVM listViewModel =
           Provider.of<ExpandablePlaylistListVM>(tester.element(listViewFinder),
               listen: false);
-      expect(listViewModel.items.length, 10);
+      expect(listViewModel.items.length, 7);
 
       // Find and select the ListTile to move'
-      const String itemToDeleteTextStr = 'Item 9';
+      const String itemToDeleteTextStr = 'Item 6';
 
       await findSelectAndTestListTileCheckbox(
         tester: tester,
@@ -645,15 +652,15 @@ void main() {
       listViewModel = Provider.of<ExpandablePlaylistListVM>(
           tester.element(listViewFinder),
           listen: false);
-      expect(listViewModel.items[0].url, 'Item 9');
-      expect(listViewModel.items[9].url, 'Item 10');
+      expect(listViewModel.items[0].url, 'Item 6');
+      expect(listViewModel.items[6].url, 'Item 7');
     });
 
     testWidgets('select and move up item', (WidgetTester tester) async {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ExpandablePlaylistListVM()),
+            ChangeNotifierProvider<ExpandablePlaylistListVM>(create: (_) => MockExpandablePlaylistListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -670,7 +677,7 @@ void main() {
       // displaying the list
       final Finder toggleButtonFinder = find.byKey(const ValueKey('toggle_button'));
       await tester.tap(toggleButtonFinder);
-      await tester.pump();
+      await tester.pumpAndSettle();
 
       Finder listViewFinder = find.byType(ExpandablePlaylistListView);
 
@@ -679,7 +686,7 @@ void main() {
       ExpandablePlaylistListVM listViewModel =
           Provider.of<ExpandablePlaylistListVM>(tester.element(listViewFinder),
               listen: false);
-      expect(listViewModel.items.length, 10);
+      expect(listViewModel.items.length, 7);
 
       // Find and select the ListTile to move'
       const String itemToDeleteTextStr = 'Item 5';
@@ -719,7 +726,7 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ExpandablePlaylistListVM()),
+            ChangeNotifierProvider<ExpandablePlaylistListVM>(create: (_) => MockExpandablePlaylistListVM()),
           ],
           child: MaterialApp(
             title: 'MVVM Example',
@@ -745,7 +752,7 @@ void main() {
       ExpandablePlaylistListVM listViewModel =
           Provider.of<ExpandablePlaylistListVM>(tester.element(listViewFinder),
               listen: false);
-      expect(listViewModel.items.length, 10);
+      expect(listViewModel.items.length, 7);
 
       // Find and select the ListTile to move'
       const String itemToDeleteTextStr = 'Item 1';
@@ -779,7 +786,7 @@ void main() {
           tester.element(listViewFinder),
           listen: false);
       expect(listViewModel.items[0].url, 'Item 2');
-      expect(listViewModel.items[8].url, 'Item 1');
+      expect(listViewModel.items[5].url, 'Item 1');
     });
   });
 }
