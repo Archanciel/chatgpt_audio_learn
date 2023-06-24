@@ -15,7 +15,6 @@ class ExpandablePlaylistListVM extends ChangeNotifier {
   bool get isButton2Enabled => _isButton2Enabled;
   bool get isButton3Enabled => _isButton3Enabled;
 
-
   bool _isPlaylistSelected = false;
 
   bool get isPlaylistSelected => _isPlaylistSelected;
@@ -34,39 +33,33 @@ class ExpandablePlaylistListVM extends ChangeNotifier {
     // Playlist(url: 'Item 10'),
   ];
 
-  void addItem(String url) {
-    items.add(Playlist(url: url));
-    print('Added $url');
-    notifyListeners();
-  }
-
   Future<void> addItemUsingYoutube(String url) async {
     String? playlistId;
-    yt.Playlist youtubePlaylist;
-    yt.YoutubeExplode youtubeExplode = yt.YoutubeExplode();
-
     playlistId = yt.PlaylistId.parsePlaylistId(url);
-    print('playlistId: $playlistId');
-
-    try {
-      youtubePlaylist = await youtubeExplode.playlists.get(playlistId);
-    } catch (e) {
-      // _warningMessageVM.isPlaylistUrlInvalid = true;
-      print(e);
-
-      return;
-    }
-
-    print('youtubePlaylist: $youtubePlaylist');
-    
-    String playlistTitle = youtubePlaylist.title;
+    String playlistTitle = await obtainPlaylistTitle(playlistId);
 
     Playlist playlist = Playlist(url: url);
     playlist.title = playlistTitle;
     items.add(playlist);
 
-    print('Added $url');
     notifyListeners();
+  }
+
+  Future<String> obtainPlaylistTitle(String? playlistId) async {
+    yt.YoutubeExplode youtubeExplode = yt.YoutubeExplode();
+
+    String playlistTitle = '';
+
+    try {
+      yt.Playlist youtubePlaylist =
+          await youtubeExplode.playlists.get(playlistId);
+      playlistTitle = youtubePlaylist.title;
+    } catch (e) {
+      // empty playlistTitle will be returned
+      print('Error: $e');
+    }
+
+    return playlistTitle;
   }
 
   void toggleList() {
@@ -186,4 +179,3 @@ class ExpandablePlaylistListVM extends ChangeNotifier {
     notifyListeners();
   }
 }
-

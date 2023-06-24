@@ -7,17 +7,27 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:chatgpt_audio_learn/viewmodels/expandable_playlist_list_vm.dart';
 
+class MockExpandablePlaylistListVM extends ExpandablePlaylistListVM {
+  @override
+  Future<String> obtainPlaylistTitle(String? playlistId) async {
+    return 'audio_learn_new_youtube_playlist_test';
+  }
+}
+
 void main() {
+  const String youtubePlaylistId = 'PLzwWSJNcZTMTSAE8iabVB6BCAfFGHHfah';
+  const String youtubePlaylistUrl =
+      'https://youtube.com/playlist?list=$youtubePlaylistId';
+  const String youtubePlaylistTitle = 'audio_learn_new_youtube_playlist_test';
+
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets("Test adding playlist NOT WORKING", (WidgetTester tester) async {
-    const String playlistUrl = 'https://youtube.com/playlist?list=EXAMPLE';
-
     await tester.pumpWidget(
       MultiProvider(
         providers: [
           ChangeNotifierProvider<ExpandablePlaylistListVM>(
-            create: (context) => ExpandablePlaylistListVM(),
+            create: (context) => MockExpandablePlaylistListVM(),
           ),
         ],
         child: const MaterialApp(
@@ -43,11 +53,11 @@ void main() {
 
     // Add a new playlist
     await tester.enterText(
-        find.byKey(const Key('playlistUrlTextField')), playlistUrl);
+        find.byKey(const Key('playlistUrlTextField')), youtubePlaylistUrl);
 
     TextField urlTextField =
         tester.widget(find.byKey(const Key('playlistUrlTextField')));
-    expect(urlTextField.controller!.text, playlistUrl);
+    expect(urlTextField.controller!.text, youtubePlaylistUrl);
 
     await tester.tap(find.byKey(const Key('addPlaylistButton')));
     await tester.pumpAndSettle();
@@ -58,7 +68,7 @@ void main() {
     // Check the value of the AlertDialog TextField
     TextField confirmUrlTextField = tester
         .widget(find.byKey(const Key('playlistUrlConfirmationTextField')));
-    expect(confirmUrlTextField.controller!.text, playlistUrl);
+    expect(confirmUrlTextField.controller!.text, youtubePlaylistUrl);
 
     // Confirm the addition by tapping the confirmation button in the AlertDialog
     await tester
@@ -70,7 +80,7 @@ void main() {
 
     // Check if the added item is displayed correctly
     final playlistTile = find.byType(ListTile).first;
-    expect(find.descendant(of: playlistTile, matching: find.text(playlistUrl)),
+    expect(find.descendant(of: playlistTile, matching: find.text(youtubePlaylistTitle)),
         findsOneWidget);
   });
 }

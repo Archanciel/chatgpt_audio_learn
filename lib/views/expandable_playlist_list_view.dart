@@ -186,7 +186,7 @@ class _ExpandablePlaylistListViewState
                   itemBuilder: (context, index) {
                     Playlist item = listViewModel.items[index];
                     return ListTile(
-                      title: Text(item.url),
+                      title: Text(item.title),
                       trailing: Checkbox(
                         value: item.isSelected,
                         onChanged: (value) {
