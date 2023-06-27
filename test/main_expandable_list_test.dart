@@ -568,13 +568,13 @@ void main() {
           find.widgetWithIcon(IconButton, Icons.arrow_drop_up));
       expect(upButton.onPressed, isNotNull);
 
-      Finder iconButtonFinder =
+      Finder downButtonFinder =
           find.widgetWithIcon(IconButton, Icons.arrow_drop_down);
-      IconButton downButton = tester.widget<IconButton>(iconButtonFinder);
+      IconButton downButton = tester.widget<IconButton>(downButtonFinder);
       expect(downButton.onPressed, isNotNull);
 
       // Tap the move down button
-      await tester.tap(iconButtonFinder);
+      await tester.tap(downButtonFinder);
       await tester.pump();
 
       listViewFinder = find.byType(ExpandablePlaylistListView);
@@ -634,15 +634,15 @@ void main() {
           find.widgetWithIcon(IconButton, Icons.arrow_drop_up));
       expect(upButton.onPressed, isNotNull);
 
-      Finder iconButtonFinder =
+      Finder downButtonFinder =
           find.widgetWithIcon(IconButton, Icons.arrow_drop_down);
-      IconButton downButton = tester.widget<IconButton>(iconButtonFinder);
+      IconButton downButton = tester.widget<IconButton>(downButtonFinder);
       expect(downButton.onPressed, isNotNull);
 
       // Tap the move down button twice
-      await tester.tap(iconButtonFinder);
+      await tester.tap(downButtonFinder);
       await tester.pump();
-      await tester.tap(iconButtonFinder);
+      await tester.tap(downButtonFinder);
       await tester.pump();
 
       listViewFinder = find.byType(ExpandablePlaylistListView);
@@ -697,9 +697,9 @@ void main() {
       );
 
       // Verify that the move buttons are enabled
-      Finder iconButtonFinder =
+      Finder downButtonFinder =
           find.widgetWithIcon(IconButton, Icons.arrow_drop_up);
-      IconButton upButton = tester.widget<IconButton>(iconButtonFinder);
+      IconButton upButton = tester.widget<IconButton>(downButtonFinder);
       expect(upButton.onPressed, isNotNull);
 
       IconButton downButton = tester.widget<IconButton>(
@@ -707,7 +707,7 @@ void main() {
       expect(downButton.onPressed, isNotNull);
 
       // Tap the move up button
-      await tester.tap(iconButtonFinder);
+      await tester.tap(downButtonFinder);
       await tester.pump();
 
       listViewFinder = find.byType(ExpandablePlaylistListView);
@@ -763,9 +763,9 @@ void main() {
       );
 
       // Verify that the move buttons are enabled
-      Finder iconButtonFinder =
+      Finder upButtonFinder =
           find.widgetWithIcon(IconButton, Icons.arrow_drop_up);
-      IconButton upButton = tester.widget<IconButton>(iconButtonFinder);
+      IconButton upButton = tester.widget<IconButton>(upButtonFinder);
       expect(upButton.onPressed, isNotNull);
 
       IconButton downButton = tester.widget<IconButton>(
@@ -773,9 +773,9 @@ void main() {
       expect(downButton.onPressed, isNotNull);
 
       // Tap twice the move up button
-      await tester.tap(iconButtonFinder);
+      await tester.tap(upButtonFinder);
       await tester.pump();
-      await tester.tap(iconButtonFinder);
+      await tester.tap(upButtonFinder);
       await tester.pump();
 
       listViewFinder = find.byType(ExpandablePlaylistListView);
