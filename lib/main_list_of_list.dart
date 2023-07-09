@@ -12,6 +12,7 @@ class MapOfListProvider with ChangeNotifier {
   };
 
   Map<String, Color> selectedKeys = {};
+  String selectedSublistItem = '';
 
   void toggleKey(String key, Color color) {
     if (selectedKeys.containsKey(key)) {
@@ -22,7 +23,7 @@ class MapOfListProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  List<String> getSelectedValues() {
+  List<String> getMasterListSelectedValues() {
     List<String> values = [];
     selectedKeys.forEach((key, _) {
       values.addAll(mapOfList[key]!);
@@ -30,6 +31,11 @@ class MapOfListProvider with ChangeNotifier {
     values.sort(); // Sort the values before returning them
 
     return values;
+  }
+
+  void setSelectedSublistItem(String value) {
+    selectedSublistItem = value;
+    notifyListeners();
   }
 }
 
@@ -60,12 +66,14 @@ class MasterList extends StatelessWidget {
     return Consumer<MapOfListProvider>(
       builder: (context, provider, _) {
         return ListView.builder(
+          key: const Key('master-list'),
           itemCount: provider.mapOfList.length,
           itemBuilder: (context, index) {
             final key = provider.mapOfList.keys.elementAt(index);
             final color = Colors.primaries[index % Colors.primaries.length];
             final selected = provider.selectedKeys.containsKey(key);
             return ListTile(
+              key: Key(key),
               title: Text(
                 key,
                 style: TextStyle(color: color),
@@ -87,8 +95,9 @@ class SubList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<MapOfListProvider>(
       builder: (context, provider, _) {
-        final selectedValues = provider.getSelectedValues();
+        final selectedValues = provider.getMasterListSelectedValues();
         return ListView.builder(
+          key: const Key('sub-list'),
           itemCount: selectedValues.length,
           itemBuilder: (context, index) {
             final value = selectedValues[index];
@@ -96,11 +105,21 @@ class SubList extends StatelessWidget {
                 .firstWhere((entry) => entry.value.contains(value))
                 .key;
             final color = provider.selectedKeys[key];
+            final selected = provider.selectedSublistItem == value;
             return ListTile(
+              key: Key(value),
               title: Text(
                 value,
                 style: TextStyle(color: color),
               ),
+              trailing: selected ? Icon(Icons.check, color: color) : null,
+              onTap: () {
+                if (selected) {
+                  provider.setSelectedSublistItem('');
+                  return;
+                }
+                provider.setSelectedSublistItem(value);
+              },
             );
           },
         );
