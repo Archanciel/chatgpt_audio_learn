@@ -16,7 +16,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Find the first ListTile in the master list by its value.
-    final masterListItemFinder = find.text('key1');
+    final Finder masterListItemFinder = find.text('key1');
     expect(masterListItemFinder, findsOneWidget);
 
     // Tap the ListTile in the master list.
@@ -34,7 +34,7 @@ void main() {
         isTrue);
 
     // Find the sublist item by its value.
-    final sublistItemFinder = find.text('key1-value1');
+    final Finder sublistItemFinder = find.text('key1-value1');
     expect(sublistItemFinder, findsOneWidget);
 
     // Tap the sublist item.
