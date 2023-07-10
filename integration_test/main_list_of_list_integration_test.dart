@@ -17,8 +17,15 @@ void main() {
     // Wait for the app to build.
     await tester.pumpAndSettle();
 
-    // Find the first ListTile in the master list.
-    final masterListItemFinder = find.byKey(const Key('key1'));
+    // Find the first ListTile in the master list using its key.
+    Finder masterListItemFinder = find.byKey(const Key('key1'));
+    expect(masterListItemFinder, findsOneWidget);
+
+    // Tap the ListTile in the master list.
+    await tester.tap(masterListItemFinder);
+
+    // Find the second ListTile in the master list using its value.
+    masterListItemFinder = find.text('key2');
     expect(masterListItemFinder, findsOneWidget);
 
     // Tap the ListTile in the master list.
