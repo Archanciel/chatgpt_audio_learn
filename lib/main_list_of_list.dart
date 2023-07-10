@@ -73,7 +73,6 @@ class MasterList extends StatelessWidget {
             final color = Colors.primaries[index % Colors.primaries.length];
             final selected = provider.selectedKeys.containsKey(key);
             return ListTile(
-              key: Key(key),
               title: Text(
                 key,
                 style: TextStyle(color: color),
@@ -107,7 +106,6 @@ class SubList extends StatelessWidget {
             final color = provider.selectedKeys[key];
             final selected = provider.selectedSublistItem == value;
             return ListTile(
-              key: Key(value),
               title: Text(
                 value,
                 style: TextStyle(color: color),
