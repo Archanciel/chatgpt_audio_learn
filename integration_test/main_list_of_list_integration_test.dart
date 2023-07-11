@@ -15,12 +15,12 @@ void main() {
     // Wait for the app to build.
     await tester.pumpAndSettle();
 
-    // Find the first ListTile in the master list by its value.
-    final Finder masterListItemFinder = find.text('key1');
-    expect(masterListItemFinder, findsOneWidget);
+    // Find the first ListTile Text in the master list by its value.
+    final Finder masterlistListTileText = find.text('key1');
+    expect(masterlistListTileText, findsOneWidget);
 
-    // Tap the ListTile in the master list.
-    await tester.tap(masterListItemFinder);
+    // Tap the ListTile Text in the master list.
+    await tester.tap(masterlistListTileText);
 
     // Wait for the tap to be processed and for any animations to complete.
     await tester.pumpAndSettle();
@@ -33,12 +33,12 @@ void main() {
             'key1'),
         isTrue);
 
-    // Find the sublist item by its value.
-    final Finder sublistItemFinder = find.text('key1-value1');
-    expect(sublistItemFinder, findsOneWidget);
+    // Find the sublist ListTile Text widget
+    final Finder sublistListTileText = find.text('key1-value1');
+    expect(sublistListTileText, findsOneWidget);
 
-    // Tap the sublist item.
-    await tester.tap(sublistItemFinder);
+    // Tap the sublist ListTile Text widget
+    await tester.tap(sublistListTileText);
 
     // Wait for the tap to be processed and for any animations to complete.
     await tester.pumpAndSettle();
