@@ -21,38 +21,46 @@ void main() {
     // Ensure everything is loaded
     await tester.pumpAndSettle();
 
-    // Find the second ListTile in the master list by its value.
-    final Finder masterListItemFinder = find.text('key2');
-    expect(masterListItemFinder, findsOneWidget);
+    // Find the second ListTile Text widget in the master list
+    final Finder masterlistListTileText = find.text('key2');
+    expect(masterlistListTileText, findsOneWidget);
 
-    // Tap the ListTile in the master list.
-    await tester.tap(masterListItemFinder);
+    // Tap the on the ListTile Text in the master list
+    await tester.tap(masterlistListTileText);
 
-    // Wait for the tap to be processed and for any animations to complete.
+    // Wait for the tap to be processed and for any animations to complete
     await tester.pumpAndSettle();
 
-    // Assume we want to tap the popup menu of the sublist item "key2-value1"
-    var sublistItem = find.text('key2-value1');
-    expect(sublistItem, findsOneWidget);
+    // Assume we want to tap the popup menu of the sublist ListTile
+    // "key2-value1"
 
-    // Now find the leading icon button of the sublist item and tap it
-    var leadingIconButton = find.descendant(
-      of: sublistItem,
+    // First, find the sublist ListTile Text widget
+    final Finder sublistListTileText = find.text('key2-value1');
+    expect(sublistListTileText, findsOneWidget);
+
+    // Then obtain the ListTile widget enclosing the Text widget by
+    // finding its ancestor
+    final Finder sublistListTile = find.ancestor(
+      of: sublistListTileText,
+      matching: find.byType(ListTile),
+    );
+
+    // Now find the leading icon button of the sublist ListTile and tap it
+    final Finder sublistListTileLeadingIconButton = find.descendant(
+      of: sublistListTile,
       matching: find.byIcon(Icons.menu),
     );
-    expect(leadingIconButton, findsOneWidget);
+    expect(sublistListTileLeadingIconButton, findsOneWidget);
 
     // Tap the leading icon button to open the popup menu
-    await tester.tap(leadingIconButton);
+    await tester.tap(sublistListTileLeadingIconButton);
     await tester.pumpAndSettle(); // Wait for popup menu to appear
 
     // Now find the popup menu item and tap on it
-    var popupMenuItem = find.byKey(const Key('popup_menu_one'));
+    final Finder popupMenuItem = find.byKey(const Key('popup_menu_one'));
     expect(popupMenuItem, findsOneWidget);
 
     await tester.tap(popupMenuItem);
     await tester.pumpAndSettle(); // Wait for tap action to complete
-
-    // Here, you can check if the action associated with the popup menu item has been executed
   });
 }
