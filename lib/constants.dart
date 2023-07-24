@@ -59,3 +59,10 @@ const double kResetButtonBottomDistance = 5.0;
 
 DateFormat englishDateTimeFormat = DateFormat("yyyy-MM-dd HH:mm");
 DateFormat frenchDateTimeFormat = DateFormat("dd-MM-yyyy HH:mm");
+
+const double kRowWidthSeparator = 3.0;
+const double kSmallestButtonWidth = 40.0;
+const double kSmallButtonWidth = 48.0;
+const double kSmallButtonInsidePadding = 3.0;
+const double kDefaultMargin = 15.0;
+const double kRoundedButtonBorderRadius = 11.0;
