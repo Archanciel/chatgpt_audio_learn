@@ -16,26 +16,20 @@ class ExpandablePlaylistListVM with ChangeNotifier {
     Playlist(id: 1, title: 'title1'),
     Playlist(id: 2, title: 'title2'),
     Playlist(id: 3, title: 'title3'),
-    Playlist(id: 4, title: 'title4'),
+    Playlist(id: 4, title: 'very long very long very long very long very long very long title4'),
   ];
 
-  Playlist? selectedPlaylist;
+  Playlist? _selectedPlaylist;
+  Playlist? get selectedPlaylist => _selectedPlaylist;
 
   void selectPlaylist(Playlist? playlist) {
-    selectedPlaylist = playlist;
+    _selectedPlaylist = playlist;
     notifyListeners();
   }
 }
 
-class PlaylistOneSelectedDialogWidget extends StatefulWidget {
-  const PlaylistOneSelectedDialogWidget({super.key});
-
-  @override
-  _PlaylistOneSelectedDialogWidgetState createState() => _PlaylistOneSelectedDialogWidgetState();
-}
-
-class _PlaylistOneSelectedDialogWidgetState extends State<PlaylistOneSelectedDialogWidget> {
-  Playlist? _selectedPlaylist;
+class PlaylistOneSelectedDialogWidget extends StatelessWidget {
+  const PlaylistOneSelectedDialogWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -51,11 +45,9 @@ class _PlaylistOneSelectedDialogWidgetState extends State<PlaylistOneSelectedDia
               return RadioListTile<Playlist>(
                 title: Text(playlistProvider.listOfPlaylist[index].title),
                 value: playlistProvider.listOfPlaylist[index],
-                groupValue: _selectedPlaylist,
+                groupValue: playlistProvider.selectedPlaylist,
                 onChanged: (Playlist? value) {
-                  setState(() {
-                    _selectedPlaylist = value;
-                  });
+                  playlistProvider.selectPlaylist(value);
                 },
               );
             },
@@ -64,9 +56,6 @@ class _PlaylistOneSelectedDialogWidgetState extends State<PlaylistOneSelectedDia
         actions: [
           ElevatedButton(
             onPressed: () {
-              if (_selectedPlaylist != null) {
-                playlistProvider.selectPlaylist(_selectedPlaylist!);
-              }
               Navigator.of(context).pop();
             },
             child: const Text('Apply'),
@@ -99,16 +88,30 @@ class MyApp extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                TextField(
+                  readOnly: true,
+                  maxLines: 1,
+                  controller: TextEditingController(
+                    text: Provider.of<ExpandablePlaylistListVM>(context)
+                            .selectedPlaylist
+                            ?.title ??
+                        'No playlist selected',
+                  ),
+                ),
+                SelectableText(Provider.of<ExpandablePlaylistListVM>(context).selectedPlaylist?.title ?? 'No playlist selected',
+                maxLines: 1,),
                 ElevatedButton(
                   onPressed: () {
                     showDialog(
                       context: context,
-                      builder: (context) => const PlaylistOneSelectedDialogWidget(),
+                      builder: (context) =>
+                          const PlaylistOneSelectedDialogWidget(),
                     ).then((_) {
                       ExpandablePlaylistListVM expandablePlaylistVM =
-                          Provider.of<ExpandablePlaylistListVM>(context, listen: false);
+                          Provider.of<ExpandablePlaylistListVM>(context,
+                              listen: false);
                       Playlist? selectedPlaylist =
-                          expandablePlaylistVM.selectedPlaylist;
+                          expandablePlaylistVM._selectedPlaylist;
                       print(selectedPlaylist?.title ?? 'No playlist selected');
                       // Now you can use selectedPlaylist here
                     });
