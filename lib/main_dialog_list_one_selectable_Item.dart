@@ -16,11 +16,19 @@ class ExpandablePlaylistListVM with ChangeNotifier {
     Playlist(id: 1, title: 'title1'),
     Playlist(id: 2, title: 'title2'),
     Playlist(id: 3, title: 'title3'),
-    Playlist(id: 4, title: 'very long very long very long very long very long very long title4'),
+    Playlist(
+        id: 4,
+        title:
+            'very long very long very long very long very long very long title4'),
   ];
 
   Playlist? _selectedPlaylist;
   Playlist? get selectedPlaylist => _selectedPlaylist;
+
+  ExpandablePlaylistListVM() {
+    // required so that the first playlist is initialized at app startup
+    _selectedPlaylist = listOfPlaylist[0];
+  }
 
   void selectPlaylist(Playlist? playlist) {
     _selectedPlaylist = playlist;
@@ -98,8 +106,14 @@ class MyApp extends StatelessWidget {
                         'No playlist selected',
                   ),
                 ),
-                SelectableText(Provider.of<ExpandablePlaylistListVM>(context).selectedPlaylist?.title ?? 'No playlist selected',
-                maxLines: 1,),
+                SelectableText(
+                  Provider.of<ExpandablePlaylistListVM>(context)
+                          .selectedPlaylist
+                          ?.title ??
+                      'No playlist selected',
+                  maxLines: 1,
+                  textAlign: TextAlign.start, // or .left: both not working !
+                ),
                 ElevatedButton(
                   onPressed: () {
                     showDialog(
