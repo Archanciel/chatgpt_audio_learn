@@ -36,9 +36,16 @@ class ExpandablePlaylistListVM with ChangeNotifier {
   }
 }
 
-class PlaylistOneSelectedDialogWidget extends StatelessWidget {
+class PlaylistOneSelectedDialogWidget extends StatefulWidget {
   const PlaylistOneSelectedDialogWidget({Key? key}) : super(key: key);
 
+  @override
+  State<PlaylistOneSelectedDialogWidget> createState() =>
+      _PlaylistOneSelectedDialogWidgetState();
+}
+
+class _PlaylistOneSelectedDialogWidgetState
+    extends State<PlaylistOneSelectedDialogWidget> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ExpandablePlaylistListVM>(
@@ -62,6 +69,34 @@ class PlaylistOneSelectedDialogWidget extends StatelessWidget {
           ),
         ),
         actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const SizedBox(
+                width: 45.0,
+              ),
+              const Flexible(
+                child: Text(
+                  'Keep Audio Entry in source playlist',
+                ),
+              ),
+              SizedBox(
+                width: 13,
+                height: 13,
+                child: Checkbox(
+                  value: true,
+                  onChanged: (bool? newValue) {
+                    setState(() {
+                      // _ignoreCase = newValue!;
+                    });
+                    // now clicking on Enter works since the
+                    // Checkbox is not focused anymore
+                    // _audioTitleSubStringFocusNode.requestFocus();
+                  },
+                ),
+              ),
+            ],
+          ),
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -81,14 +116,9 @@ class PlaylistOneSelectedDialogWidget extends StatelessWidget {
   }
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -122,60 +152,18 @@ class _MyAppState extends State<MyApp> {
                 ElevatedButton(
                   onPressed: () {
                     showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return Builder(
-                            builder: (BuildContext alertDialogContext) {
-                              return AlertDialog(
-                                title: const Text('Question'),
-                                actions: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const SizedBox(
-                                        width: 45.0,
-                                      ),
-                                      const Flexible(
-                                        child: Text(
-                                          'Keep Audio Entry in source playlist',
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 13,
-                                        height: 13,
-                                        child: Checkbox(
-                                          value: true,
-                                          onChanged: (bool? newValue) {
-                                            setState(() {
-                                              // _ignoreCase = newValue!;
-                                            });
-                                            // now clicking on Enter works since the
-                                            // Checkbox is not focused anymore
-                                            // _audioTitleSubStringFocusNode.requestFocus();
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text('Confirm'),
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text(
-                                        'Cancel'), // <== this is the solution
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        });
+                      context: context,
+                      builder: (context) =>
+                          const PlaylistOneSelectedDialogWidget(),
+                    ).then((_) {
+                      ExpandablePlaylistListVM expandablePlaylistVM =
+                          Provider.of<ExpandablePlaylistListVM>(context,
+                              listen: false);
+                      Playlist? selectedPlaylist =
+                          expandablePlaylistVM._selectedPlaylist;
+                      print(selectedPlaylist?.title ?? 'No playlist selected');
+                      // Now you can use selectedPlaylist here
+                    });
                   },
                   child: const Text('Select one playlist'),
                 ),
