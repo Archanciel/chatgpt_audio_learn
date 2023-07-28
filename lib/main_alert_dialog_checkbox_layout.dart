@@ -70,19 +70,15 @@ class _PlaylistOneSelectedDialogWidgetState
         ),
         actions: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const SizedBox(
-                width: 45.0,
-              ),
-              const Flexible(
+              const Expanded(
                 child: Text(
                   'Keep Audio Entry in source playlist',
                 ),
               ),
               SizedBox(
-                width: 13,
-                height: 13,
+                height: 20,
+                width: 20,
                 child: Checkbox(
                   value: true,
                   onChanged: (bool? newValue) {
