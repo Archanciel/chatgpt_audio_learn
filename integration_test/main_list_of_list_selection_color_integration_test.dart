@@ -9,7 +9,6 @@ void main() {
 
   testWidgets('select a master list item and then a sublist item',
       (WidgetTester tester) async {
-
     // Since it is not possible to test the ListTile enclosing Container
     // color unless we apply a Key to the Container, we will test the
     // selection state of the corresponding MapOfListProvider.selectedKeys
@@ -19,7 +18,7 @@ void main() {
     // integration test.
     await tester.pumpWidget(
       ChangeNotifierProvider(
-        create: (context) => MapOfListProvider(),
+        create: (context) => MapOfListsVM(),
         child: const MyApp(),
       ),
     );
@@ -48,7 +47,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Access the provider and print the selected keys
-    final providerMaster = Provider.of<MapOfListProvider>(
+    final providerMaster = Provider.of<MapOfListsVM>(
         tester.element(find.byType(MasterList)),
         listen: false);
     expect(providerMaster.selectedKeys.keys, equals(['key1', 'key3']));
@@ -64,7 +63,9 @@ void main() {
     await tester.pumpAndSettle();
 
     // Access the provider and print the selected sublist item
-    MapOfListProvider providerSub = Provider.of<MapOfListProvider>(tester.element(find.byType(SubList)), listen: false);
+    MapOfListsVM providerSub = Provider.of<MapOfListsVM>(
+        tester.element(find.byType(SubList)),
+        listen: false);
 
     // Verify the sublist item is selected
     expect(providerSub.selectedSublistItem, equals('key1-value1'));
@@ -80,7 +81,9 @@ void main() {
     await tester.pumpAndSettle();
 
     // Access the provider and print the selected sublist item
-    providerSub = Provider.of<MapOfListProvider>(tester.element(find.byType(SubList)), listen: false);
+    providerSub = Provider.of<MapOfListsVM>(
+        tester.element(find.byType(SubList)),
+        listen: false);
 
     // Verify the sublist item is selected
     expect(providerSub.selectedSublistItem, equals('key3-value2'));

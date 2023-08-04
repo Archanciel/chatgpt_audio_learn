@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class MapOfListProvider with ChangeNotifier {
+class MapOfListsVM with ChangeNotifier {
   Map<String, List<String>> mapOfList = {
     'key1': ['key1-value1', 'key1-value2'],
     'key2': ['key2-value1', 'key2-value2', 'key2-value3', 'key2-value4'],
@@ -14,7 +14,7 @@ class MapOfListProvider with ChangeNotifier {
   Map<String, Color> selectedKeys = {};
   String selectedSublistItem = '';
 
-  void toggleKey(String key, Color color) {
+  void selectParentListItem(String key, Color color) {
     if (selectedKeys.containsKey(key)) {
       selectedKeys.remove(key);
     } else {
@@ -63,23 +63,23 @@ class MasterList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<MapOfListProvider>(
-      builder: (context, provider, _) {
+    return Consumer<MapOfListsVM>(
+      builder: (context, mapOfListsVM, _) {
         return ListView.builder(
           key: const Key('master-list'),
-          itemCount: provider.mapOfList.length,
+          itemCount: mapOfListsVM.mapOfList.length,
           itemBuilder: (context, index) {
-            final key = provider.mapOfList.keys.elementAt(index);
+            final key = mapOfListsVM.mapOfList.keys.elementAt(index);
             final color = Colors.primaries[index % Colors.primaries.length];
-            final selected = provider.selectedKeys.containsKey(key);
+            final bool isItemSelected = mapOfListsVM.selectedKeys.containsKey(key);
             return Container(
-              color: selected ? color.withOpacity(0.3) : null,
+              color: isItemSelected ? color.withOpacity(0.3) : null,
               child: ListTile(
                 title: Text(
                   key,
                   style: TextStyle(color: color),
                 ),
-                onTap: () => provider.toggleKey(key, color),
+                onTap: () => mapOfListsVM.selectParentListItem(key, color),
               ),
             );
           },
@@ -94,7 +94,7 @@ class SubList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<MapOfListProvider>(
+    return Consumer<MapOfListsVM>(
       builder: (context, provider, _) {
         final selectedValues = provider.getMasterListSelectedValues();
         return ListView.builder(
@@ -133,7 +133,7 @@ class SubList extends StatelessWidget {
 void main() {
   runApp(
     ChangeNotifierProvider(
-      create: (context) => MapOfListProvider(),
+      create: (context) => MapOfListsVM(),
       child: const MyApp(),
     ),
   );
