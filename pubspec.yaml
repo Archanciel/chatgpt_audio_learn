@@ -25,6 +25,7 @@ dependencies:
   rxdart: ^0.27.7
   url_launcher: ^6.1.10
   another_flushbar: ^1.12.29
+  workmanager: ^0.5.1
 
 dev_dependencies:
   flutter_test:
