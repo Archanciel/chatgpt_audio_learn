@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:chatgpt_audio_learn/viewmodels/theme_provider.dart';
 import 'package:chatgpt_audio_learn/viewmodels/language_provider.dart';
-import 'package:chatgpt_audio_learn/main.dart';
+import 'package:chatgpt_audio_learn/main_translation.dart';
 import 'package:youtube_explode_dart/src/youtube_explode_base.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
