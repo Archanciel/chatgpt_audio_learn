@@ -6,7 +6,7 @@ import 'package:chatgpt_audio_learn/main_date_time_picker.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets("Selects a specified hour in the time picker",
+  testWidgets("Set an hour in the time picker",
       (WidgetTester tester) async {
     // Build the app
     await tester.pumpWidget(MyApp());
@@ -16,19 +16,18 @@ void main() {
     await tester.tap(openPickerButton);
     await tester.pumpAndSettle();
 
-    // Select a date (e.g., January 1, 2023)
-    // await tester.tap(find.text('1'));
-    // await tester.pumpAndSettle();
-
-    // Confirm the selected date
+    // Confirm the displayed current date
     await tester.tap(find.text('OK'));
     await tester.pumpAndSettle();
 
-    // Open the time picker
-    // await tester.tap(openPickerButton);
-    // await tester.pumpAndSettle();
+    // in order to set a time in the time picker dialog, we
+    // need to tap the keyboard icon displayed at the bottom
+    // of the time picker dialog. Then, we will be able to
+    // set the hour of the TextField that displays the current
+    // hour.
 
-    // Find the IconButton with Icons.keyboard_outlined within the time picker dialog
+    // Find the IconButton with Icons.keyboard_outlined within
+    // the time picker dialog
     final iconButtonFinder = find.descendant(
       of: find.byType(Dialog),
       matching: find.byIcon(Icons.keyboard_outlined),
@@ -38,10 +37,19 @@ void main() {
     await tester.tap(iconButtonFinder);
     await tester.pumpAndSettle();
 
-    final EditableText hourEditableTextWidget =
-        tester.widget<EditableText>(find.text("19").first);
+    // Now, find the TextField that displays the current hour
 
-    expect("19", hourEditableTextWidget.controller.text);
+    DateTime now = DateTime.now();
+    final String currentHour = now.hour.toString();
+
+    final EditableText hourEditableTextWidget =
+        tester.widget<EditableText>(find.text(currentHour).first);
+
+    // Verify that the hour displayed in the TextField is the
+    // current hour
+    expect(currentHour, hourEditableTextWidget.controller.text);
+
+    // Now, modify the time picker hour to 14
 
     hourEditableTextWidget.controller.text = "14";
     await tester.pumpAndSettle();
@@ -50,7 +58,8 @@ void main() {
     await tester.tap(find.text('OK'));
     await tester.pumpAndSettle();
 
-    // Verify that the selected date and time are displayed in the TextField
+    // Verify that the modified hour is displayed
+    // in the screen TextField
     final textField = find.byType(TextField);
     expect(
       tester.widget<TextField>(textField).controller!.text.contains('14'),

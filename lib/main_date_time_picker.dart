@@ -30,7 +30,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flutter DateTime Picker Demo'),
+        title: const Text('Flutter DateTime Picker Demo'),
       ),
       body: Center(
         child: Column(
@@ -38,13 +38,13 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             TextField(
               controller: _dateTimeController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Selected Date Time',
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             ElevatedButton(
-              child: Text('Open Date Time Picker'),
+              child: const Text('Open Date Time Picker'),
               onPressed: () async {
                 final DateTime? date = await showDatePicker(
                   context: context,
