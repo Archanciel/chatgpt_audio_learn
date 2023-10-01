@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
+final Color screenBackgroundColor = Colors.lightBlueAccent.withOpacity(0.2);
+
 Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([
@@ -113,7 +115,13 @@ class _MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_screenTitlesLst[_currentIndex]),
+        title: Text(_screenTitlesLst[_currentIndex],
+              style: TextStyle(
+                color: Colors.yellowAccent.withOpacity(0.8),
+              ),
+            ),
+            elevation: 0,
+            centerTitle: true,
       ),
       body: PageView(
         controller: _pageController,
@@ -124,6 +132,8 @@ class _MainAppState extends State<MainApp> {
         key: _navigationKey,
         index: _currentIndex,
         items: _curvedNavigationBarItemIconsLst,
+        buttonBackgroundColor: Colors.yellow.withOpacity(0.5),
+        backgroundColor: screenBackgroundColor,
         onTap: (index) {
           _updateCurrentIndex(index);
           _pageController.jumpToPage(index);
@@ -137,7 +147,7 @@ class ScreenOne extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.lightBlueAccent.withOpacity(0.2),
+      color: screenBackgroundColor,
       child: const Center(
         child: Text(
           'Screen One',
@@ -156,7 +166,7 @@ class ScreenTwo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.lightBlueAccent.withOpacity(0.2),
+      color: screenBackgroundColor,
       child: const Center(
         child: Text(
           'Screen Two',
@@ -175,7 +185,7 @@ class ScreenThree extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.lightBlueAccent.withOpacity(0.2),
+      color: screenBackgroundColor,
       child: const Center(
         child: Text(
           'Screen Three',
@@ -194,7 +204,7 @@ class ScreenFour extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.lightBlueAccent.withOpacity(0.2),
+      color: screenBackgroundColor,
       child: const Center(
         child: Text(
           'Screen Four',
