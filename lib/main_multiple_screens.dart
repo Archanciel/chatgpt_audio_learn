@@ -12,13 +12,15 @@ Future<void> main(List<String> args) async {
       DeviceOrientation.portraitDown,
     ],
   );
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Multi screen app',
       home: MainApp(),
@@ -27,6 +29,8 @@ class MyApp extends StatelessWidget {
 }
 
 class MainApp extends StatefulWidget {
+  const MainApp({super.key});
+
   @override
   State<MainApp> createState() {
     return _MainAppState();
@@ -57,10 +61,10 @@ class _MainAppState extends State<MainApp> {
     // data for CurvedNavigationBar
 
     _screensLst = [
-      ScreenOne(),
-      ScreenTwo(),
-      ScreenThree(),
-      ScreenFour(),
+      const ScreenOne(),
+      const ScreenTwo(),
+      const ScreenThree(),
+      const ScreenFour(),
     ];
 
     _screenTitlesLst = [
@@ -212,6 +216,8 @@ class _MainAppState extends State<MainApp> {
 }
 
 class ScreenOne extends StatelessWidget {
+  const ScreenOne({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -231,6 +237,8 @@ class ScreenOne extends StatelessWidget {
 }
 
 class ScreenTwo extends StatelessWidget {
+  const ScreenTwo({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -250,6 +258,8 @@ class ScreenTwo extends StatelessWidget {
 }
 
 class ScreenThree extends StatelessWidget {
+  const ScreenThree({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -269,6 +279,8 @@ class ScreenThree extends StatelessWidget {
 }
 
 class ScreenFour extends StatelessWidget {
+  const ScreenFour({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
