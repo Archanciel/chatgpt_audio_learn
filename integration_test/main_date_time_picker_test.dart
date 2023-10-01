@@ -9,7 +9,7 @@ void main() {
   testWidgets("Set an hour in the time picker",
       (WidgetTester tester) async {
     // Build the app
-    await tester.pumpWidget(MyApp());
+    await tester.pumpWidget(const MyApp());
 
     // Find the "Open Date Time Picker" button and tap it
     final openPickerButton = find.text('Open Date Time Picker');
