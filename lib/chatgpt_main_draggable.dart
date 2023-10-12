@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
-const Color kIconColor = Color.fromARGB(246, 44, 61, 255);  // rgba(44, 61, 246, 255)
+const Color kIconColor =
+    Color.fromARGB(246, 44, 61, 255); // rgba(44, 61, 246, 255)
 const Color kButtonColor = Color(0xFF3D3EC2);
+
+// Constants for repeated values
+const Duration pageTransitionDuration = Duration(milliseconds: 300);
+const Curve pageTransitionCurve = Curves.ease;
 
 void main() => runApp(MyApp());
 
@@ -70,6 +75,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
   double _sliderValue = 0;
+  PageController _pageController = PageController(); // Step 1
 
   final List<IconData> _icons = [
     Icons.timer,
@@ -89,44 +95,67 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       body: Column(
         children: [
-          SizedBox(height: 25),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: _icons.asMap().entries.map((entry) {
-              return IconButton(
-                icon: Icon(entry.value),
-                onPressed: () => _onPageChanged(entry.key),
-                color: _currentIndex == entry.key ? Colors.blue : Colors.grey,
-              );
-            }).toList(),
-          ),
-          Slider(
-            value: _sliderValue,
-            onChanged: (value) {
-              setState(() {
-                _sliderValue = value;
-                _currentIndex = value.round();
-              });
-            },
-            divisions: _icons.length - 1,
-            max: (_icons.length - 1).toDouble(),
-          ),
-          Expanded(
-            child: PageView.builder(
-              itemCount: _icons.length,
-              onPageChanged: _onPageChanged,
-              itemBuilder: (context, index) {
-                return Center(
-                  child: Icon(
-                    _icons[index],
-                    size: 200,
-                  ),
-                );
-              },
-            ),
-          ),
+          const SizedBox(height: 25),
+          _buildIconButtonRow(), // Extracted widget
+          _buildSlider(), // Extracted widget
+          _buildPageView(), // Extracted widget
         ],
       ),
+    );
+  }
+
+  Row _buildIconButtonRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: _icons.asMap().entries.map((entry) {
+        return IconButton(
+          icon: Icon(entry.value),
+          onPressed: () => _changePage(entry.key),
+          color: _currentIndex == entry.key ? Colors.blue : Colors.grey,
+        );
+      }).toList(),
+    );
+  }
+
+  Slider _buildSlider() {
+    return Slider(
+      value: _sliderValue,
+      onChanged: (value) {
+        setState(() {
+          _sliderValue = value;
+          _currentIndex = value.round();
+        });
+        _changePage(_currentIndex);
+      },
+      divisions: _icons.length - 1,
+      max: (_icons.length - 1).toDouble(),
+    );
+  }
+
+  Expanded _buildPageView() {
+    return Expanded(
+      child: PageView.builder(
+        itemCount: _icons.length,
+        controller: _pageController,
+        onPageChanged: _onPageChanged,
+        itemBuilder: (context, index) {
+          return Center(
+            child: Icon(
+              _icons[index],
+              size: 200,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  void _changePage(int index) {
+    _onPageChanged(index);
+    _pageController.animateToPage(
+      index,
+      duration: pageTransitionDuration, // Use constant
+      curve: pageTransitionCurve, // Use constant
     );
   }
 }
