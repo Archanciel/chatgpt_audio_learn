@@ -1,5 +1,3 @@
-// lib/main.dart
-
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -8,10 +6,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Slider Icons',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
       home: MyHomePage(),
     );
   }
@@ -23,57 +17,64 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late PageController _pageController;
   int _currentIndex = 0;
+  double _sliderValue = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController(initialPage: _currentIndex);
+  final List<IconData> _icons = [
+    Icons.timer,
+    Icons.book,
+    Icons.list,
+  ];
+
+  void _onPageChanged(int index) {
+    setState(() {
+      _currentIndex = index;
+      _sliderValue = index.toDouble();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Types d'Activité"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.camera_alt),
-            onPressed: () => _changePage(0),
+      body: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: _icons.asMap().entries.map((entry) {
+              return IconButton(
+                icon: Icon(entry.value),
+                onPressed: () => _onPageChanged(entry.key),
+                color: _currentIndex == entry.key ? Colors.blue : Colors.grey,
+              );
+            }).toList(),
           ),
-          IconButton(
-            icon: const Icon(Icons.book),
-            onPressed: () => _changePage(1),
+          Slider(
+            value: _sliderValue,
+            onChanged: (value) {
+              setState(() {
+                _sliderValue = value;
+                _currentIndex = value.round();
+              });
+            },
+            divisions: _icons.length - 1,
+            max: (_icons.length - 1).toDouble(),
           ),
-          IconButton(
-            icon: const Icon(Icons.layers),
-            onPressed: () => _changePage(2),
+          Expanded(
+            child: PageView.builder(
+              itemCount: _icons.length,
+              onPageChanged: _onPageChanged,
+              itemBuilder: (context, index) {
+                return Center(
+                  child: Icon(
+                    _icons[index],
+                    size: 200,
+                  ),
+                );
+              },
+            ),
           ),
-          const SizedBox(width: 100.0),
         ],
       ),
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        children: <Widget>[
-          const Center(child: Text('Premier écran')),
-          const Center(child: Text('Deuxième écran')),
-          const Center(child: Text('Troisième écran')),
-        ],
-      ),
-    );
-  }
-
-  _changePage(int index) {
-    _pageController.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeIn,
     );
   }
 }
