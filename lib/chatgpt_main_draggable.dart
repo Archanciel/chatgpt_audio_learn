@@ -36,20 +36,21 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Types d'Activité"),
+        title: const Text("Types d'Activité"),
         actions: [
           IconButton(
-            icon: Icon(Icons.camera_alt),
+            icon: const Icon(Icons.camera_alt),
             onPressed: () => _changePage(0),
           ),
           IconButton(
-            icon: Icon(Icons.book),
+            icon: const Icon(Icons.book),
             onPressed: () => _changePage(1),
           ),
           IconButton(
-            icon: Icon(Icons.layers),
+            icon: const Icon(Icons.layers),
             onPressed: () => _changePage(2),
           ),
+          const SizedBox(width: 100.0),
         ],
       ),
       body: PageView(
@@ -60,9 +61,9 @@ class _MyHomePageState extends State<MyHomePage> {
           });
         },
         children: <Widget>[
-          Center(child: Text('Premier écran')),
-          Center(child: Text('Deuxième écran')),
-          Center(child: Text('Troisième écran')),
+          const Center(child: Text('Premier écran')),
+          const Center(child: Text('Deuxième écran')),
+          const Center(child: Text('Troisième écran')),
         ],
       ),
     );
@@ -71,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
   _changePage(int index) {
     _pageController.animateToPage(
       index,
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       curve: Curves.easeIn,
     );
   }
