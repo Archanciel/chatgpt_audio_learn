@@ -76,7 +76,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
-  double _sliderValue = 0;
   final PageController _pageController = PageController(); // Step 1
 
   final List<IconData> _icons = [
@@ -102,7 +101,6 @@ class _MyHomePageState extends State<MyHomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildIconButtonRow(), // Extracted widget
-          _buildSlider(), // Extracted widget
           _buildPageView(), // Extracted widget
         ],
       ),
@@ -111,48 +109,26 @@ class _MyHomePageState extends State<MyHomePage> {
 
   SizedBox _buildIconButtonRow() {
     return SizedBox(
-      height: 15,
+      height: 0, // Adjust this value if needed
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: _icons.asMap().entries.map((entry) {
-          return IconButton(
-            icon: Icon(entry.value),
-            onPressed: () => _changePage(entry.key),
-            color: _currentIndex == entry.key ? Colors.blue : Colors.grey,
+          return Padding(
+            padding: const EdgeInsets.all(15.0), // increase tappable area
+            child: IconButton(
+              icon: Icon(entry.value),
+              onPressed: () => _changePage(entry.key),
+              color: _currentIndex == entry.key ? Colors.blue : Colors.grey,
+              iconSize:
+                  24, // Set this if you want to control the icon's visual size
+              padding: EdgeInsets
+                  .zero, // This is crucial to avoid default IconButton padding
+            ),
           );
         }).toList(),
       ),
     );
   }
-
-Widget _buildSlider() {
-  return SliderTheme(
-    data: SliderThemeData(
-      trackHeight: 2.0,
-      activeTrackColor: kIconColor,
-      inactiveTrackColor: kIconColor,
-      thumbColor: kIconColor,
-      thumbShape: RoundSliderThumbShape(enabledThumbRadius: 10.0),
-      overlayColor: Colors.white.withAlpha(32),
-      overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
-      tickMarkShape: RoundSliderTickMarkShape(),
-      activeTickMarkColor: Colors.white,
-      inactiveTickMarkColor: Colors.grey[300],
-    ),
-    child: Slider(
-      value: _sliderValue,
-      onChanged: (value) {
-        setState(() {
-          _sliderValue = value;
-          _currentIndex = value.round();
-        });
-        _changePage(_currentIndex);
-      },
-      divisions: _icons.length - 1,
-      max: (_icons.length - 1).toDouble(),
-    ),
-  );
-}
 
   Expanded _buildPageView() {
     return Expanded(
@@ -184,7 +160,6 @@ Widget _buildSlider() {
   void _onPageChanged(int index) {
     setState(() {
       _currentIndex = index;
-      _sliderValue = index.toDouble();
     });
   }
 }
