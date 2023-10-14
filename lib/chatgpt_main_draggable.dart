@@ -5,7 +5,7 @@ const Color kIconColor =
 const Color kButtonColor = Color(0xFF3D3EC2);
 
 // Constants for repeated values
-const Duration pageTransitionDuration = Duration(milliseconds: 1);
+const Duration pageTransitionDuration = Duration(milliseconds: 20);
 const Curve pageTransitionCurve = Curves.ease;
 
 void main() => runApp(MyApp());
