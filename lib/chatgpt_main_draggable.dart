@@ -60,16 +60,20 @@ class MyApp extends StatelessWidget {
     ),
   );
 
+  MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: _darkTheme,
-      home: MyHomePage(),
+      home: const MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -94,39 +98,33 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${_titles[_currentIndex]}'),
+        title: Text(_titles[_currentIndex]),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildIconButtonRow(), // Extracted widget
           _buildPageView(), // Extracted widget
+          _buildIconButtonRow(), // Extracted widget
         ],
       ),
     );
   }
 
-  SizedBox _buildIconButtonRow() {
-    return SizedBox(
-      height: 0, // Adjust this value if needed
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: _icons.asMap().entries.map((entry) {
-          return Padding(
-            padding: const EdgeInsets.all(15.0), // increase tappable area
-            child: IconButton(
-              icon: Icon(entry.value),
-              onPressed: () => _changePage(entry.key),
-              color: _currentIndex == entry.key ? Colors.blue : Colors.grey,
-              iconSize:
-                  24, // Set this if you want to control the icon's visual size
-              padding: EdgeInsets
-                  .zero, // This is crucial to avoid default IconButton padding
-            ),
-          );
-        }).toList(),
-      ),
+  Row _buildIconButtonRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: _icons.asMap().entries.map((entry) {
+        return IconButton(
+          icon: Icon(entry.value),
+          onPressed: () => _changePage(entry.key),
+          color: _currentIndex == entry.key ? Colors.blue : Colors.grey,
+          iconSize:
+              24, // Set this if you want to control the icon's visual size
+          padding: EdgeInsets
+              .zero, // This is crucial to avoid default IconButton padding
+        );
+      }).toList(),
     );
   }
 
