@@ -5,7 +5,7 @@ const Color kIconColor =
 const Color kButtonColor = Color(0xFF3D3EC2);
 
 // Constants for repeated values
-const Duration pageTransitionDuration = Duration(milliseconds: 300);
+const Duration pageTransitionDuration = Duration(milliseconds: 1);
 const Curve pageTransitionCurve = Curves.ease;
 
 void main() => runApp(MyApp());
@@ -82,48 +82,179 @@ class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
   final PageController _pageController = PageController(); // Step 1
 
-  final List<IconData> _icons = [
+  final List<IconData> _screenNavigationIconLst = [
     Icons.timer,
     Icons.book,
     Icons.list,
   ];
 
-  final List<String> _titles = [
+  final List<String> _screenTitleLst = [
     'Timer',
     'Book',
     'List',
   ];
 
+  late List<StatefulWidget> _screenWidgetLst;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    _screenWidgetLst = [
+      StringListScreenWidget(items: const [
+        'Timer 1',
+        'Timer 2',
+        'Timer 3',
+        'Timer 4',
+        'Timer 5',
+        'Timer 6',
+        'Timer 7',
+        'Timer 8',
+        'Timer 9',
+        'Timer 10',
+        'Timer 11',
+        'Timer 12',
+        'Timer 13',
+        'Timer 14',
+        'Timer 15',
+        'Timer 16',
+        'Timer 17',
+        'Timer 18',
+        'Timer 19',
+        'Timer 20',
+        'Timer 21',
+        'Timer 22',
+        'Timer 23',
+        'Timer 24',
+        'Timer 25',
+        'Timer 26',
+        'Timer 27',
+        'Timer 28',
+        'Timer 29',
+        'Timer 30',
+        'Timer 31',
+        'Timer 32',
+        'Timer 33',
+        'Timer 34',
+        'Timer 35',
+        'Timer 36',
+        'Timer 37',
+        'Timer 38',
+        'Timer 39',
+        'Timer 40',
+        'Timer 41',
+        'Timer 42',
+        'Timer 43',
+        'Timer 44',
+        'Timer 45',
+        'Timer 46',
+        'Timer 47',
+        'Timer 48',
+        'Timer 49',
+        'Timer 50',
+        'Timer 51',
+        'Timer 52',
+        'Timer 53',
+        'Timer 54',
+        'Timer 55',
+        'Timer 56',
+        'Timer 57',
+        'Timer 58',
+        'Timer 59',
+        'Timer 60',
+        'Timer 61',
+        'Timer 62',
+        'Timer 63',
+        'Timer 64',
+        'Timer 65',
+        'Timer 66',
+        'Timer 67',
+        'Timer 68',
+        'Timer 69',
+        'Timer 70',
+        'Timer 71',
+        'Timer 72',
+        'Timer 73',
+        'Timer 74',
+        'Timer 75',
+        'Timer 76',
+        'Timer 77',
+        'Timer 78',
+        'Timer 79',
+        'Timer 80',
+        'Timer 81',
+        'Timer 82',
+        'Timer 83',
+        'Timer 84',
+        'Timer 85',
+        'Timer 86',
+        'Timer 87',
+        'Timer 88',
+        'Timer 89',
+        'Timer 90',
+        'Timer 91',
+        'Timer 92',
+        'Timer 93',
+        'Timer 94',
+        'Timer 95',
+        'Timer 96',
+        'Timer 97',
+        'Timer 98',
+        'Timer 99',
+        'Timer 100',
+        'Timer 101',
+        'Timer 102',
+        'Timer 103',
+        'Timer 104',
+        'Timer 105',
+      ]),
+      IconScreenWidget(iconData: Icons.book),
+      StringListScreenWidget(items: const [
+        'List 1',
+        'List 2',
+        'List 3',
+        'List 4',
+        'List 5',
+        'List 6',
+        'List 7',
+        'List 8',
+        'List 9',
+        'List 10',
+        'List 11',
+        'List 12',
+        'List 13',
+        'List 14',
+        'List 15',
+      ]),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_titles[_currentIndex]),
+        title: Text(_screenTitleLst[_currentIndex]),
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildPageView(), // Extracted widget
-          _buildIconButtonRow(), // Extracted widget
+          _buildPageView(_screenWidgetLst[_currentIndex]),
+          _buildIconButtonRow(),
         ],
       ),
     );
   }
 
-  Expanded _buildPageView() {
+  Expanded _buildPageView(StatefulWidget screenWidget) {
     return Expanded(
       child: PageView.builder(
-        itemCount: _icons.length,
+        itemCount:
+            _screenNavigationIconLst.length, // specifies the number of pages
+        //                           that can be swiped by dragging left or right
         controller: _pageController,
         onPageChanged: _onPageChanged,
         itemBuilder: (context, index) {
-          return Center(
-            child: Icon(
-              _icons[index],
-              size: 200,
-            ),
-          );
+          return screenWidget;
         },
       ),
     );
@@ -132,7 +263,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Row _buildIconButtonRow() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: _icons.asMap().entries.map((entry) {
+      children: _screenNavigationIconLst.asMap().entries.map((entry) {
         return IconButton(
           icon: Icon(entry.value),
           onPressed: () => _changePage(entry.key),
@@ -159,5 +290,47 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _currentIndex = index;
     });
+  }
+}
+
+class StringListScreenWidget extends StatefulWidget {
+  final List<String> items;
+
+  StringListScreenWidget({required this.items});
+
+  @override
+  State<StringListScreenWidget> createState() => _StringListScreenWidgetState();
+}
+
+class _StringListScreenWidgetState extends State<StringListScreenWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: widget.items.length,
+      itemBuilder: (context, index) {
+        return ListTile(title: Text(widget.items[index]));
+      },
+    );
+  }
+}
+
+class IconScreenWidget extends StatefulWidget {
+  final IconData iconData;
+
+  IconScreenWidget({required this.iconData});
+
+  @override
+  State<IconScreenWidget> createState() => _IconScreenWidgetState();
+}
+
+class _IconScreenWidgetState extends State<IconScreenWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Icon(
+        widget.iconData,
+        size: 200,
+      ),
+    );
   }
 }
