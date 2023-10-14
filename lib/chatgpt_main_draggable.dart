@@ -111,23 +111,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Row _buildIconButtonRow() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: _icons.asMap().entries.map((entry) {
-        return IconButton(
-          icon: Icon(entry.value),
-          onPressed: () => _changePage(entry.key),
-          color: _currentIndex == entry.key ? Colors.blue : Colors.grey,
-          iconSize:
-              24, // Set this if you want to control the icon's visual size
-          padding: EdgeInsets
-              .zero, // This is crucial to avoid default IconButton padding
-        );
-      }).toList(),
-    );
-  }
-
   Expanded _buildPageView() {
     return Expanded(
       child: PageView.builder(
@@ -143,6 +126,23 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         },
       ),
+    );
+  }
+
+  Row _buildIconButtonRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: _icons.asMap().entries.map((entry) {
+        return IconButton(
+          icon: Icon(entry.value),
+          onPressed: () => _changePage(entry.key),
+          color: _currentIndex == entry.key ? Colors.blue : Colors.grey,
+          iconSize:
+              24, // Set this if you want to control the icon's visual size
+          padding: EdgeInsets
+              .zero, // This is crucial to avoid default IconButton padding
+        );
+      }).toList(),
     );
   }
 
