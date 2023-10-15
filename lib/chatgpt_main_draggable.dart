@@ -8,9 +8,9 @@ const Color kButtonColor = Color(0xFF3D3EC2);
 const Duration pageTransitionDuration = Duration(milliseconds: 20);
 const Curve pageTransitionCurve = Curves.ease;
 
-void main() => runApp(MyApp());
+void main() => runApp(MainApp());
 
-class MyApp extends StatelessWidget {
+class MainApp extends StatelessWidget {
   final ThemeData _darkTheme = ThemeData.dark().copyWith(
     colorScheme: ThemeData.dark().colorScheme.copyWith(
           background: Colors.black,
@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
     ),
   );
 
-  MyApp({super.key});
+  MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
