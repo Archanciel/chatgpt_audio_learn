@@ -88,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Icons.list,
   ];
 
-  final List<String> _screenTitleLst = [
+  final List<String> _appBarTitleScreenLst = [
     'Timer',
     'Book',
     'List',
@@ -98,7 +98,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     _screenWidgetLst = [
@@ -234,7 +233,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_screenTitleLst[_currentIndex]),
+        title: Text(_appBarTitleScreenLst[_currentIndex]),
       ),
       body: Column(
         children: [
