@@ -11,6 +11,14 @@ enum AudioSortCriterion { audioDownloadDateTime, validVideoTitle }
 enum PlaylistType { youtube, local }
 enum PlaylistQuality { music, voice }
 
+void main() {
+  runApp(MaterialApp(
+    home: AudioPlayerScreen(
+      audioPathFileName: 'audio/myAudio.mp3',
+    ),
+  ));
+}
+
 class Playlist {
   String id = '';
   String title = '';
@@ -935,12 +943,4 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
       },
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: AudioPlayerScreen(
-      audioPathFileName: 'audio/myAudio.mp3',
-    ),
-  ));
 }
