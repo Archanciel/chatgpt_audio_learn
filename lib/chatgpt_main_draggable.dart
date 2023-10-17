@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'main_audio_play.dart';
 
 const Color kIconColor =
     Color.fromARGB(246, 44, 61, 255); // rgba(44, 61, 246, 255)
@@ -209,23 +210,7 @@ class _MyHomePageState extends State<MyHomePage> {
         'Timer 105',
       ]),
       IconScreenWidget(iconData: Icons.book),
-      StringListScreenWidget(items: const [
-        'List 1',
-        'List 2',
-        'List 3',
-        'List 4',
-        'List 5',
-        'List 6',
-        'List 7',
-        'List 8',
-        'List 9',
-        'List 10',
-        'List 11',
-        'List 12',
-        'List 13',
-        'List 14',
-        'List 15',
-      ]),
+      AudioPlayerView(audioPathFileName: 'audio/myAudio.mp3',),
     ];
   }
 
