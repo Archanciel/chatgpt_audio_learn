@@ -13,7 +13,7 @@ enum PlaylistQuality { music, voice }
 
 void main() {
   runApp(MaterialApp(
-    home: AudioPlayerScreen(
+    home: AudioPlayerView(
       audioPathFileName: 'audio/myAudio.mp3',
     ),
   ));
@@ -637,7 +637,7 @@ class Audio {
   }
 }
 
-class AudioPlayerViewModel extends ChangeNotifier {
+class AudioPlayerVM extends ChangeNotifier {
   final String audioPathFileName;
   late AudioPlayer _audioPlayer;
   Duration _duration = const Duration();
@@ -647,7 +647,7 @@ class AudioPlayerViewModel extends ChangeNotifier {
   Duration get duration => _duration;
   Duration get remaining => _duration - _position;
 
-  AudioPlayerViewModel({required this.audioPathFileName}) {
+  AudioPlayerVM({required this.audioPathFileName}) {
     _audioPlayer = AudioPlayer();
     _initializePlayer();
   }
@@ -704,12 +704,12 @@ class AudioPlayerViewModel extends ChangeNotifier {
   }
 }
 
-class AudioPlayerScreen extends StatefulWidget {
+class AudioPlayerView extends StatefulWidget {
   final String audioPathFileName;
   final Playlist playlist;
   final Audio audio;
 
-  AudioPlayerScreen({Key? key, required this.audioPathFileName})
+  AudioPlayerView({Key? key, required this.audioPathFileName})
       : playlist = _createPlaylist(),
         audio = _createAudio(),
         super(key: key);
@@ -740,10 +740,10 @@ class AudioPlayerScreen extends StatefulWidget {
   }
 
   @override
-  _AudioPlayerScreenState createState() => _AudioPlayerScreenState();
+  _AudioPlayerViewState createState() => _AudioPlayerViewState();
 }
 
-class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
+class _AudioPlayerViewState extends State<AudioPlayerView> {
   final double _audioIconSizeSmaller = 50;
   final double _audioIconSizeMedium = 60;
   final double _audioIconSizeLarge = 90;
@@ -752,7 +752,7 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) =>
-          AudioPlayerViewModel(audioPathFileName: widget.audioPathFileName),
+          AudioPlayerVM(audioPathFileName: widget.audioPathFileName),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Audio Player'),
@@ -778,7 +778,7 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
   }
 
   Widget _buildSlider() {
-    return Consumer<AudioPlayerViewModel>(
+    return Consumer<AudioPlayerVM>(
       builder: (context, viewModel, child) {
         return Slider(
           value: viewModel.position.inSeconds.toDouble(),
@@ -793,7 +793,7 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
   }
 
   Widget _buildPositions() {
-    return Consumer<AudioPlayerViewModel>(
+    return Consumer<AudioPlayerVM>(
       builder: (context, viewModel, child) {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -823,7 +823,7 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
   }
 
   Widget _buildPlayButtons() {
-    return Consumer<AudioPlayerViewModel>(
+    return Consumer<AudioPlayerVM>(
       builder: (context, viewModel, child) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -852,7 +852,7 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
   }
 
   Widget _buildPositionButtons() {
-    return Consumer<AudioPlayerViewModel>(
+    return Consumer<AudioPlayerVM>(
       builder: (context, viewModel, child) {
         return Column(
           mainAxisSize: MainAxisSize.min,
