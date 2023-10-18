@@ -101,7 +101,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
-  final PageController _pageController = PageController(); // Step 1
+  final PageController _pageController = PageController();
 
   final List<IconData> _screenNavigationIconLst = [
     Icons.download,
@@ -109,17 +109,17 @@ class _MyHomePageState extends State<MyHomePage> {
     Icons.audiotrack,
   ];
 
-  final List<String> _appBarTitleScreenLst = [
-    'Timer',
-    'Edit',
-    'List',
-  ];
+  final List<String> _appBarTitleScreenLst = [];
 
   final List<StatefulWidget> _screenWidgetLst = [];
 
   @override
   void initState() {
     super.initState();
+
+    _appBarTitleScreenLst.add('Timer');
+    _appBarTitleScreenLst.add('Edit'); 
+    _appBarTitleScreenLst.add('List');
 
     _screenWidgetLst.add(
       const StringListScreenWidget(items: [
