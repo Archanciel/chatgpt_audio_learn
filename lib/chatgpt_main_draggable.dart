@@ -10,11 +10,6 @@ const Color kButtonColor = Color(0xFF3D3EC2);
 const Duration pageTransitionDuration = Duration(milliseconds: 20);
 const Curve pageTransitionCurve = Curves.ease;
 
-enum AppTheme {
-  light,
-  dark,
-}
-
 enum Language {
   english,
   french,
@@ -85,8 +80,8 @@ class MainApp extends StatelessWidget {
           create: (_) => LanguageProvider(),
         ),
       ],
-      child: Consumer<ThemeProvider>(
-        builder: (context, themeProvider, child) {
+      child: Consumer2<ThemeProvider, LanguageProvider>(
+        builder: (context, themeProvider, languageProvider, child) {
           return MaterialApp(
             theme: _darkTheme,
             home: const MyHomePage(),
