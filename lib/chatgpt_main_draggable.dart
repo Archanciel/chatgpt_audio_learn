@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'main_audio_play.dart';
 
 const Color kIconColor =
@@ -65,9 +66,20 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: _darkTheme,
-      home: const MyHomePage(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ThemeProvider>(
+          create: (_) => ThemeProvider(),
+        ),
+      ],
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return MaterialApp(
+            theme: _darkTheme,
+            home: const MyHomePage(),
+          );
+        },
+      ),
     );
   }
 }
@@ -210,7 +222,9 @@ class _MyHomePageState extends State<MyHomePage> {
         'Timer 105',
       ]),
       const IconScreenWidget(iconData: Icons.book),
-      AudioPlayerView(audioPathFileName: 'audio/myAudio.mp3',),
+      AudioPlayerView(
+        audioPathFileName: 'audio/myAudio.mp3',
+      ),
     ];
   }
 
@@ -316,5 +330,16 @@ class _IconScreenWidgetState extends State<IconScreenWidget> {
         size: 200,
       ),
     );
+  }
+}
+
+class ThemeProvider extends ChangeNotifier {
+  bool _isDarkMode = false;
+
+  bool get isDarkMode => _isDarkMode;
+
+  void toggleTheme() {
+    _isDarkMode = !_isDarkMode;
+    notifyListeners();
   }
 }
