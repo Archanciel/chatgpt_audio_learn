@@ -10,6 +10,16 @@ const Color kButtonColor = Color(0xFF3D3EC2);
 const Duration pageTransitionDuration = Duration(milliseconds: 20);
 const Curve pageTransitionCurve = Curves.ease;
 
+enum AppTheme {
+  light,
+  dark,
+}
+
+enum Language {
+  english,
+  french,
+}
+
 void main() => runApp(MainApp());
 
 class MainApp extends StatelessWidget {
@@ -70,6 +80,9 @@ class MainApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<ThemeProvider>(
           create: (_) => ThemeProvider(),
+        ),
+        ChangeNotifierProvider<LanguageProvider>(
+          create: (_) => LanguageProvider(),
         ),
       ],
       child: Consumer<ThemeProvider>(
@@ -340,6 +353,17 @@ class ThemeProvider extends ChangeNotifier {
 
   void toggleTheme() {
     _isDarkMode = !_isDarkMode;
+    notifyListeners();
+  }
+}
+
+class LanguageProvider extends ChangeNotifier {
+  Locale _currentLocale = const Locale('en');
+  Locale get currentLocale => _currentLocale;
+
+  void changeLocale(Locale newLocale) {
+    _currentLocale = newLocale;
+
     notifyListeners();
   }
 }
