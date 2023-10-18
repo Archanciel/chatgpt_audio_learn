@@ -102,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
 
     _screenWidgetLst = [
-      StringListScreenWidget(items: const [
+      const StringListScreenWidget(items: [
         'Timer 1',
         'Timer 2',
         'Timer 3',
@@ -209,7 +209,7 @@ class _MyHomePageState extends State<MyHomePage> {
         'Timer 104',
         'Timer 105',
       ]),
-      IconScreenWidget(iconData: Icons.book),
+      const IconScreenWidget(iconData: Icons.book),
       AudioPlayerView(audioPathFileName: 'audio/myAudio.mp3',),
     ];
   }
@@ -280,7 +280,7 @@ class _MyHomePageState extends State<MyHomePage> {
 class StringListScreenWidget extends StatefulWidget {
   final List<String> items;
 
-  StringListScreenWidget({required this.items});
+  const StringListScreenWidget({super.key, required this.items});
 
   @override
   State<StringListScreenWidget> createState() => _StringListScreenWidgetState();
@@ -301,7 +301,7 @@ class _StringListScreenWidgetState extends State<StringListScreenWidget> {
 class IconScreenWidget extends StatefulWidget {
   final IconData iconData;
 
-  IconScreenWidget({required this.iconData});
+  const IconScreenWidget({super.key, required this.iconData});
 
   @override
   State<IconScreenWidget> createState() => _IconScreenWidgetState();
