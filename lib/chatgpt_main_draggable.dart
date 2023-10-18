@@ -84,14 +84,14 @@ class _MyHomePageState extends State<MyHomePage> {
   final PageController _pageController = PageController(); // Step 1
 
   final List<IconData> _screenNavigationIconLst = [
-    Icons.timer,
-    Icons.book,
-    Icons.list,
+    Icons.download,
+    Icons.edit,
+    Icons.audiotrack,
   ];
 
   final List<String> _appBarTitleScreenLst = [
     'Timer',
-    'Book',
+    'Edit',
     'List',
   ];
 
