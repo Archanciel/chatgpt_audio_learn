@@ -115,13 +115,13 @@ class _MyHomePageState extends State<MyHomePage> {
     'List',
   ];
 
-  late List<StatefulWidget> _screenWidgetLst;
+  final List<StatefulWidget> _screenWidgetLst = [];
 
   @override
   void initState() {
     super.initState();
 
-    _screenWidgetLst = [
+    _screenWidgetLst.add(
       const StringListScreenWidget(items: [
         'Timer 1',
         'Timer 2',
@@ -229,11 +229,11 @@ class _MyHomePageState extends State<MyHomePage> {
         'Timer 104',
         'Timer 105',
       ]),
-      const IconScreenWidget(iconData: Icons.book),
-      AudioPlayerView(
-        audioPathFileName: 'audio/myAudio.mp3',
-      ),
-    ];
+    );
+    _screenWidgetLst.add(const IconScreenWidget(iconData: Icons.book));
+    _screenWidgetLst.add(AudioPlayerView(
+      audioPathFileName: 'audio/myAudio.mp3',
+    ));
   }
 
   @override
