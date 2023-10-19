@@ -109,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Icons.audiotrack,
   ];
 
-  final List<String> _appBarTitleScreenLst = [];
+  final List<Widget> _appBarTitleWidgetLst = [];
 
   final List<StatefulWidget> _screenWidgetLst = [];
 
@@ -117,118 +117,128 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
 
-    _appBarTitleScreenLst.add('Timer');
-    _appBarTitleScreenLst.add('Edit'); 
-    _appBarTitleScreenLst.add('List');
+    _appBarTitleWidgetLst.add(
+      AppBarTitleForPlaylistView(playlistViewHomePage: widget),
+    );
+
+    _appBarTitleWidgetLst.add(
+      AppBarTitleForPlaylistView(playlistViewHomePage: widget),
+    );
+
+    _appBarTitleWidgetLst.add(
+      AppBarTitleForPlaylistView(playlistViewHomePage: widget),
+    );
 
     _screenWidgetLst.add(
-      const StringListScreenWidget(items: [
-        'Timer 1',
-        'Timer 2',
-        'Timer 3',
-        'Timer 4',
-        'Timer 5',
-        'Timer 6',
-        'Timer 7',
-        'Timer 8',
-        'Timer 9',
-        'Timer 10',
-        'Timer 11',
-        'Timer 12',
-        'Timer 13',
-        'Timer 14',
-        'Timer 15',
-        'Timer 16',
-        'Timer 17',
-        'Timer 18',
-        'Timer 19',
-        'Timer 20',
-        'Timer 21',
-        'Timer 22',
-        'Timer 23',
-        'Timer 24',
-        'Timer 25',
-        'Timer 26',
-        'Timer 27',
-        'Timer 28',
-        'Timer 29',
-        'Timer 30',
-        'Timer 31',
-        'Timer 32',
-        'Timer 33',
-        'Timer 34',
-        'Timer 35',
-        'Timer 36',
-        'Timer 37',
-        'Timer 38',
-        'Timer 39',
-        'Timer 40',
-        'Timer 41',
-        'Timer 42',
-        'Timer 43',
-        'Timer 44',
-        'Timer 45',
-        'Timer 46',
-        'Timer 47',
-        'Timer 48',
-        'Timer 49',
-        'Timer 50',
-        'Timer 51',
-        'Timer 52',
-        'Timer 53',
-        'Timer 54',
-        'Timer 55',
-        'Timer 56',
-        'Timer 57',
-        'Timer 58',
-        'Timer 59',
-        'Timer 60',
-        'Timer 61',
-        'Timer 62',
-        'Timer 63',
-        'Timer 64',
-        'Timer 65',
-        'Timer 66',
-        'Timer 67',
-        'Timer 68',
-        'Timer 69',
-        'Timer 70',
-        'Timer 71',
-        'Timer 72',
-        'Timer 73',
-        'Timer 74',
-        'Timer 75',
-        'Timer 76',
-        'Timer 77',
-        'Timer 78',
-        'Timer 79',
-        'Timer 80',
-        'Timer 81',
-        'Timer 82',
-        'Timer 83',
-        'Timer 84',
-        'Timer 85',
-        'Timer 86',
-        'Timer 87',
-        'Timer 88',
-        'Timer 89',
-        'Timer 90',
-        'Timer 91',
-        'Timer 92',
-        'Timer 93',
-        'Timer 94',
-        'Timer 95',
-        'Timer 96',
-        'Timer 97',
-        'Timer 98',
-        'Timer 99',
-        'Timer 100',
-        'Timer 101',
-        'Timer 102',
-        'Timer 103',
-        'Timer 104',
-        'Timer 105',
-      ]),
+      const StringListScreenWidget(
+        items: [
+          'Timer 1',
+          'Timer 2',
+          'Timer 3',
+          'Timer 4',
+          'Timer 5',
+          'Timer 6',
+          'Timer 7',
+          'Timer 8',
+          'Timer 9',
+          'Timer 10',
+          'Timer 11',
+          'Timer 12',
+          'Timer 13',
+          'Timer 14',
+          'Timer 15',
+          'Timer 16',
+          'Timer 17',
+          'Timer 18',
+          'Timer 19',
+          'Timer 20',
+          'Timer 21',
+          'Timer 22',
+          'Timer 23',
+          'Timer 24',
+          'Timer 25',
+          'Timer 26',
+          'Timer 27',
+          'Timer 28',
+          'Timer 29',
+          'Timer 30',
+          'Timer 31',
+          'Timer 32',
+          'Timer 33',
+          'Timer 34',
+          'Timer 35',
+          'Timer 36',
+          'Timer 37',
+          'Timer 38',
+          'Timer 39',
+          'Timer 40',
+          'Timer 41',
+          'Timer 42',
+          'Timer 43',
+          'Timer 44',
+          'Timer 45',
+          'Timer 46',
+          'Timer 47',
+          'Timer 48',
+          'Timer 49',
+          'Timer 50',
+          'Timer 51',
+          'Timer 52',
+          'Timer 53',
+          'Timer 54',
+          'Timer 55',
+          'Timer 56',
+          'Timer 57',
+          'Timer 58',
+          'Timer 59',
+          'Timer 60',
+          'Timer 61',
+          'Timer 62',
+          'Timer 63',
+          'Timer 64',
+          'Timer 65',
+          'Timer 66',
+          'Timer 67',
+          'Timer 68',
+          'Timer 69',
+          'Timer 70',
+          'Timer 71',
+          'Timer 72',
+          'Timer 73',
+          'Timer 74',
+          'Timer 75',
+          'Timer 76',
+          'Timer 77',
+          'Timer 78',
+          'Timer 79',
+          'Timer 80',
+          'Timer 81',
+          'Timer 82',
+          'Timer 83',
+          'Timer 84',
+          'Timer 85',
+          'Timer 86',
+          'Timer 87',
+          'Timer 88',
+          'Timer 89',
+          'Timer 90',
+          'Timer 91',
+          'Timer 92',
+          'Timer 93',
+          'Timer 94',
+          'Timer 95',
+          'Timer 96',
+          'Timer 97',
+          'Timer 98',
+          'Timer 99',
+          'Timer 100',
+          'Timer 101',
+          'Timer 102',
+          'Timer 103',
+          'Timer 104',
+          'Timer 105',
+        ],
+      ),
     );
     _screenWidgetLst.add(const IconScreenWidget(iconData: Icons.book));
     _screenWidgetLst.add(AudioPlayerView(
@@ -240,7 +250,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_appBarTitleScreenLst[_currentIndex]),
+        title: _appBarTitleWidgetLst[_currentIndex],
       ),
       body: Column(
         children: [
@@ -360,5 +370,42 @@ class LanguageProvider extends ChangeNotifier {
     _currentLocale = newLocale;
 
     notifyListeners();
+  }
+}
+
+/// When the PlaylistView screen is displayed, the AppBarTitlePlaylistView
+/// is displayed in the AppBar title:
+class AppBarTitleForPlaylistView extends StatelessWidget {
+  const AppBarTitleForPlaylistView({
+    super.key,
+    required this.playlistViewHomePage,
+  });
+
+  final MyHomePage playlistViewHomePage;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Flexible(
+          child: Text(
+            'Title',
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 17),
+          ),
+        ),
+        // InkWell(
+        //   key: const Key('image_open_youtube'),
+        //   onTap: () async {
+        //     await playlistViewHomePage.openUrlInExternalApp(
+        //       url: kYoutubeUrl,
+        //     );
+        //   },
+        //   child: Image.asset('assets/images/youtube-logo-png-2069.png',
+        //       height: 38),
+        // ),
+      ],
+    );
   }
 }
