@@ -7,12 +7,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData.dark(),
-      home: MediaPlayerScreen(),
+      home: MediaPlayerView(),
     );
   }
 }
 
-class MediaPlayerScreen extends StatelessWidget {
+class MediaPlayerView extends StatefulWidget {
+  @override
+  State<MediaPlayerView> createState() => _MediaPlayerViewState();
+}
+
+class _MediaPlayerViewState extends State<MediaPlayerView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
