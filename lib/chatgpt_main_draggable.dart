@@ -385,6 +385,8 @@ class AppBarTitleForPlaylistView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // converting audio_learn corresponding code to this does not
+    // solve anything 
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
