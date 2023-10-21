@@ -10,8 +10,6 @@ const String accessToken =
 Future<void> main() async {
   String playlistId = 'PLzwWSJNcZTMTB9iwbu77FGokc3WsoxuV0';
   String videoId = '4iRrusLxMIY';
-  String videoIdLong =
-      'UEx6d1dTSk5jWlRNVEI5aXdidTc3Rkdva2MzV3NveHVWMC4zRjM0MkVCRTg0MkYyQTM0';
 
   // Obtain the date a video was added to a playlist
   DateTime addedDate = await getVideoAddedDate(playlistId, videoId);

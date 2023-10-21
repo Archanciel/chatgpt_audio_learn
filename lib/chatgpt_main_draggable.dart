@@ -241,9 +241,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
     _screenWidgetLst.add(const IconScreenWidget(iconData: Icons.book));
-    _screenWidgetLst.add(AudioPlayerView(
-      audioPathFileName: 'audio/myAudio.mp3',
-    ));
+    _screenWidgetLst.add(AudioPlayerView());
   }
 
   @override

@@ -16,9 +16,7 @@ enum PlaylistQuality { music, voice }
 
 void main() {
   runApp(MaterialApp(
-    home: AudioPlayerView(
-      audioPathFileName: 'audio/myAudio.mp3',
-    ),
+    home: AudioPlayerView(),
   ));
 }
 
@@ -641,7 +639,6 @@ class Audio {
 }
 
 class AudioPlayerVM extends ChangeNotifier {
-  final String audioPathFileName;
   Audio currentAudio;
   late AudioPlayer _audioPlayer;
   Duration _duration = const Duration();
@@ -653,30 +650,45 @@ class AudioPlayerVM extends ChangeNotifier {
 
   AudioPlayerVM({
     required this.currentAudio,
-    required this.audioPathFileName,
   }) {
     _audioPlayer = AudioPlayer();
     _initializePlayer();
   }
 
   void _initializePlayer() async {
-    await _audioPlayer.setSourceAsset(audioPathFileName);
-    _audioPlayer.onDurationChanged.listen((duration) {
-      _duration = duration;
-      notifyListeners();
-    });
+    // Assuming filePath is the full path to your audio file
+    String audioFilePathName = currentAudio.filePathName;
 
-    _audioPlayer.onPositionChanged.listen((position) {
-      _position = position;
-      notifyListeners();
-    });
+    // Check if the file exists before attempting to play it
+    if (await File(audioFilePathName).exists()) {
+      _audioPlayer.onDurationChanged.listen((duration) {
+        _duration = duration;
+        notifyListeners();
+      });
+
+      _audioPlayer.onPositionChanged.listen((position) {
+        _position = position;
+        notifyListeners();
+      });
+    } else {
+      print('Audio file does not exist at $audioFilePathName');
+    }
   }
 
   bool get isPlaying => _audioPlayer.state == PlayerState.playing;
 
-  void playFromAssets() {
-    _audioPlayer.play(AssetSource(audioPathFileName));
-    notifyListeners();
+  void playFromFile() {
+    // <-- Renamed from playFromAssets
+    // Assuming filePath is the full path to your audio file
+    String audioFilePathName = currentAudio.filePathName;
+
+    // Check if the file exists before attempting to play it
+    if (File(audioFilePathName).existsSync()) {
+      _audioPlayer.play(DeviceFileSource(audioFilePathName)); // <-- Directly using play method
+      notifyListeners();
+    } else {
+      print('Audio file does not exist at $audioFilePathName');
+    }
   }
 
   void pause() {
@@ -712,10 +724,9 @@ class AudioPlayerVM extends ChangeNotifier {
 }
 
 class AudioPlayerView extends StatefulWidget {
-  final String audioPathFileName;
   final Audio audio;
 
-  AudioPlayerView({Key? key, required this.audioPathFileName})
+  AudioPlayerView({Key? key,})
       : audio = _createAudio(),
         super(key: key);
 
@@ -760,7 +771,6 @@ class _AudioPlayerViewState extends State<AudioPlayerView> {
     return ChangeNotifierProvider(
       create: (_) => AudioPlayerVM(
         currentAudio: widget.audio,
-        audioPathFileName: widget.audioPathFileName,
       ),
       child: Scaffold(
         appBar: AppBar(
@@ -846,7 +856,7 @@ class _AudioPlayerViewState extends State<AudioPlayerView> {
               iconSize: _audioIconSizeLarge,
               onPressed: viewModel.isPlaying
                   ? viewModel.pause
-                  : viewModel.playFromAssets,
+                  : viewModel.playFromFile,
               icon: Icon(viewModel.isPlaying ? Icons.pause : Icons.play_arrow),
             ),
             IconButton(
