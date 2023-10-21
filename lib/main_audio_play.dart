@@ -7,8 +7,11 @@ import 'package:audioplayers/audioplayers.dart';
 
 const bool kAudioFileNamePrefixIncludeTime = true;
 const double kAudioDefaultSpeed = 1.0;
+
 enum AudioSortCriterion { audioDownloadDateTime, validVideoTitle }
+
 enum PlaylistType { youtube, local }
+
 enum PlaylistQuality { music, voice }
 
 void main() {
@@ -639,6 +642,7 @@ class Audio {
 
 class AudioPlayerVM extends ChangeNotifier {
   final String audioPathFileName;
+  Audio currentAudio;
   late AudioPlayer _audioPlayer;
   Duration _duration = const Duration();
   Duration _position = const Duration();
@@ -647,7 +651,10 @@ class AudioPlayerVM extends ChangeNotifier {
   Duration get duration => _duration;
   Duration get remaining => _duration - _position;
 
-  AudioPlayerVM({required this.audioPathFileName}) {
+  AudioPlayerVM({
+    required this.currentAudio,
+    required this.audioPathFileName,
+  }) {
     _audioPlayer = AudioPlayer();
     _initializePlayer();
   }
@@ -706,12 +713,10 @@ class AudioPlayerVM extends ChangeNotifier {
 
 class AudioPlayerView extends StatefulWidget {
   final String audioPathFileName;
-  final Playlist playlist;
   final Audio audio;
 
   AudioPlayerView({Key? key, required this.audioPathFileName})
-      : playlist = _createPlaylist(),
-        audio = _createAudio(),
+      : audio = _createAudio(),
         super(key: key);
 
   static Playlist _createPlaylist() {
@@ -720,7 +725,8 @@ class AudioPlayerView extends StatefulWidget {
       playlistType: PlaylistType.local,
       playlistQuality: PlaylistQuality.voice,
     );
-    pl.downloadPath = 'audio';
+    pl.downloadPath =
+        "C:\\Users\\Jean-Pierre\\Downloads\\Audio\\audio_learn_short";
     return pl;
   }
 
@@ -735,7 +741,8 @@ class AudioPlayerView extends StatefulWidget {
       videoUploadDate: DateTime.now(),
       audioDuration: Duration.zero,
     );
-    au.audioFileName = 'myAudio.mp3';
+    au.audioFileName =
+        "231004-214307-15 minutes de Janco pour retourner un climatosceptique 23-10-01.mp3";
     return au;
   }
 
@@ -751,8 +758,10 @@ class _AudioPlayerViewState extends State<AudioPlayerView> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) =>
-          AudioPlayerVM(audioPathFileName: widget.audioPathFileName),
+      create: (_) => AudioPlayerVM(
+        currentAudio: widget.audio,
+        audioPathFileName: widget.audioPathFileName,
+      ),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Audio Player'),
