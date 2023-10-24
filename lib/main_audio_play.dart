@@ -450,6 +450,8 @@ class Audio {
 
   bool isMusicQuality = false;
 
+  int audioPositionSeconds = 0;
+
   Audio({
     required this.enclosingPlaylist,
     required this.originalVideoTitle,
@@ -654,10 +656,21 @@ class AudioGlobalPlayerVM extends ChangeNotifier {
     required this.currentAudio,
   }) {
     _audioPlayer = AudioPlayer();
+    _duration = currentAudio.audioDuration ?? const Duration();
     _initializePlayer();
   }
 
-  void _initializePlayer() async {
+  Future<void> setCurrentAudio(Audio audio) async {
+    currentAudio = audio;
+    _duration = currentAudio.audioDuration ?? const Duration();
+    _position = Duration(seconds: currentAudio.audioPositionSeconds);
+    await _initializePlayer();
+  }
+
+  Future<void> _initializePlayer() async {
+    _audioPlayer.dispose();
+    _audioPlayer = AudioPlayer();
+
     // Assuming filePath is the full path to your audio file
     String audioFilePathName = currentAudio.filePathName;
 
@@ -670,6 +683,8 @@ class AudioGlobalPlayerVM extends ChangeNotifier {
 
       _audioPlayer.onPositionChanged.listen((position) {
         _position = position;
+        updateAndSaveCurrentAudio();
+
         notifyListeners();
       });
     } else {
@@ -679,6 +694,17 @@ class AudioGlobalPlayerVM extends ChangeNotifier {
 
   bool get isPlaying => _audioPlayer.state == PlayerState.playing;
 
+  void updateAndSaveCurrentAudio() {
+    currentAudio.audioPositionSeconds = _position.inSeconds;
+    print(
+        'currentAudio.audioPositionSeconds: ${currentAudio.audioPositionSeconds}');
+    Playlist? currentAudioPlaylist = currentAudio.enclosingPlaylist;
+    // JsonDataService.saveToFile(
+    //   model: currentAudioPlaylist!,
+    //   path: currentAudioPlaylist.getPlaylistDownloadFilePathName(),
+    // );
+  }
+
   void playFromFile() {
     // <-- Renamed from playFromAssets
     // Assuming filePath is the full path to your audio file
@@ -686,7 +712,8 @@ class AudioGlobalPlayerVM extends ChangeNotifier {
 
     // Check if the file exists before attempting to play it
     if (File(audioFilePathName).existsSync()) {
-      _audioPlayer.play(DeviceFileSource(audioFilePathName)); // <-- Directly using play method
+      _audioPlayer.play(DeviceFileSource(
+          audioFilePathName)); // <-- Directly using play method
       notifyListeners();
     } else {
       print('Audio file does not exist at $audioFilePathName');
@@ -698,22 +725,26 @@ class AudioGlobalPlayerVM extends ChangeNotifier {
     notifyListeners();
   }
 
-  void seekBy(Duration duration) {
-    _audioPlayer.seek(_position + duration);
+  Future<void> seekBy(Duration duration) async {
+    _position += duration;
+    await _audioPlayer.seek(_position);
     notifyListeners();
   }
 
-  void seekTo(Duration position) {
-    _audioPlayer.seek(position);
+  Future<void> seekTo(Duration position) async {
+    await _audioPlayer.seek(position);
+    _position = position; // Immediately update the position
     notifyListeners();
   }
 
   void skipToStart() {
-    _audioPlayer.seek(Duration.zero);
+    _position = Duration.zero;
+    _audioPlayer.seek(_position);
     notifyListeners();
   }
 
   void skipToEnd() {
+    _position = _duration;
     _audioPlayer.seek(_duration);
     notifyListeners();
   }
@@ -726,10 +757,11 @@ class AudioGlobalPlayerVM extends ChangeNotifier {
 }
 
 class AudioPlayerView extends StatefulWidget {
-  final Audio audio;
+  final List<Audio> audioLst;
 
-  AudioPlayerView({Key? key,})
-      : audio = _createAudio(),
+  AudioPlayerView({
+    Key? key,
+  })  : audioLst = _createTwoAudiosLst(),
         super(key: key);
 
   static Playlist _createPlaylist() {
@@ -743,22 +775,39 @@ class AudioPlayerView extends StatefulWidget {
     return pl;
   }
 
-  static Audio _createAudio() {
-    final au = Audio(
-      enclosingPlaylist: _createPlaylist(),
-      originalVideoTitle: 'originalVideoTitle',
+  static List<Audio> _createTwoAudiosLst() {
+    Playlist playlist = _createPlaylist();
+
+    final audioOne = Audio(
+      enclosingPlaylist: playlist,
+      originalVideoTitle:
+          '15 minutes de Janco pour retourner un climatosceptique',
       compactVideoDescription: 'compactVideoDescription',
       videoUrl: 'videoUrl',
       audioDownloadDateTime: DateTime.now(),
       audioDownloadDuration: Duration.zero,
       videoUploadDate: DateTime.now(),
-      audioDuration: Duration.zero,
+      audioDuration: const Duration(seconds: 873),
     );
 
-    au.audioFileName =
+    audioOne.audioFileName =
         "231004-214307-15 minutes de Janco pour retourner un climatosceptique 23-10-01.mp3";
-    
-    return au;
+
+    final audioTwo = Audio(
+      enclosingPlaylist: playlist,
+      originalVideoTitle: 'Avoir accès à DALLE 3 gratuitement et en un click',
+      compactVideoDescription: 'compactVideoDescription',
+      videoUrl: 'videoUrl',
+      audioDownloadDateTime: DateTime.now(),
+      audioDownloadDuration: Duration.zero,
+      videoUploadDate: DateTime.now(),
+      audioDuration: const Duration(seconds: 618),
+    );
+
+    audioTwo.audioFileName =
+        "231004-214313-Avoir accès à DALLE 3 gratuitement et en un click 23-09-30.mp3";
+
+    return [audioOne, audioTwo];
   }
 
   @override
@@ -766,15 +815,17 @@ class AudioPlayerView extends StatefulWidget {
 }
 
 class _AudioPlayerViewState extends State<AudioPlayerView> {
-  final double _audioIconSizeSmaller = 50;
   final double _audioIconSizeMedium = 60;
   final double _audioIconSizeLarge = 90;
+
+  final TextEditingController _audioPositionController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => AudioGlobalPlayerVM(
-        currentAudio: widget.audio,
+        currentAudio: widget.audioLst[0],
       ),
       child: Scaffold(
         appBar: AppBar(
@@ -784,6 +835,59 @@ class _AudioPlayerViewState extends State<AudioPlayerView> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            const SizedBox(height: 10.0),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                TextField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Initial audio position in seconds',
+                  ),
+                  controller: _audioPositionController,
+                ),
+                const SizedBox(height: 2.0),
+                Builder(builder: (BuildContext context) {
+                  // By wrapping your TextButton with a Builder, you're
+                  // ensuring that the context passed to the Provider.of
+                  // method is a direct child of the ChangeNotifierProvider,
+                  // which should resolve the ProviderNotFoundException
+                  // error.
+                  return TextButton(
+                    onPressed: () async {
+                      await Provider.of<AudioGlobalPlayerVM>(context, listen: false)
+                          .seekTo(Duration(
+                              seconds: int.parse(
+                                  _audioPositionController.text.isEmpty
+                                      ? '0'
+                                      : _audioPositionController.text)));
+                    },
+                    child: const Text('Seek to position'),
+                  );
+                }),
+                Container(
+                  height: 200,
+                  child: ListView.builder(
+                    itemCount: widget.audioLst.length,
+                    itemBuilder: (context, index) {
+                      Audio item = widget.audioLst[index];
+                      return ListTile(
+                        title: Text(item.validVideoTitle),
+                        onTap: () async {
+                          AudioGlobalPlayerVM audioGlobalPlayerVM =
+                              Provider.of<AudioGlobalPlayerVM>(context,
+                                  listen: false);
+                          await audioGlobalPlayerVM.setCurrentAudio(item);
+                          await audioGlobalPlayerVM.seekTo(
+                              Duration(seconds: item.audioPositionSeconds));
+                        },
+                      );
+                    },
+                  ),
+                )
+              ],
+            ),
             const SizedBox(height: 10.0),
             Column(
               children: [
@@ -861,7 +965,9 @@ class _AudioPlayerViewState extends State<AudioPlayerView> {
               onPressed: audioGlobalPlayerVM.isPlaying
                   ? audioGlobalPlayerVM.pause
                   : audioGlobalPlayerVM.playFromFile,
-              icon: Icon(audioGlobalPlayerVM.isPlaying ? Icons.pause : Icons.play_arrow),
+              icon: Icon(audioGlobalPlayerVM.isPlaying
+                  ? Icons.pause
+                  : Icons.play_arrow),
             ),
             IconButton(
               iconSize: _audioIconSizeMedium,
@@ -893,32 +999,32 @@ class _AudioPlayerViewState extends State<AudioPlayerView> {
                         Expanded(
                           child: IconButton(
                             iconSize: _audioIconSizeMedium,
-                            onPressed: () =>
-                                audioGlobalPlayerVM.seekBy(const Duration(minutes: -1)),
+                            onPressed: () => audioGlobalPlayerVM
+                                .seekBy(const Duration(minutes: -1)),
                             icon: const Icon(Icons.fast_rewind),
                           ),
                         ),
                         Expanded(
                           child: IconButton(
                             iconSize: _audioIconSizeMedium,
-                            onPressed: () =>
-                                audioGlobalPlayerVM.seekBy(const Duration(seconds: -10)),
+                            onPressed: () => audioGlobalPlayerVM
+                                .seekBy(const Duration(seconds: -10)),
                             icon: const Icon(Icons.fast_rewind),
                           ),
                         ),
                         Expanded(
                           child: IconButton(
                             iconSize: _audioIconSizeMedium,
-                            onPressed: () =>
-                                audioGlobalPlayerVM.seekBy(const Duration(seconds: 10)),
+                            onPressed: () => audioGlobalPlayerVM
+                                .seekBy(const Duration(seconds: 10)),
                             icon: const Icon(Icons.fast_forward),
                           ),
                         ),
                         Expanded(
                           child: IconButton(
                             iconSize: _audioIconSizeMedium,
-                            onPressed: () =>
-                                audioGlobalPlayerVM.seekBy(const Duration(minutes: 1)),
+                            onPressed: () => audioGlobalPlayerVM
+                                .seekBy(const Duration(minutes: 1)),
                             icon: const Icon(Icons.fast_forward),
                           ),
                         ),
