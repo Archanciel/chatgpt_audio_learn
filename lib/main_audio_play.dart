@@ -841,7 +841,7 @@ class _AudioPlayerViewState extends State<AudioPlayerView> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 TextField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Initial audio position in seconds',
                   ),
@@ -867,7 +867,7 @@ class _AudioPlayerViewState extends State<AudioPlayerView> {
                     child: const Text('Seek to position'),
                   );
                 }),
-                Container(
+                SizedBox(
                   height: 200,
                   child: ListView.builder(
                     itemCount: widget.audioLst.length,
