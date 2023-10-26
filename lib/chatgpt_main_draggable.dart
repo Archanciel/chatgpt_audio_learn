@@ -275,14 +275,14 @@ class AppBarTitleForPlaylistView extends StatelessWidget {
   Widget build(BuildContext context) {
     // converting audio_learn corresponding code to this does not
     // solve anything
-    return Row(
+    return const Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Flexible(
           child: Text(
             'Title',
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 17),
+            style: TextStyle(fontSize: 17),
           ),
         ),
         // InkWell(
@@ -305,7 +305,7 @@ class StringListView extends StatefulWidget {
 
   final Function(int) onPageChange;
 
-  const StringListView({required this.onPageChange});
+  const StringListView({super.key, required this.onPageChange});
 
   @override
   State<StringListView> createState() => _StringListViewState();
