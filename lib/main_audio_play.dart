@@ -703,8 +703,13 @@ class AudioGlobalPlayerVM extends ChangeNotifier {
       });
 
       _audioPlayer.onPositionChanged.listen((position) {
-        _position = position;
-        updateAndSaveCurrentAudio();
+        if (isPlaying) {
+          // this test avoids that when selecting another audio
+          // the selected audio position is set to 0 since the
+          // passed position value is 0 !
+          _position = position;
+          updateAndSaveCurrentAudio();
+        }
 
         notifyListeners();
       });
