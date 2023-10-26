@@ -753,32 +753,53 @@ class AudioGlobalPlayerVM extends ChangeNotifier {
 
   Future<void> seekBy(Duration duration) async {
     _position += duration;
+
+    // necessary so that the audio position is stored on the
+    // audio
+    currentAudio.audioPositionSeconds = _position.inSeconds;
+
     await _audioPlayer.seek(_position);
+
     notifyListeners();
   }
 
   Future<void> seekTo(Duration position) async {
-    await _audioPlayer.seek(position);
     _position = position; // Immediately update the position
+    // necessary so that the audio position is stored on the
+    // audio
+    currentAudio.audioPositionSeconds = _position.inSeconds;
+
+    await _audioPlayer.seek(position);
+
     notifyListeners();
   }
 
   Future<void> skipToStart() async {
     _position = Duration.zero;
+    // necessary so that the audio position is stored on the
+    // audio
+    currentAudio.audioPositionSeconds = _position.inSeconds;
+
     await _audioPlayer.seek(_position);
+
     notifyListeners();
   }
 
   Future<void> skipToEnd() async {
     _position = _duration;
+    // necessary so that the audio position is stored on the
+    // audio
+    currentAudio.audioPositionSeconds = _position.inSeconds;
+
     await _audioPlayer.seek(_duration);
+
     notifyListeners();
   }
 
   @override
   void dispose() {
     _audioPlayer.dispose();
-    print('********** _audioPlayer disposed');
+
     super.dispose();
   }
 }
