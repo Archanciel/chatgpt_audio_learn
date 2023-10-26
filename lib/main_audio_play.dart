@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
+import 'package:window_manager/window_manager.dart';
 
 import 'package:audioplayers/audioplayers.dart';
 
@@ -14,7 +15,23 @@ enum PlaylistType { youtube, local }
 
 enum PlaylistQuality { music, voice }
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await windowManager.ensureInitialized();
+
+  WindowOptions windowOptions = const WindowOptions(
+    size: Size(500, 715),
+    // center: true,
+    backgroundColor: Colors.transparent,
+    skipTaskbar: false,
+    titleBarStyle: TitleBarStyle.hidden,
+    windowButtonVisibility: false,
+  );
+  windowManager.waitUntilReadyToShow(windowOptions, () async {
+    await windowManager.show();
+    await windowManager.focus();
+  });
+
   runApp(MaterialApp(
     home: AudioPlayerView(),
   ));
@@ -450,7 +467,10 @@ class Audio {
 
   bool isMusicQuality = false;
 
-  int audioPositionSeconds = 0;
+  int audioPositionSeconds;
+  void setAudioPositionSeconds(int seconds) {
+    audioPositionSeconds = seconds;
+  }
 
   Audio({
     required this.enclosingPlaylist,
@@ -463,7 +483,8 @@ class Audio {
     this.audioDuration,
   })  : validVideoTitle = createValidVideoTitle(originalVideoTitle),
         audioFileName =
-            '${buildDownloadDatePrefix(audioDownloadDateTime)}${createValidVideoTitle(originalVideoTitle)} ${buildUploadDateSuffix(videoUploadDate)}.mp3';
+            '${buildDownloadDatePrefix(audioDownloadDateTime)}${createValidVideoTitle(originalVideoTitle)} ${buildUploadDateSuffix(videoUploadDate)}.mp3',
+        audioPositionSeconds = 0;
 
   /// This constructor requires all instance variables. It is used
   /// by the fromJson factory constructor.
@@ -483,7 +504,7 @@ class Audio {
     required this.isMusicQuality,
     required this.audioFileName,
     required this.audioFileSize,
-  });
+  }) : audioPositionSeconds = 0;
 
   /// Returns a copy of the current Audio instance
   Audio copy() {
@@ -695,10 +716,10 @@ class AudioGlobalPlayerVM extends ChangeNotifier {
   bool get isPlaying => _audioPlayer.state == PlayerState.playing;
 
   void updateAndSaveCurrentAudio() {
-    currentAudio.audioPositionSeconds = _position.inSeconds;
+    currentAudio.setAudioPositionSeconds(_position.inSeconds);
     print(
-        'currentAudio.audioPositionSeconds: ${currentAudio.audioPositionSeconds}');
-    Playlist? currentAudioPlaylist = currentAudio.enclosingPlaylist;
+        'updateAndSaveCurrentAudio() currentAudio.audioPositionSeconds: ${currentAudio.audioPositionSeconds}');
+    // Playlist? currentAudioPlaylist = currentAudio.enclosingPlaylist;
     // JsonDataService.saveToFile(
     //   model: currentAudioPlaylist!,
     //   path: currentAudioPlaylist.getPlaylistDownloadFilePathName(),
@@ -752,6 +773,7 @@ class AudioGlobalPlayerVM extends ChangeNotifier {
   @override
   void dispose() {
     _audioPlayer.dispose();
+    print('********** _audioPlayer disposed');
     super.dispose();
   }
 }
@@ -872,16 +894,16 @@ class _AudioPlayerViewState extends State<AudioPlayerView> {
                   child: ListView.builder(
                     itemCount: widget.audioLst.length,
                     itemBuilder: (context, index) {
-                      Audio item = widget.audioLst[index];
+                      Audio audioItem = widget.audioLst[index];
                       return ListTile(
-                        title: Text(item.validVideoTitle),
+                        title: Text(audioItem.validVideoTitle),
                         onTap: () async {
                           AudioGlobalPlayerVM audioGlobalPlayerVM =
                               Provider.of<AudioGlobalPlayerVM>(context,
                                   listen: false);
-                          audioGlobalPlayerVM.setCurrentAudio(item);
-                          await audioGlobalPlayerVM.seekTo(
-                              Duration(seconds: item.audioPositionSeconds));
+                          audioGlobalPlayerVM.setCurrentAudio(audioItem);
+                          await audioGlobalPlayerVM.seekTo(Duration(
+                              seconds: audioItem.audioPositionSeconds));
                         },
                       );
                     },
@@ -912,7 +934,7 @@ class _AudioPlayerViewState extends State<AudioPlayerView> {
           value: audioGlobalPlayerVM.position.inSeconds.toDouble(),
           min: 0.0,
           max: audioGlobalPlayerVM.duration.inSeconds.toDouble(),
-          onChanged: (double value)async {
+          onChanged: (double value) async {
             await audioGlobalPlayerVM.seekTo(Duration(seconds: value.toInt()));
           },
         );
