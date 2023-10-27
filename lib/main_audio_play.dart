@@ -773,7 +773,6 @@ class AudioGlobalPlayerVM extends ChangeNotifier {
   /// Method called when the user clicks on the '<<' or '>>' buttons
   Future<void> changeAudioPlayPosition(
       Duration positiveOrNegativeDuration) async {
-
     Duration currentAudioDuration =
         _currentAudio!.audioDuration ?? Duration.zero;
     Duration newAudioPosition =
@@ -975,6 +974,7 @@ class _AudioPlayerViewState extends State<AudioPlayerView> {
                           await audioGlobalPlayerVM.goToAudioPlayPosition(
                               Duration(
                                   seconds: audioItem.audioPositionSeconds));
+                          await audioGlobalPlayerVM.playFromCurrentAudioFile();
                         },
                       );
                     },
