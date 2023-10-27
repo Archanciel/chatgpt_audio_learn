@@ -54,6 +54,10 @@ class Playlist {
   // device.
   List<Audio> playableAudioLst = [];
 
+  // If a playable audio is or has been playing, this variable
+  // contains the index of the audio in the playableAudioLst.
+  int currentPlayableAudioIndex = -1;
+
   Playlist({
     this.url = '',
     this.id = '',
@@ -131,6 +135,11 @@ class Playlist {
           playableAudioLst.map((audio) => audio.toJson()).toList(),
       'isSelected': isSelected,
     };
+  }
+
+  void setCurrentPlayableAudio(Audio audio) {
+    currentPlayableAudioIndex = playableAudioLst
+        .indexWhere((item) => item.audioFileName == audio.audioFileName);
   }
 
   /// Adds the downloaded audio to the downloadedAudioLst and to
@@ -463,11 +472,13 @@ class Audio {
   // first time.
   AudioPlayer? audioPlayer;
 
-  double playSpeed = kAudioDefaultSpeed;
+  double audioPlaySpeed = kAudioDefaultSpeed;
 
   bool isMusicQuality = false;
 
+  bool isPlayingOnGlobalAudioPlayerVM = false;
   int audioPositionSeconds;
+
   void setAudioPositionSeconds(int seconds) {
     audioPositionSeconds = seconds;
   }
@@ -664,14 +675,17 @@ class Audio {
 /// Used in the AudioPlayerView screen to manage the audio playing
 /// position modifications.
 class AudioGlobalPlayerVM extends ChangeNotifier {
-  Audio? currentAudio;
+  Audio? _currentAudio;
   late AudioPlayer _audioPlayer;
-  Duration _duration = const Duration();
-  Duration _position = const Duration();
+  Duration _currentAudioTotalDuration = const Duration();
+  Duration _currentAudioPosition = const Duration();
 
-  Duration get position => _position;
-  Duration get duration => _duration;
-  Duration get remaining => _duration - _position;
+  Duration get currentAudioPosition => _currentAudioPosition;
+  Duration get currentAudioTotalDuration => _currentAudioTotalDuration;
+  Duration get currentAudioRemainingDuration =>
+      _currentAudioTotalDuration - _currentAudioPosition;
+
+  bool get isPlaying => _audioPlayer.state == PlayerState.playing;
 
   AudioGlobalPlayerVM() {
     // the next line is necessary since _audioPlayer.dispose() is
@@ -681,10 +695,25 @@ class AudioGlobalPlayerVM extends ChangeNotifier {
     _initializePlayer();
   }
 
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+
+    super.dispose();
+  }
+
   void setCurrentAudio(Audio audio) {
-    currentAudio = audio;
-    _duration = audio.audioDuration ?? const Duration();
-    _position = Duration(seconds: audio.audioPositionSeconds);
+    _currentAudio = audio;
+
+    // without setting _currentAudioTotalDuration to the
+    // the next instruction causes an error: Failed assertion: line 194
+    // pos 15: 'value >= min && value <= max': Value 3.0 is not between
+    // minimum 0.0 and maximum 0.0
+    _currentAudioTotalDuration = audio.audioDuration ?? const Duration();
+
+    _currentAudioPosition = Duration(seconds: audio.audioPositionSeconds);
+    audio.enclosingPlaylist!.setCurrentPlayableAudio(audio);
+
     _initializePlayer();
   }
 
@@ -693,12 +722,12 @@ class AudioGlobalPlayerVM extends ChangeNotifier {
     _audioPlayer = AudioPlayer();
 
     // Assuming filePath is the full path to your audio file
-    String audioFilePathName = currentAudio?.filePathName ?? '';
+    String audioFilePathName = _currentAudio?.filePathName ?? '';
 
     // Check if the file exists before attempting to play it
     if (audioFilePathName.isNotEmpty && File(audioFilePathName).existsSync()) {
       _audioPlayer.onDurationChanged.listen((duration) {
-        _duration = duration;
+        _currentAudioTotalDuration = duration;
         notifyListeners();
       });
 
@@ -707,7 +736,7 @@ class AudioGlobalPlayerVM extends ChangeNotifier {
           // this test avoids that when selecting another audio
           // the selected audio position is set to 0 since the
           // passed position value is 0 !
-          _position = position;
+          _currentAudioPosition = position;
           updateAndSaveCurrentAudio();
         }
 
@@ -716,64 +745,55 @@ class AudioGlobalPlayerVM extends ChangeNotifier {
     }
   }
 
-  bool get isPlaying => _audioPlayer.state == PlayerState.playing;
-
-  void updateAndSaveCurrentAudio() {
-    currentAudio!.setAudioPositionSeconds(_position.inSeconds);
-    print(
-        'updateAndSaveCurrentAudio() currentAudio!.audioPositionSeconds: ${currentAudio!.audioPositionSeconds}');
-    // Playlist? currentAudioPlaylist = currentAudio!.enclosingPlaylist;
-    // JsonDataService.saveToFile(
-    //   model: currentAudioPlaylist!,
-    //   path: currentAudioPlaylist.getPlaylistDownloadFilePathName(),
-    // );
-  }
-
   Future<void> playFromCurrentAudioFile() async {
-    // if (currentAudio == null) {
-    // the case if the user has selected the AudioPlayerView screen
-    // without yet having choosed an audio file to listen. Later, you
-    // will store the last played audio file in the settings.
-    //   return;
-    // }
+    if (_currentAudio == null) {
+      // the case if the user has selected the AudioPlayerView screen
+      // without yet having choosed an audio file to listen. Later, you
+      // will store the last played audio file in the settings.
+      return;
+    }
 
-    String audioFilePathName = currentAudio!.filePathName;
+    String audioFilePathName = _currentAudio!.filePathName;
 
     // Check if the file exists before attempting to play it
     if (File(audioFilePathName).existsSync()) {
       await _audioPlayer.play(DeviceFileSource(
           audioFilePathName)); // <-- Directly using play method
+      await _audioPlayer.setPlaybackRate(_currentAudio!.audioPlaySpeed);
+      _currentAudio!.isPlayingOnGlobalAudioPlayerVM = true;
+
       notifyListeners();
-    } else {
-      print('Audio file does not exist at $audioFilePathName');
     }
   }
 
   Future<void> pause() async {
     await _audioPlayer.pause();
+    _currentAudio!.isPlayingOnGlobalAudioPlayerVM = false;
+
     notifyListeners();
   }
 
   /// Method called when the user clicks on the '<<' or '>>' buttons
   Future<void> changeAudioPlayPosition(
       Duration positiveOrNegativeDuration) async {
-    _position += positiveOrNegativeDuration;
+    _currentAudioPosition += positiveOrNegativeDuration;
 
     // necessary so that the audio position is stored on the
     // audio
-    currentAudio!.audioPositionSeconds = _position.inSeconds;
+    _currentAudio!.audioPositionSeconds = _currentAudioPosition.inSeconds;
 
-    await _audioPlayer.seek(_position);
+    await _audioPlayer.seek(_currentAudioPosition);
 
     notifyListeners();
   }
 
   /// Method called when the user clicks on the audio slider
   Future<void> goToAudioPlayPosition(Duration position) async {
-    _position = position; // Immediately update the position
+    _currentAudioPosition = position; // Immediately update the position
+
     // necessary so that the audio position is stored on the
     // audio
-    currentAudio!.audioPositionSeconds = _position.inSeconds;
+    _currentAudio!.audioPositionSeconds = _currentAudioPosition.inSeconds;
 
     await _audioPlayer.seek(position);
 
@@ -781,32 +801,37 @@ class AudioGlobalPlayerVM extends ChangeNotifier {
   }
 
   Future<void> skipToStart() async {
-    _position = Duration.zero;
+    _currentAudioPosition = Duration.zero;
     // necessary so that the audio position is stored on the
     // audio
-    currentAudio!.audioPositionSeconds = _position.inSeconds;
+    _currentAudio!.audioPositionSeconds = _currentAudioPosition.inSeconds;
 
-    await _audioPlayer.seek(_position);
+    await _audioPlayer.seek(_currentAudioPosition);
 
     notifyListeners();
   }
 
   Future<void> skipToEnd() async {
-    _position = _duration;
+    _currentAudioPosition = _currentAudioTotalDuration;
     // necessary so that the audio position is stored on the
     // audio
-    currentAudio!.audioPositionSeconds = _position.inSeconds;
+    _currentAudio!.audioPositionSeconds = _currentAudioPosition.inSeconds;
+    _currentAudio!.isPlayingOnGlobalAudioPlayerVM = false;
 
-    await _audioPlayer.seek(_duration);
+    await _audioPlayer.seek(_currentAudioTotalDuration);
 
     notifyListeners();
   }
 
-  @override
-  void dispose() {
-    _audioPlayer.dispose();
-
-    super.dispose();
+  void updateAndSaveCurrentAudio() {
+    _currentAudio!.setAudioPositionSeconds(_currentAudioPosition.inSeconds);
+    print(
+        'updateAndSaveCurrentAudio() currentAudio!.audioPositionSeconds: ${_currentAudio!.audioPositionSeconds}');
+    // Playlist? currentAudioPlaylist = currentAudio!.enclosingPlaylist;
+    // JsonDataService.saveToFile(
+    //   model: currentAudioPlaylist!,
+    //   path: currentAudioPlaylist.getPlaylistDownloadFilePathName(),
+    // );
   }
 }
 
@@ -962,9 +987,10 @@ class _AudioPlayerViewState extends State<AudioPlayerView> {
     return Consumer<AudioGlobalPlayerVM>(
       builder: (context, audioGlobalPlayerVM, child) {
         return Slider(
-          value: audioGlobalPlayerVM.position.inSeconds.toDouble(),
+          value: audioGlobalPlayerVM.currentAudioPosition.inSeconds.toDouble(),
           min: 0.0,
-          max: audioGlobalPlayerVM.duration.inSeconds.toDouble(),
+          max: audioGlobalPlayerVM.currentAudioTotalDuration.inSeconds
+              .toDouble(),
           onChanged: (double value) async {
             await audioGlobalPlayerVM
                 .goToAudioPlayPosition(Duration(seconds: value.toInt()));
@@ -983,11 +1009,12 @@ class _AudioPlayerViewState extends State<AudioPlayerView> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                _formatDuration(audioGlobalPlayerVM.position),
+                _formatDuration(audioGlobalPlayerVM.currentAudioPosition),
                 style: const TextStyle(fontSize: 20.0),
               ),
               Text(
-                _formatDuration(audioGlobalPlayerVM.remaining),
+                _formatDuration(
+                    audioGlobalPlayerVM.currentAudioRemainingDuration),
                 style: const TextStyle(fontSize: 20.0),
               ),
             ],
