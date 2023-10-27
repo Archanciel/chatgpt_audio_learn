@@ -479,10 +479,6 @@ class Audio {
   bool isPlayingOnGlobalAudioPlayerVM = false;
   int audioPositionSeconds;
 
-  void setAudioPositionSeconds(int seconds) {
-    audioPositionSeconds = seconds;
-  }
-
   Audio({
     required this.enclosingPlaylist,
     required this.originalVideoTitle,
@@ -776,7 +772,25 @@ class AudioGlobalPlayerVM extends ChangeNotifier {
   /// Method called when the user clicks on the '<<' or '>>' buttons
   Future<void> changeAudioPlayPosition(
       Duration positiveOrNegativeDuration) async {
-    _currentAudioPosition += positiveOrNegativeDuration;
+
+    Duration currentAudioDuration =
+        _currentAudio!.audioDuration ?? Duration.zero;
+    Duration newAudioPosition =
+        _currentAudioPosition + positiveOrNegativeDuration;
+
+    // Check if the new audio position is within the audio duration.
+    // If not, set the audio position to the beginning or the end
+    // of the audio. This is necessary to avoid a slider error.
+    //
+    // This fixes the bug when clicking on >> after having clicked
+    // on >| or clicking on << after having clicked on |<.
+    if (newAudioPosition < Duration.zero) {
+      _currentAudioPosition = Duration.zero;
+    } else if (newAudioPosition > currentAudioDuration) {
+      _currentAudioPosition = currentAudioDuration;
+    } else {
+      _currentAudioPosition = newAudioPosition;
+    }
 
     // necessary so that the audio position is stored on the
     // audio
@@ -824,7 +838,7 @@ class AudioGlobalPlayerVM extends ChangeNotifier {
   }
 
   void updateAndSaveCurrentAudio() {
-    _currentAudio!.setAudioPositionSeconds(_currentAudioPosition.inSeconds);
+    _currentAudio!.audioPositionSeconds = _currentAudioPosition.inSeconds;
     print(
         'updateAndSaveCurrentAudio() currentAudio!.audioPositionSeconds: ${_currentAudio!.audioPositionSeconds}');
     // Playlist? currentAudioPlaylist = currentAudio!.enclosingPlaylist;
