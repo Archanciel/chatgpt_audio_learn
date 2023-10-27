@@ -731,9 +731,14 @@ class AudioGlobalPlayerVM extends ChangeNotifier {
     // );
   }
 
-  Future<void> playFromFile() async {
-    // <-- Renamed from playFromAssets
-    // Assuming filePath is the full path to your audio file
+  Future<void> playFromCurrentAudioFile() async {
+    // if (currentAudio == null) {
+      // the case if the user has selected the AudioPlayerView screen
+      // without yet having choosed an audio file to listen. Later, you
+      // will store the last played audio file in the settings.
+    //   return;
+    // }
+
     String audioFilePathName = currentAudio.filePathName;
 
     // Check if the file exists before attempting to play it
@@ -751,8 +756,9 @@ class AudioGlobalPlayerVM extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> seekBy(Duration duration) async {
-    _position += duration;
+  /// Method called when the user clicks on the '<<' or '>>' buttons
+  Future<void> changeAudioPlayPosition(Duration positiveOrNegativeDuration) async {
+    _position += positiveOrNegativeDuration;
 
     // necessary so that the audio position is stored on the
     // audio
@@ -763,7 +769,8 @@ class AudioGlobalPlayerVM extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> seekTo(Duration position) async {
+  /// Method called when the user clicks on the audio slider
+  Future<void> goToAudioPlayPosition(Duration position) async {
     _position = position; // Immediately update the position
     // necessary so that the audio position is stored on the
     // audio
@@ -906,7 +913,7 @@ class _AudioPlayerViewState extends State<AudioPlayerView> {
                     onPressed: () async {
                       await Provider.of<AudioGlobalPlayerVM>(context,
                               listen: false)
-                          .seekTo(Duration(
+                          .goToAudioPlayPosition(Duration(
                               seconds: int.parse(
                                   _audioPositionController.text.isEmpty
                                       ? '0'
@@ -928,7 +935,7 @@ class _AudioPlayerViewState extends State<AudioPlayerView> {
                               Provider.of<AudioGlobalPlayerVM>(context,
                                   listen: false);
                           audioGlobalPlayerVM.setCurrentAudio(audioItem);
-                          await audioGlobalPlayerVM.seekTo(Duration(
+                          await audioGlobalPlayerVM.goToAudioPlayPosition(Duration(
                               seconds: audioItem.audioPositionSeconds));
                         },
                       );
@@ -961,7 +968,7 @@ class _AudioPlayerViewState extends State<AudioPlayerView> {
           min: 0.0,
           max: audioGlobalPlayerVM.duration.inSeconds.toDouble(),
           onChanged: (double value) async {
-            await audioGlobalPlayerVM.seekTo(Duration(seconds: value.toInt()));
+            await audioGlobalPlayerVM.goToAudioPlayPosition(Duration(seconds: value.toInt()));
           },
         );
       },
@@ -1014,7 +1021,7 @@ class _AudioPlayerViewState extends State<AudioPlayerView> {
               onPressed: () async {
                 audioGlobalPlayerVM.isPlaying
                     ? await audioGlobalPlayerVM.pause()
-                    : await audioGlobalPlayerVM.playFromFile();
+                    : await audioGlobalPlayerVM.playFromCurrentAudioFile();
               },
               icon: Icon(audioGlobalPlayerVM.isPlaying
                   ? Icons.pause
@@ -1051,7 +1058,7 @@ class _AudioPlayerViewState extends State<AudioPlayerView> {
                           child: IconButton(
                             iconSize: _audioIconSizeMedium,
                             onPressed: () async => await audioGlobalPlayerVM
-                                .seekBy(const Duration(minutes: -1)),
+                                .changeAudioPlayPosition(const Duration(minutes: -1)),
                             icon: const Icon(Icons.fast_rewind),
                           ),
                         ),
@@ -1059,7 +1066,7 @@ class _AudioPlayerViewState extends State<AudioPlayerView> {
                           child: IconButton(
                             iconSize: _audioIconSizeMedium,
                             onPressed: () async => await audioGlobalPlayerVM
-                                .seekBy(const Duration(seconds: -10)),
+                                .changeAudioPlayPosition(const Duration(seconds: -10)),
                             icon: const Icon(Icons.fast_rewind),
                           ),
                         ),
@@ -1067,7 +1074,7 @@ class _AudioPlayerViewState extends State<AudioPlayerView> {
                           child: IconButton(
                             iconSize: _audioIconSizeMedium,
                             onPressed: () async => await audioGlobalPlayerVM
-                                .seekBy(const Duration(seconds: 10)),
+                                .changeAudioPlayPosition(const Duration(seconds: 10)),
                             icon: const Icon(Icons.fast_forward),
                           ),
                         ),
@@ -1075,7 +1082,7 @@ class _AudioPlayerViewState extends State<AudioPlayerView> {
                           child: IconButton(
                             iconSize: _audioIconSizeMedium,
                             onPressed: () async => await audioGlobalPlayerVM
-                                .seekBy(const Duration(minutes: 1)),
+                                .changeAudioPlayPosition(const Duration(minutes: 1)),
                             icon: const Icon(Icons.fast_forward),
                           ),
                         ),
