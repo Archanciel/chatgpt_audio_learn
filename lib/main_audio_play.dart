@@ -787,7 +787,8 @@ class AudioGlobalPlayerVM extends ChangeNotifier {
     if (newAudioPosition < Duration.zero) {
       _currentAudioPosition = Duration.zero;
     } else if (newAudioPosition > currentAudioDuration) {
-      _currentAudioPosition = currentAudioDuration;
+      // subtracting 1 second is necessary to avoid a slider error
+      _currentAudioPosition = currentAudioDuration - const Duration(seconds: 1);
     } else {
       _currentAudioPosition = newAudioPosition;
     }
