@@ -9,16 +9,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: ElevatedButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => MyDialog(),
-              );
-            },
-            child: Text('Show Dialog'),
+      home: Builder(
+        builder: (context) => Scaffold(
+          body: Center(
+            child: ElevatedButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => MyDialog(),
+                ).then((value) {
+                  print(value);
+                });
+              },
+              child: Text('Show Dialog'),
+            ),
           ),
         ),
       ),
@@ -33,7 +37,10 @@ class MyDialog extends StatelessWidget {
       child: RawKeyboardListener(
         focusNode: FocusNode(),
         onKey: (event) {
-          if (event is RawKeyEvent && event.physicalKey == PhysicalKeyboardKey.enter) {
+          print('handling event');
+
+          if (event is RawKeyEvent &&
+              event.physicalKey == PhysicalKeyboardKey.enter) {
             Navigator.pop(context, 'Default Action');
           }
         },
