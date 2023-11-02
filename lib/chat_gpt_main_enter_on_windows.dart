@@ -30,18 +30,41 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyDialog extends StatelessWidget {
+class MyDialog extends StatefulWidget {
+  @override
+  _MyDialogState createState() => _MyDialogState();
+}
+
+class _MyDialogState extends State<MyDialog> {
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    // Request focus when the widget is initialized
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNode.requestFocus();
+    });
+  }
+
+  @override
+  void dispose() {
+    // Dispose the focus node when the widget is disposed
+    _focusNode.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
       child: RawKeyboardListener(
-        focusNode: FocusNode(),
+        focusNode: _focusNode,
+        autofocus: true,
         onKey: (event) {
           print('handling event');
-
           if (event is RawKeyEvent &&
               event.physicalKey == PhysicalKeyboardKey.enter) {
-            Navigator.pop(context, 'Default Action');
+            Navigator.pop(context, 'Default Action from clicking on Enter');
           }
         },
         child: Column(
