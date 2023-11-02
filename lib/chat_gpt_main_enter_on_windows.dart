@@ -62,8 +62,7 @@ class _MyDialogState extends State<MyDialog> {
         autofocus: true,
         onKey: (event) {
           print('handling event');
-          if (event is RawKeyEvent &&
-              event.physicalKey == PhysicalKeyboardKey.enter) {
+          if (event.physicalKey == PhysicalKeyboardKey.enter) {
             Navigator.pop(context, 'Default Action from clicking on Enter');
           }
         },
