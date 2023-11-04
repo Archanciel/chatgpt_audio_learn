@@ -28,6 +28,7 @@ dependencies:
   workmanager: ^0.5.1
   curved_navigation_bar: ^1.0.3
   window_manager: ^0.3.7
+  scrollable_positioned_list: ^0.3.8
 
 dev_dependencies:
   flutter_test:
