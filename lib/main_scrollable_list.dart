@@ -14,7 +14,7 @@ const scrollDuration = Duration(seconds: 2);
 const randomMax = 1 << 32;
 
 void main() {
-  runApp(ScrollablePositionedListExample());
+  runApp(const ScrollablePositionedListExample());
 }
 
 // The root widget for the example app.
@@ -119,7 +119,7 @@ class _ScrollablePositionedListPageState
           SizedBox(
             width: 200,
             child: SliderTheme(
-              data: SliderThemeData(
+              data: const SliderThemeData(
                 showValueIndicator: ShowValueIndicator.always,
               ),
               child: Slider(
@@ -234,29 +234,29 @@ class _ScrollablePositionedListPageState
   Widget scrollItemButton(int value) => TextButton(
         key: ValueKey<String>('Scroll$value'),
         onPressed: () => scrollTo(value),
-        child: Text('$value'),
         style: _scrollButtonStyle(horizonalPadding: 20),
+        child: Text('$value'),
       );
 
   Widget scrollOffsetButton(int value) => TextButton(
         key: ValueKey<String>('Scroll$value'),
         onPressed: () => scrollBy(value.toDouble()),
-        child: Text('$value'),
         style: _scrollButtonStyle(horizonalPadding: 10),
+        child: Text('$value'),
       );
 
   Widget scrollPixelButton(int value) => TextButton(
         key: ValueKey<String>('Scroll$value'),
         onPressed: () => scrollTo(value),
-        child: Text('$value'),
         style: _scrollButtonStyle(horizonalPadding: 20),
+        child: Text('$value'),
       );
 
   Widget jumpButton(int value) => TextButton(
         key: ValueKey<String>('Jump$value'),
         onPressed: () => jumpTo(value),
-        child: Text('$value'),
         style: _scrollButtonStyle(horizonalPadding: 20),
+        child: Text('$value'),
       );
 
   void scrollTo(int index) => itemScrollController.scrollTo(

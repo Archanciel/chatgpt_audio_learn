@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,12 +18,12 @@ class MyApp extends StatelessWidget {
               onPressed: () {
                 showDialog(
                   context: context,
-                  builder: (context) => MyDialog(),
+                  builder: (context) => const MyDialog(),
                 ).then((value) {
                   print(value);
                 });
               },
-              child: Text('Show Dialog'),
+              child: const Text('Show Dialog'),
             ),
           ),
         ),
@@ -31,6 +33,8 @@ class MyApp extends StatelessWidget {
 }
 
 class MyDialog extends StatefulWidget {
+  const MyDialog({super.key});
+
   @override
   _MyDialogState createState() => _MyDialogState();
 }
@@ -69,18 +73,18 @@ class _MyDialogState extends State<MyDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('This is a dialog'),
+            const Text('This is a dialog'),
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context, 'Default Action');
               },
-              child: Text('Default Action'),
+              child: const Text('Default Action'),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context, 'Cancel');
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
           ],
         ),
