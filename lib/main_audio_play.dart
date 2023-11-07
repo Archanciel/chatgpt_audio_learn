@@ -79,6 +79,21 @@ class Playlist {
     required this.isSelected,
   });
 
+  Audio? getNextPlayableAudio(Audio currentAudio) {
+    int currentAudioIndex = playableAudioLst
+        .indexWhere((item) => item.audioFileName == currentAudio.audioFileName);
+
+    if (currentAudioIndex == -1) {
+      return null;
+    }
+
+    if (currentAudioIndex == playableAudioLst.length - 1) {
+      return null;
+    }
+
+    return playableAudioLst[currentAudioIndex + 1];
+  }
+
   /// Factory constructor: creates an instance of Playlist from a
   /// JSON object
   factory Playlist.fromJson(Map<String, dynamic> json) {
@@ -737,9 +752,33 @@ class AudioGlobalPlayerVM extends ChangeNotifier {
           updateAndSaveCurrentAudio();
         }
 
+        _audioPlayer.onPlayerComplete.listen((event) {
+          // Play next audio when current audio finishes.
+          playNextAudio();
+        });
+
         notifyListeners();
       });
     }
+  }
+
+  Future<void> playNextAudio() async {
+    await _setNextAudio();
+    await playFromCurrentAudioFile();
+
+    notifyListeners();
+  }
+
+  Future<void> _setNextAudio() async {
+    Audio? nextAudio = _currentAudio!.enclosingPlaylist!.getNextPlayableAudio(
+      _currentAudio!,
+    );
+
+    if (nextAudio == null) {
+      return;
+    }
+
+    setCurrentAudio(nextAudio);
   }
 
   Future<void> playFromCurrentAudioFile() async {
@@ -855,7 +894,7 @@ class AudioPlayerView extends StatefulWidget {
 
   AudioPlayerView({
     Key? key,
-  })  : audioLst = _createTwoAudiosLst(),
+  })  : audioLst = _createAudiosLst(),
         super(key: key);
 
   static Playlist _createPlaylist() {
@@ -869,7 +908,7 @@ class AudioPlayerView extends StatefulWidget {
     return pl;
   }
 
-  static List<Audio> _createTwoAudiosLst() {
+  static List<Audio> _createAudiosLst() {
     Playlist playlist = _createPlaylist();
 
     final audioOne = Audio(
@@ -899,9 +938,24 @@ class AudioPlayerView extends StatefulWidget {
     );
 
     audioTwo.audioFileName =
-        "231004-214313-Avoir accès à DALLE 3 gratuitement et en un click 23-09-30.mp3";
+        "231031-132823-Avoir accès à DALLE 3 gratuitement et en un click 23-09-30.mp3";
 
-    return [audioOne, audioTwo];
+    final audioThree = Audio(
+      enclosingPlaylist: playlist,
+      originalVideoTitle: "Limites de l'IA",
+      compactVideoDescription: 'compactVideoDescription',
+      videoUrl: 'videoUrl',
+      audioDownloadDateTime: DateTime.now(),
+      audioDownloadDuration: Duration.zero,
+      videoUploadDate: DateTime.now(),
+      audioDuration: const Duration(seconds: 968),
+    );
+
+    audioThree.audioFileName = "231031-135647-Limites de l’IA 23-10-01.mp3";
+    List<Audio> audioLst = [audioOne, audioTwo, audioThree];
+    playlist.playableAudioLst = audioLst;
+
+    return audioLst;
   }
 
   @override
@@ -912,8 +966,8 @@ class _AudioPlayerViewState extends State<AudioPlayerView> {
   final double _audioIconSizeMedium = 60;
   final double _audioIconSizeLarge = 90;
 
-  final TextEditingController _audioPositionController =
-      TextEditingController();
+  // final TextEditingController _audioPositionController =
+  //     TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -932,33 +986,34 @@ class _AudioPlayerViewState extends State<AudioPlayerView> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                TextField(
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Initial audio position in seconds',
-                  ),
-                  controller: _audioPositionController,
-                ),
-                const SizedBox(height: 2.0),
-                Builder(builder: (BuildContext context) {
-                  // By wrapping your TextButton with a Builder, you're
-                  // ensuring that the context passed to the Provider.of
-                  // method is a direct child of the ChangeNotifierProvider,
-                  // which should resolve the ProviderNotFoundException
-                  // error.
-                  return TextButton(
-                    onPressed: () async {
-                      await Provider.of<AudioGlobalPlayerVM>(context,
-                              listen: false)
-                          .goToAudioPlayPosition(Duration(
-                              seconds: int.parse(
-                                  _audioPositionController.text.isEmpty
-                                      ? '0'
-                                      : _audioPositionController.text)));
-                    },
-                    child: const Text('Seek to position'),
-                  );
-                }),
+                // TextField(
+                //   decoration: const InputDecoration(
+                //     border: OutlineInputBorder(),
+                //     labelText: 'Initial audio position in seconds',
+                //   ),
+                //   controller: _audioPositionController,
+                // ),
+                // const SizedBox(height: 2.0),
+                // Builder(builder: (BuildContext context) {
+                //   // By wrapping your TextButton with a Builder, you're
+                //   // ensuring that the context passed to the Provider.of
+                //   // method is a direct child of the ChangeNotifierProvider,
+                //   // which should resolve the ProviderNotFoundException
+                //   // error.
+                //   return TextButton(
+                //     onPressed: () async {
+                //       await Provider.of<AudioGlobalPlayerVM>(context,
+                //               listen: false)
+                //           .goToAudioPlayPosition(Duration(
+                //               seconds: int.parse(
+                //                   _audioPositionController.text.isEmpty
+                //                       ? '0'
+                //                       : _audioPositionController.text)));
+                //     },
+                //     child: const Text('Seek to position'),
+                //   );
+                // }),
+                const Text('Audio List'),
                 SizedBox(
                   height: 200,
                   child: ListView.builder(
@@ -1002,11 +1057,22 @@ class _AudioPlayerViewState extends State<AudioPlayerView> {
   Widget _buildSlider() {
     return Consumer<AudioGlobalPlayerVM>(
       builder: (context, audioGlobalPlayerVM, child) {
+        // Obtaining the slider values here (when audioGlobalPlayerVM
+        // call notifyListeners()) avoids that the slider generate
+        // a 'Value xxx.x is not between minimum 0.0 and maximum 0.0'
+        // error
+        double sliderValue =
+            audioGlobalPlayerVM.currentAudioPosition.inSeconds.toDouble();
+        double maxDuration =
+            audioGlobalPlayerVM.currentAudioTotalDuration.inSeconds.toDouble();
+
+        // Ensure the slider value is within the range
+        sliderValue = sliderValue.clamp(0.0, maxDuration);
+
         return Slider(
-          value: audioGlobalPlayerVM.currentAudioPosition.inSeconds.toDouble(),
           min: 0.0,
-          max: audioGlobalPlayerVM.currentAudioTotalDuration.inSeconds
-              .toDouble(),
+          max: maxDuration,
+          value: sliderValue,
           onChanged: (double value) async {
             await audioGlobalPlayerVM
                 .goToAudioPlayPosition(Duration(seconds: value.toInt()));
