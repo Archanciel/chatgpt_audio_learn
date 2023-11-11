@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 void main() {
   runApp(MyApp());
@@ -26,6 +27,8 @@ class MyListWidget extends StatefulWidget {
 class _MyListWidgetState extends State<MyListWidget> {
   final ScrollController _scrollController = ScrollController();
   final GlobalKey myKey = GlobalKey();
+  int targetIndex = 57; // Replace with the index of the target item.
+  Random random = Random();
 
   @override
   void initState() {
@@ -41,16 +44,25 @@ class _MyListWidgetState extends State<MyListWidget> {
   }
 
   void scrollToItem() {
-    final context = myKey.currentContext;
-    if (context != null) {
-      Scrollable.ensureVisible(context, duration: Duration(seconds: 1));
+    final double itemHeight =
+        75.0; // Estimate or calculate the height of your ListTile
+    final double offset = targetIndex * itemHeight;
+
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        offset,
+        duration: Duration(seconds: 1),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      // The scroll controller isn't attached to any scroll views.
+      // Schedule a callback to try again after the next frame.
+      WidgetsBinding.instance.addPostFrameCallback((_) => scrollToItem());
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    int targetIndex = 17; // Replace with the index of the target item.
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Scroll To ListTile Example'),
@@ -61,7 +73,7 @@ class _MyListWidgetState extends State<MyListWidget> {
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
             key: index == targetIndex ? myKey : null,
-            title: Text('Item $index'),
+            title: buildTitle(index),
             tileColor: index == targetIndex ? Colors.blue : null,
             onTap: () {
               // Your onTap logic here
@@ -71,4 +83,10 @@ class _MyListWidgetState extends State<MyListWidget> {
       ),
     );
   }
-}
+
+Text buildTitle(int index) {
+  int randomNumber = random.nextInt(6) + 1; // Random number between 1 and 6
+  String title = List.generate(randomNumber, (_) => 'Title').join('\n');
+
+  return Text('$title $index');
+}}
