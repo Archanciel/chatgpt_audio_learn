@@ -6,10 +6,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-const numberOfItems = 5001;
+const numberOfItems = 1001;
 const minItemHeight = 20.0;
 const maxItemHeight = 150.0;
-const scrollDuration = Duration(seconds: 2);
+const scrollDuration = Duration(seconds: 1);
 
 const randomMax = 1 << 32;
 
@@ -56,9 +56,9 @@ class _ScrollablePositionedListPageState
   final ItemScrollController itemScrollController = ItemScrollController();
 
   /// Controller to scroll a certain number of pixels relative to the current
-  /// scroll offset.
-  final ScrollOffsetController scrollOffsetController =
-      ScrollOffsetController();
+  /// scroll offset. Not interresting
+  // final ScrollOffsetController scrollOffsetController =
+  //     ScrollOffsetController();
 
   /// Listener that reports the position of items when the list is scrolled.
   final ItemPositionsListener itemPositionsListener =
@@ -99,10 +99,10 @@ class _ScrollablePositionedListPageState
                   Column(
                     children: <Widget>[
                       scrollControlButtons,
-                      scrollOffsetControlButtons,
+                      // scrollOffsetControlButtons, // no interesting
                       const SizedBox(height: 10),
                       jumpControlButtons,
-                      alignmentControl,
+                      alignmentControl, // alignement 0 preferred
                     ],
                   ),
                 ],
@@ -137,7 +137,7 @@ class _ScrollablePositionedListPageState
         itemBuilder: (context, index) => item(index, orientation),
         itemScrollController: itemScrollController,
         itemPositionsListener: itemPositionsListener,
-        scrollOffsetController: scrollOffsetController,
+        // scrollOffsetController: scrollOffsetController, // no interesting
         reverse: reversed,
         scrollDirection: orientation == Orientation.portrait
             ? Axis.vertical
@@ -194,21 +194,22 @@ class _ScrollablePositionedListPageState
           scrollItemButton(10),
           scrollItemButton(100),
           scrollItemButton(1000),
-          scrollItemButton(5000),
+          // scrollItemButton(5000),
         ],
       );
 
-  Widget get scrollOffsetControlButtons => Row(
-        children: <Widget>[
-          const Text('scroll by'),
-          scrollOffsetButton(-1000),
-          scrollOffsetButton(-100),
-          scrollOffsetButton(-10),
-          scrollOffsetButton(10),
-          scrollOffsetButton(100),
-          scrollOffsetButton(1000),
-        ],
-      );
+  // no interesting
+  // Widget get scrollOffsetControlButtons => Row(
+  //       children: <Widget>[
+  //         const Text('scroll by'),
+  //         scrollOffsetButton(-1000),
+  //         scrollOffsetButton(-100),
+  //         scrollOffsetButton(-10),
+  //         scrollOffsetButton(10),
+  //         scrollOffsetButton(100),
+  //         scrollOffsetButton(1000),
+  //       ],
+  //     );
 
   Widget get jumpControlButtons => Row(
         children: <Widget>[
@@ -218,7 +219,7 @@ class _ScrollablePositionedListPageState
           jumpButton(10),
           jumpButton(100),
           jumpButton(1000),
-          jumpButton(5000),
+          // jumpButton(5000),
         ],
       );
 
@@ -238,12 +239,12 @@ class _ScrollablePositionedListPageState
         child: Text('$value'),
       );
 
-  Widget scrollOffsetButton(int value) => TextButton(
-        key: ValueKey<String>('Scroll$value'),
-        onPressed: () => scrollBy(value.toDouble()),
-        style: _scrollButtonStyle(horizonalPadding: 10),
-        child: Text('$value'),
-      );
+  // Widget scrollOffsetButton(int value) => TextButton(
+  //       key: ValueKey<String>('Scroll$value'),
+  //       onPressed: () => scrollBy(value.toDouble()),
+  //       style: _scrollButtonStyle(horizonalPadding: 10),
+  //       child: Text('$value'),
+  //     );
 
   Widget scrollPixelButton(int value) => TextButton(
         key: ValueKey<String>('Scroll$value'),
@@ -265,8 +266,9 @@ class _ScrollablePositionedListPageState
       curve: Curves.easeInOutCubic,
       alignment: alignment);
 
-  void scrollBy(double offset) => scrollOffsetController.animateScroll(
-      offset: offset, duration: scrollDuration, curve: Curves.easeInOutCubic);
+  // no interesting
+  // void scrollBy(double offset) => scrollOffsetController.animateScroll(
+      // offset: offset, duration: scrollDuration, curve: Curves.easeInOutCubic);
 
   void jumpTo(int index) =>
       itemScrollController.jumpTo(index: index, alignment: alignment);
