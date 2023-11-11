@@ -29,6 +29,8 @@ class _MyListWidgetState extends State<MyListWidget> {
   final GlobalKey myKey = GlobalKey();
   int targetIndex = 57; // Replace with the index of the target item.
   Random random = Random();
+  final double itemHeight =
+      75.0; // Estimate or calculate the height of your ListTile
 
   @override
   void initState() {
@@ -44,8 +46,6 @@ class _MyListWidgetState extends State<MyListWidget> {
   }
 
   void scrollToItem() {
-    final double itemHeight =
-        75.0; // Estimate or calculate the height of your ListTile
     final double offset = targetIndex * itemHeight;
 
     if (_scrollController.hasClients) {
@@ -84,9 +84,10 @@ class _MyListWidgetState extends State<MyListWidget> {
     );
   }
 
-Text buildTitle(int index) {
-  int randomNumber = random.nextInt(6) + 1; // Random number between 1 and 6
-  String title = List.generate(randomNumber, (_) => 'Title').join('\n');
+  Text buildTitle(int index) {
+    int randomNumber = random.nextInt(6) + 1; // Random number between 1 and 6
+    String title = List.generate(randomNumber, (_) => 'Title').join('\n');
 
-  return Text('$title $index');
-}}
+    return Text('$title $index');
+  }
+}
