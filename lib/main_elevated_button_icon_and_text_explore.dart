@@ -13,23 +13,23 @@ class MyApp extends StatelessWidget {
           title: const Text('ElevatedButton with Icon'),
         ),
         body: Center(
-          child: ElevatedButton.icon(
+          child: ElevatedButton(
             onPressed: () {
-              // Your code here
+              // Votre code ici
               print('Button Pressed');
             },
-            icon: const Icon(Icons.download_outlined,
-            size: 15,), // Icon
-            // icon: Image.asset(
-            //   'assets/images/down_arrow_white.png', // Remplacez par le chemin de votre image
-            //   width: 20.0, // Spécifiez la largeur souhaitée
-            //   height: 20.0, // Spécifiez la hauteur souhaitée
-            // ),
-            label: const Text('Tél'), // Text
             style: ElevatedButton.styleFrom(
-              // Optional: Button styling
-              backgroundColor: Colors.blue, // Background color
-              foregroundColor: Colors.white, // Text color
+              // Style optionnel du bouton
+              backgroundColor: Colors.blue, // Couleur de fond
+              foregroundColor: Colors.white, // Couleur du texte
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10), // Padding du bouton
+            ),
+            child: const Row(
+              mainAxisSize: MainAxisSize.min, // Pour s'assurer que le Row n'occupe pas plus d'espace que nécessaire
+              children: <Widget>[
+                Icon(Icons.download_outlined, size: 15), // Icône
+                Text('Un'), // Texte
+              ],
             ),
           ),
         ),
