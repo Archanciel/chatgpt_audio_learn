@@ -101,6 +101,7 @@ void main() {
       ),
     );
 
+    // necessary, otherwise test not working
     await tester.pumpAndSettle();
 
     // Verify that the mocked string is shown
