@@ -107,7 +107,7 @@ class _AudioExtractorViewState extends State<AudioExtractorView> {
                       vertical: 3.0, horizontal: 3.0), // Reduces height
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
-                    borderSide: BorderSide(color: Colors.blue, width: 2.0),
+                    borderSide: const BorderSide(color: Colors.blue, width: 2.0),
                   ),
                 ),
                 controller: _startPositionTextEditingController,
@@ -127,7 +127,7 @@ class _AudioExtractorViewState extends State<AudioExtractorView> {
                       vertical: 3.0, horizontal: 3.0), // Reduces height
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
-                    borderSide: BorderSide(color: Colors.blue, width: 2.0),
+                    borderSide: const BorderSide(color: Colors.blue, width: 2.0),
                   ),
                 ),
                 controller: _currentPositionTextEditingController,
@@ -147,7 +147,7 @@ class _AudioExtractorViewState extends State<AudioExtractorView> {
                       vertical: 3.0, horizontal: 3.0), // Reduces height
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
-                    borderSide: BorderSide(color: Colors.blue, width: 2.0),
+                    borderSide: const BorderSide(color: Colors.blue, width: 2.0),
                   ),
                 ),
                 controller: _endPositionTextEditingController,
