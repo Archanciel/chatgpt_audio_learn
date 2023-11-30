@@ -67,24 +67,14 @@ class _AudioExtractorViewState extends State<AudioExtractorView> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            IconButton(
-              // Button to decrease extraction start time
-              visualDensity: VisualDensity.compact,
-              icon: const Icon(
-                Icons.remove_circle_outline,
-              ),
-              iconSize: 20,
-              onPressed: () {},
+            _buildPositionLabelAndIconButton(
+              iconData: Icons.remove_circle_outline,
+              onPressedFunction: () {},
             ),
-            IconButton(
-              // Button to increase extraction start time
-              visualDensity: VisualDensity.compact,
-              icon: const Icon(
-                Icons.add_circle_outline,
-              ),
-              iconSize: 20,
-              onPressed: () {},
-            ), // Start Position Widgets
+            _buildPositionLabelAndIconButton(
+              iconData: Icons.add_circle_outline,
+              onPressedFunction: () {},
+            ),
             _buildPositionLabelAndField(
               label: 'Start',
               controller: _startPositionTextEditingController,
@@ -99,24 +89,14 @@ class _AudioExtractorViewState extends State<AudioExtractorView> {
               label: 'End',
               controller: _endPositionTextEditingController,
             ),
-            IconButton(
-              // Button to decrease extraction start time
-              visualDensity: VisualDensity.compact,
-              icon: const Icon(
-                Icons.remove_circle_outline,
-              ),
-              iconSize: 20,
-              onPressed: () {},
+            _buildPositionLabelAndIconButton(
+              iconData: Icons.remove_circle_outline,
+              onPressedFunction: () {},
             ),
-            IconButton(
-              // Button to increase extraction start time
-              visualDensity: VisualDensity.compact,
-              icon: const Icon(
-                Icons.add_circle_outline,
-              ),
-              iconSize: 20,
-              onPressed: () {},
-            ), // Start Position Widgets
+            _buildPositionLabelAndIconButton(
+              iconData: Icons.add_circle_outline,
+              onPressedFunction: () {},
+            ),
           ],
         ),
       ],
@@ -124,27 +104,25 @@ class _AudioExtractorViewState extends State<AudioExtractorView> {
   }
 
   Widget _buildPositionLabelAndIconButton({
-    required String label,
-    required TextEditingController controller,
+    required IconData iconData,
+    required void Function() onPressedFunction,
   }) {
-    return Expanded(
-      child: Column(
-        children: [
-          const Text(
-            '',
-            textAlign: TextAlign.center,
+    return Column(
+      children: [
+        const Text(
+          '',
+          textAlign: TextAlign.center,
+        ),
+        IconButton(
+          // Button to decrease extraction start time
+          visualDensity: VisualDensity.compact,
+          icon: Icon(
+            iconData,
           ),
-          IconButton(
-            // Button to decrease extraction start time
-            visualDensity: VisualDensity.compact,
-            icon: const Icon(
-              Icons.remove_circle_outline,
-            ),
-            iconSize: 20,
-            onPressed: () {},
-          ),
-        ],
-      ),
+          iconSize: 20,
+          onPressed: onPressedFunction,
+        ),
+      ],
     );
   }
 
