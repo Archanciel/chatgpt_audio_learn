@@ -63,16 +63,7 @@ class _AudioExtractorViewState extends State<AudioExtractorView> {
 
   Widget _buildExtractPositionDataLayout() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Text('Start'),
-            Text('Current'),
-            Text('End'),
-          ],
-        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
@@ -93,68 +84,23 @@ class _AudioExtractorViewState extends State<AudioExtractorView> {
               ),
               iconSize: 20,
               onPressed: () {},
+            ), // Start Position Widgets
+            _buildPositionLabelAndField(
+              label: 'Start',
+              controller: _startPositionTextEditingController,
             ),
-            Expanded(
-              child: TextField(
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                  // Utiliser InputDecoration pour personnaliser l'apparence
-                  isDense:
-                      true, // Ajoutez ceci pour une meilleure contrôle de la taille
-                  border: InputBorder.none, // Aucune bordure sous le TextField
-                  // Si vous voulez une bordure quand le TextField est sélectionné:
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 3.0, horizontal: 3.0), // Reduces height
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: const BorderSide(color: Colors.blue, width: 2.0),
-                  ),
-                ),
-                controller: _startPositionTextEditingController,
-              ),
+            // Current Position Widgets
+            _buildPositionLabelAndField(
+              label: 'Current',
+              controller: _currentPositionTextEditingController,
             ),
-            const SizedBox(width: 5), // Ajout d'un espace entre les rangées
-            Expanded(
-              child: TextField(
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                  // Utiliser InputDecoration pour personnaliser l'apparence
-                  isDense:
-                      true, // Ajoutez ceci pour une meilleure contrôle de la taille
-                  border: InputBorder.none, // Aucune bordure sous le TextField
-                  // Si vous voulez une bordure quand le TextField est sélectionné:
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 3.0, horizontal: 3.0), // Reduces height
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: const BorderSide(color: Colors.blue, width: 2.0),
-                  ),
-                ),
-                controller: _currentPositionTextEditingController,
-              ),
-            ),
-            const SizedBox(width: 5), // Ajout d'un espace entre les rangées
-            Expanded(
-              child: TextField(
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                  // Utiliser InputDecoration pour personnaliser l'apparence
-                  isDense:
-                      true, // Ajoutez ceci pour une meilleure contrôle de la taille
-                  border: InputBorder.none, // Aucune bordure sous le TextField
-                  // Si vous voulez une bordure quand le TextField est sélectionné:
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 3.0, horizontal: 3.0), // Reduces height
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: const BorderSide(color: Colors.blue, width: 2.0),
-                  ),
-                ),
-                controller: _endPositionTextEditingController,
-              ),
+            // End Position Widgets
+            _buildPositionLabelAndField(
+              label: 'End',
+              controller: _endPositionTextEditingController,
             ),
             IconButton(
-              // Button to decrease extraction end time
+              // Button to decrease extraction start time
               visualDensity: VisualDensity.compact,
               icon: const Icon(
                 Icons.remove_circle_outline,
@@ -163,17 +109,74 @@ class _AudioExtractorViewState extends State<AudioExtractorView> {
               onPressed: () {},
             ),
             IconButton(
-              // Button to increase extraction end time
+              // Button to increase extraction start time
               visualDensity: VisualDensity.compact,
               icon: const Icon(
                 Icons.add_circle_outline,
               ),
               iconSize: 20,
               onPressed: () {},
-            ),
+            ), // Start Position Widgets
           ],
         ),
       ],
+    );
+  }
+
+  Widget _buildPositionLabelAndIconButton({
+    required String label,
+    required TextEditingController controller,
+  }) {
+    return Expanded(
+      child: Column(
+        children: [
+          const Text(
+            '',
+            textAlign: TextAlign.center,
+          ),
+          IconButton(
+            // Button to decrease extraction start time
+            visualDensity: VisualDensity.compact,
+            icon: const Icon(
+              Icons.remove_circle_outline,
+            ),
+            iconSize: 20,
+            onPressed: () {},
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPositionLabelAndField({
+    required String label,
+    required TextEditingController controller,
+  }) {
+    return Expanded(
+      child: Column(
+        children: [
+          Text(
+            label,
+            textAlign: TextAlign.center,
+          ),
+          TextField(
+            controller: controller,
+            textAlign: TextAlign.center,
+            decoration: InputDecoration(
+              isDense: true,
+              contentPadding: const EdgeInsets.symmetric(
+                vertical: 3.0,
+                horizontal: 3,
+              ),
+              border: InputBorder.none,
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.0),
+                borderSide: const BorderSide(color: Colors.blue, width: 2.0),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
