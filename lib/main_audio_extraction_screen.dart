@@ -7,6 +7,10 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Color effectiveSliderThumbColor = SliderTheme.of(context).thumbColor ??
+        Theme.of(context).colorScheme.primary;
+
+    print('Effective thumb color: $effectiveSliderThumbColor');
     return MaterialApp(
       title: 'Media Control',
       theme: ThemeData(
