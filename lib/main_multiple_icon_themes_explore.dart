@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-enum EnumIconType { iconOne, iconTwo, iconThree }
+enum MultipleIconType { iconOne, iconTwo, iconThree }
 
-class ThemeProvider extends ChangeNotifier {
+class ThemeProviderVM extends ChangeNotifier {
   bool _isDarkMode = false;
 
   bool get isDarkMode => _isDarkMode;
@@ -21,7 +21,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-// Define custom icon themes for light theme
+  // Define custom icon themes for light theme
   final IconThemeData lightThemeIconOne =
       const IconThemeData(color: Colors.blue);
   final IconThemeData lightThemeIconTwo =
@@ -29,14 +29,14 @@ class MyApp extends StatelessWidget {
   final IconThemeData lightThemeIconThree =
       const IconThemeData(color: Colors.purple);
 
-// Define custom icon themes for dark theme
+  // Define custom icon themes for dark theme
   final IconThemeData darkThemeIconOne = const IconThemeData(color: Colors.red);
   final IconThemeData darkThemeIconTwo =
       const IconThemeData(color: Colors.orange);
   final IconThemeData darkThemeIconThree =
       const IconThemeData(color: Colors.yellow);
 
-// Define the light and dark themes
+  // Define the light and dark themes
   static final ThemeData themeDataLight = ThemeData.light().copyWith(
     textTheme: ThemeData.light().textTheme.copyWith(
           bodyMedium: ThemeData.light()
@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
               .titleMedium!
               .copyWith(color: Colors.black),
         ),
-      );
+  );
 
   static final ThemeData themeDataDark = ThemeData.dark().copyWith(
     textTheme: ThemeData.dark().textTheme.copyWith(
@@ -61,22 +61,46 @@ class MyApp extends StatelessWidget {
               .titleMedium!
               .copyWith(color: Colors.white),
         ),
-      );
+  );
 
-  IconThemeData getIconTheme(ThemeProvider themeProvider,
-      {EnumIconType iconType = EnumIconType.iconOne}) {
-    ThemeData currentTheme =
-        themeProvider.isDarkMode ? themeDataDark : themeDataLight;
+  /// Returns the icon theme data based on the theme currently applyed
+  /// and the [MultipleIconType] enum value passed as parameter.
+  ///
+  /// The IconThemeData is used to wrap the icon widget.
+  ///
+  /// Example for the icon button:
+  ///
+  /// IconButton(
+  ///   onPressed: () {
+  ///   },
+  ///   icon: IconTheme(
+  ///     data: getIconThemeData(
+  ///             themeProviderVM: themeProvider,
+  ///             iconType: MultipleIconType.iconTwo,
+  ///           ),
+  ///     child: const Icon(Icons.download_outline, size: 35),
+  ///   ),
+  /// ),
+  IconThemeData getIconThemeData({
+    required ThemeProviderVM themeProviderVM,
+    required MultipleIconType iconType,
+  }) {
     switch (iconType) {
-      case EnumIconType.iconOne:
-        return themeProvider.isDarkMode ? darkThemeIconOne : lightThemeIconOne;
-      case EnumIconType.iconTwo:
-        return themeProvider.isDarkMode ? darkThemeIconTwo : lightThemeIconTwo;
-      case EnumIconType.iconThree:
-        return themeProvider.isDarkMode
+      case MultipleIconType.iconOne:
+        return themeProviderVM.isDarkMode
+            ? darkThemeIconOne
+            : lightThemeIconOne;
+      case MultipleIconType.iconTwo:
+        return themeProviderVM.isDarkMode
+            ? darkThemeIconTwo
+            : lightThemeIconTwo;
+      case MultipleIconType.iconThree:
+        return themeProviderVM.isDarkMode
             ? darkThemeIconThree
             : lightThemeIconThree;
       default:
+        ThemeData currentTheme =
+            themeProviderVM.isDarkMode ? themeDataDark : themeDataLight;
         return currentTheme.iconTheme; // Default icon theme
     }
   }
@@ -85,19 +109,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ChangeNotifierProvider(create: (context) => ThemeProviderVM()),
       ],
-      child: Consumer<ThemeProvider>(
+      child: Consumer<ThemeProviderVM>(
         builder: (context, themeProvider, child) {
           return MaterialApp(
             theme: themeProvider.isDarkMode ? themeDataDark : themeDataLight,
             home: Scaffold(
               appBar: AppBar(
-                title: const Text('MVVM Example'),
+                title: const Text('Multiple icon themes'),
                 actions: [
                   IconButton(
                     onPressed: () {
-                      Provider.of<ThemeProvider>(context, listen: false)
+                      Provider.of<ThemeProviderVM>(context, listen: false)
                           .toggleTheme();
                     },
                     icon: Icon(themeProvider.isDarkMode
@@ -125,19 +149,22 @@ class MyApp extends StatelessWidget {
                         // Votre code ici
                       },
                       icon: IconTheme(
-                        data: getIconTheme(themeProvider,
-                            iconType: EnumIconType.iconOne),
+                        data: getIconThemeData(
+                          themeProviderVM: themeProvider,
+                          iconType: MultipleIconType.iconOne,
+                        ),
                         child: const Icon(Icons.download_for_offline, size: 35),
                       ),
-                      // Icône
                     ),
                     IconButton(
                       onPressed: () {
                         // Votre code ici
                       },
                       icon: IconTheme(
-                        data: getIconTheme(themeProvider,
-                            iconType: EnumIconType.iconTwo),
+                        data: getIconThemeData(
+                          themeProviderVM: themeProvider,
+                          iconType: MultipleIconType.iconTwo,
+                        ),
                         child: const Icon(Icons.download_rounded, size: 35),
                       ),
                     ),
@@ -146,8 +173,10 @@ class MyApp extends StatelessWidget {
                       children: [
                         const Text('Alarm icon only: '),
                         IconTheme(
-                          data: getIconTheme(themeProvider,
-                              iconType: EnumIconType.iconThree),
+                          data: getIconThemeData(
+                            themeProviderVM: themeProvider,
+                            iconType: MultipleIconType.iconThree,
+                          ),
                           child: const Icon(Icons.access_alarm, size: 35),
                         ),
                       ],
