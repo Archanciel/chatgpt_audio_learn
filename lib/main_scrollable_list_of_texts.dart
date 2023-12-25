@@ -27,10 +27,10 @@ class MyListWidget extends StatefulWidget {
 class _MyListWidgetState extends State<MyListWidget> {
   final ScrollController _scrollController = ScrollController();
   final GlobalKey myKey = GlobalKey();
-  int targetIndex = 57; // Replace with the index of the target item.
+  int targetIndex = 1; // Replace with the index of the target item.
   Random random = Random();
   final double itemHeight =
-      75.0; // Estimate or calculate the height of your ListTile
+      85.0; // Estimate or calculate the height of your ListTile
 
   @override
   void initState() {
@@ -51,7 +51,7 @@ class _MyListWidgetState extends State<MyListWidget> {
     if (_scrollController.hasClients) {
       _scrollController.animateTo(
         offset,
-        duration: Duration(seconds: 1),
+        duration: const Duration(seconds: 1),
         curve: Curves.easeInOut,
       );
     } else {
@@ -65,7 +65,7 @@ class _MyListWidgetState extends State<MyListWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Scroll To ListTile Example'),
+        title: const Text('Scroll To ListTile Example'),
       ),
       body: ListView.builder(
         controller: _scrollController,
@@ -84,10 +84,16 @@ class _MyListWidgetState extends State<MyListWidget> {
     );
   }
 
-  Text buildTitle(int index) {
+  Widget buildTitle(int index) {
     int randomNumber = random.nextInt(6) + 1; // Random number between 1 and 6
     String title = List.generate(randomNumber, (_) => 'Title').join('\n');
 
-    return Text('$title $index');
+    return SizedBox(
+      height: itemHeight,
+      child: Text(
+        '$index $title',
+        maxLines: 3,
+      ),
+    );
   }
 }
