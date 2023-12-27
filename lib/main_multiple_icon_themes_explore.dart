@@ -17,7 +17,7 @@ class ThemeProviderVM extends ChangeNotifier {
 }
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -62,6 +62,8 @@ class MyApp extends StatelessWidget {
               .copyWith(color: Colors.white),
         ),
   );
+
+  const MyApp({super.key});
 
   /// Returns the icon theme data based on the theme currently applyed
   /// and the [MultipleIconType] enum value passed as parameter.

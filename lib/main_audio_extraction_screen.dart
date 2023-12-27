@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     Color effectiveSliderThumbColor = SliderTheme.of(context).thumbColor ??
@@ -16,12 +18,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: AudioExtractorView(),
+      home: const AudioExtractorView(),
     );
   }
 }
 
 class AudioExtractorView extends StatefulWidget {
+  const AudioExtractorView({super.key});
+
   @override
   _AudioExtractorViewState createState() => _AudioExtractorViewState();
 }
