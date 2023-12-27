@@ -47,18 +47,18 @@ class _HomeScreenState extends State<HomeScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return SetAudioSpeedDialog();
+        return SetAudioSpeedDialogWidget();
       },
     );
   }
 }
 
-class SetAudioSpeedDialog extends StatefulWidget {
+class SetAudioSpeedDialogWidget extends StatefulWidget {
   @override
-  _SetAudioSpeedDialogState createState() => _SetAudioSpeedDialogState();
+  _SetAudioSpeedDialogWidgetState createState() => _SetAudioSpeedDialogWidgetState();
 }
 
-class _SetAudioSpeedDialogState extends State<SetAudioSpeedDialog> {
+class _SetAudioSpeedDialogWidgetState extends State<SetAudioSpeedDialogWidget> {
   double _sliderValue = 1.0;
 
   void _changeSliderValue(double newValue) {
