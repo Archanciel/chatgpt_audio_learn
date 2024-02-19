@@ -191,7 +191,7 @@ class _ExpandableListViewState extends State<ExpandableListView> {
                       trailing: Checkbox(
                         value: item.isSelected,
                         onChanged: (value) {
-                          listViewModel.selectItem(context, index);
+                          listViewModel.selectItem(index);
                         },
                       ),
                     );
@@ -239,7 +239,7 @@ class ListVM extends ChangeNotifier {
     notifyListeners();
   }
 
-  void selectItem(BuildContext context, int index) {
+  void selectItem(int index) {
     bool isOneItemSelected = _model.selectItem(index);
 
     if (!isOneItemSelected) {
