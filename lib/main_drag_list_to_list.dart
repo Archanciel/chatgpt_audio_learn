@@ -73,12 +73,7 @@ class _HomePageState extends State<HomePage> {
       List<String> list, List<String> oppositeList, bool isListOne) {
     return DragTarget<String>(
       onWillAccept: (data) => true,
-      onAccept: (data) {
-        setState(() {
-          // oppositeList.remove(data);
-          // list.add(data);
-        });
-      },
+      onAccept: (data) {},
       builder: (context, candidateData, rejectedData) {
         return ListView.builder(
           itemCount: list.length,
