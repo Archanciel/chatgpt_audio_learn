@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Expanded(
-                  child: _buildReorderableList(_listOne, _listTwo, true),
+                  child: _buildNonReorderableList(_listOne, _listTwo, true),
                 ),
                 SizedBox(height: 20),
                 Expanded(
@@ -69,33 +69,87 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildReorderableList(List<String> list, List<String> oppositeList, bool isListOne) {
-    return ListView.builder(
-      itemCount: list.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text(list[index]),
-          leading: Icon(Icons.reorder),
-          trailing: Draggable<String>(
-            data: list[index],
-            child: Icon(Icons.drag_handle),
-            feedback: Material(
-              child: Container(
-                width: 100,
-                height: 56,
-                color: Colors.blue,
-                child: Center(
-                  child: Text(
-                    list[index],
-                    style: TextStyle(color: Colors.white),
+  Widget _buildNonReorderableList(
+      List<String> list, List<String> oppositeList, bool isListOne) {
+    return DragTarget<String>(
+      onWillAccept: (data) => true,
+      onAccept: (data) {
+        setState(() {
+          // oppositeList.remove(data);
+          // list.add(data);
+        });
+      },
+      builder: (context, candidateData, rejectedData) {
+        return ListView.builder(
+          itemCount: list.length,
+          itemBuilder: (context, index) {
+            return Draggable<String>(
+              data: list[index],
+              child: ListTile(
+                title: Text(list[index]),
+                // leading: Icon(Icons.reorder),
+              ),
+              feedback: Material(
+                elevation: 4.0,
+                child: Container(
+                  width: 100,
+                  height: 56,
+                  color: Colors.blue,
+                  child: Center(
+                    child: Text(
+                      list[index],
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ),
-            ),
-            childWhenDragging: Container(),
-            onDragCompleted: () {},
-          ),
-          onTap: () {},
+              childWhenDragging: Container(),
+              onDragCompleted: () {},
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildReorderableList(
+      List<String> list, List<String> oppositeList, bool isListOne) {
+    return DragTarget<String>(
+      onWillAccept: (data) => true,
+      onAccept: (data) {
+        setState(() {
+          // oppositeList.remove(data);
+          list.add(data);
+        });
+      },
+      builder: (context, candidateData, rejectedData) {
+        return ListView.builder(
+          itemCount: list.length,
+          itemBuilder: (context, index) {
+            return Draggable<String>(
+              data: list[index],
+              child: ListTile(
+                title: Text(list[index]),
+                // leading: Icon(Icons.reorder),
+              ),
+              feedback: Material(
+                elevation: 4.0,
+                child: Container(
+                  width: 100,
+                  height: 56,
+                  color: Colors.blue,
+                  child: Center(
+                    child: Text(
+                      list[index],
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+              childWhenDragging: Container(),
+              onDragCompleted: () {},
+            );
+          },
         );
       },
     );
