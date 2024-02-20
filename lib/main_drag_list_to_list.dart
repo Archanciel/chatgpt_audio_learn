@@ -24,12 +24,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Reorderable Lists'),
+        title: const Text('Reorderable Lists'),
       ),
       body: Center(
         child: ElevatedButton(
           onPressed: () => _showReorderDialog(context),
-          child: Text('Open Lists Dialog'),
+          child: const Text('Open Lists Dialog'),
         ),
       ),
     );
@@ -40,25 +40,33 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Reorder Items'),
+          title: const Text('Reorder Items'),
           content: Container(
             width: double.maxFinite,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Expanded(
-                  child: _buildDraggableList(_listOne, _listTwo, true),
+                  child: _buildDraggableList(
+                    _listOne,
+                    _listTwo,
+                    true,
+                  ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Expanded(
-                  child: _buildDragTargetList(_listTwo, _listOne, false),
+                  child: _buildDragTargetList(
+                    _listTwo,
+                    _listOne,
+                    false,
+                  ),
                 ),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Close'),
+              child: const Text('Close'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -70,16 +78,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildDraggableList(
-      List<String> list, List<String> oppositeList, bool isListOne) {
+    List<String> list,
+    List<String> oppositeList,
+    bool isListOne,
+  ) {
     return ListView.builder(
       itemCount: list.length,
       itemBuilder: (context, index) {
-        return Draggable<String>( // enables dragging list items
+        return Draggable<String>(
+          // enables dragging list items
           data: list[index],
-          child: ListTile(
-            title: Text(list[index]),
-            // leading: Icon(Icons.reorder),
-          ),
           feedback: Material(
             elevation: 4.0,
             child: Container(
@@ -89,26 +97,34 @@ class _HomePageState extends State<HomePage> {
               child: Center(
                 child: Text(
                   list[index],
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                 ),
               ),
             ),
           ),
           childWhenDragging: Container(),
           onDragCompleted: () {},
+          child: ListTile(
+            title: Text(list[index]),
+          ),
         );
       },
     );
   }
 
   Widget _buildDragTargetList(
-      List<String> list, List<String> oppositeList, bool isListOne) {
-    return DragTarget<String>( // enables receiving dragged list items
+    List<String> list,
+    List<String> oppositeList,
+    bool isListOne,
+  ) {
+    return DragTarget<String>(
+      // enables receiving dragged list items
       onWillAccept: (data) => true,
       onAccept: (data) {
         setState(() {
-          // oppositeList.remove(data);
-          list.add(data);
+          if (!list.contains(data)) {
+            list.add(data);
+          }
         });
       },
       builder: (context, candidateData, rejectedData) {
@@ -117,7 +133,14 @@ class _HomePageState extends State<HomePage> {
           itemBuilder: (context, index) {
             return ListTile(
               title: Text(list[index]),
-              // leading: Icon(Icons.reorder),
+              trailing: IconButton(
+                onPressed: () {
+                  setState(() {
+                    list.removeAt(index);
+                  });
+                },
+                icon: const Icon(Icons.delete),
+              ),
             );
           },
         );
