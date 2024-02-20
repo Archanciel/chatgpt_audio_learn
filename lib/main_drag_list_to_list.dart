@@ -47,11 +47,11 @@ class _HomePageState extends State<HomePage> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Expanded(
-                  child: _buildNonReorderableList(_listOne, _listTwo, true),
+                  child: _buildDraggableList(_listOne, _listTwo, true),
                 ),
                 SizedBox(height: 20),
                 Expanded(
-                  child: _buildReorderableList(_listTwo, _listOne, false),
+                  child: _buildDragTargetList(_listTwo, _listOne, false),
                 ),
               ],
             ),
@@ -69,12 +69,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildNonReorderableList(
+  Widget _buildDraggableList(
       List<String> list, List<String> oppositeList, bool isListOne) {
     return ListView.builder(
       itemCount: list.length,
       itemBuilder: (context, index) {
-        return Draggable<String>(
+        return Draggable<String>( // enables dragging list items
           data: list[index],
           child: ListTile(
             title: Text(list[index]),
@@ -101,9 +101,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildReorderableList(
+  Widget _buildDragTargetList(
       List<String> list, List<String> oppositeList, bool isListOne) {
-    return DragTarget<String>(
+    return DragTarget<String>( // enables receiving dragged list items
       onWillAccept: (data) => true,
       onAccept: (data) {
         setState(() {
