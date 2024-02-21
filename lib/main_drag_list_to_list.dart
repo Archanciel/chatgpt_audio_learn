@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: HomePage(),
+    return ChangeNotifierProvider(
+      create: (context) => SourceTargetListsVM(),
+      child: MaterialApp(
+        home: HomePage(),
+      ),
     );
   }
 }
@@ -17,47 +21,51 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<String> _listOne = ['Item 1', 'Item 2', 'Item 3'];
-  List<String> _listTwo = ['Item A', 'Item B', 'Item C'];
-
   @override
   Widget build(BuildContext context) {
+    SourceTargetListsVM sourceTargetListsVMListenFalse =
+        Provider.of<SourceTargetListsVM>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Reorderable Lists'),
       ),
       body: Center(
         child: ElevatedButton(
-          onPressed: () => _showReorderDialog(context),
+          onPressed: () => _showReorderDialog(
+            context,
+            sourceTargetListsVMListenFalse,
+          ),
           child: const Text('Open Lists Dialog'),
         ),
       ),
     );
   }
 
-  void _showReorderDialog(BuildContext context) {
+  void _showReorderDialog(
+    BuildContext context,
+    SourceTargetListsVM sourceTargetListsVMListenFalse,
+  ) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Reorder Items'),
-          content: Container(
+          content: SizedBox(
             width: double.maxFinite,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Expanded(
                   child: _buildDraggableList(
-                    _listOne,
-                    _listTwo,
+                    sourceTargetListsVMListenFalse,
                     true,
                   ),
                 ),
                 const SizedBox(height: 20),
                 Expanded(
                   child: _buildDragTargetList(
-                    _listTwo,
-                    _listOne,
+                    sourceTargetListsVMListenFalse,
                     false,
                   ),
                 ),
@@ -78,16 +86,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildDraggableList(
-    List<String> list,
-    List<String> oppositeList,
+    SourceTargetListsVM sourceTargetListsVM,
     bool isListOne,
   ) {
     return ListView.builder(
-      itemCount: list.length,
+      itemCount: sourceTargetListsVM.sourceList.length,
       itemBuilder: (context, index) {
         return Draggable<String>(
           // enables dragging list items
-          data: list[index],
+          data: sourceTargetListsVM.sourceList[index],
           feedback: Material(
             elevation: 4.0,
             child: Container(
@@ -96,7 +103,7 @@ class _HomePageState extends State<HomePage> {
               color: Colors.blue,
               child: Center(
                 child: Text(
-                  list[index],
+                  sourceTargetListsVM.sourceList[index],
                   style: const TextStyle(color: Colors.white),
                 ),
               ),
@@ -105,7 +112,7 @@ class _HomePageState extends State<HomePage> {
           childWhenDragging: Container(),
           onDragCompleted: () {},
           child: ListTile(
-            title: Text(list[index]),
+            title: Text(sourceTargetListsVM.sourceList[index]),
           ),
         );
       },
@@ -113,36 +120,33 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildDragTargetList(
-    List<String> list,
-    List<String> oppositeList,
+    SourceTargetListsVM sourceTargetListsVMListenFalse,
     bool isListOne,
   ) {
-    return DragTarget<String>(
-      // enables receiving dragged list items
-      onWillAccept: (data) => true,
-      onAccept: (data) {
-        setState(() {
-          if (!list.contains(data)) {
-            list.add(data);
-          }
-        });
-      },
-      builder: (context, candidateData, rejectedData) {
-        return ListView.builder(
-          itemCount: list.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              // key: ValueKey(list[index]), // Ajout d'une clé unique. Ne fonctionne pas
-              title: Text(list[index]),
-              trailing: IconButton(
-                onPressed: () {
-                  setState(() {
-                    list.removeAt(index);
-                    // list = List.from(list); // Ne fonctionne pas
-                  });
-                },
-                icon: const Icon(Icons.delete),
-              ),
+    return Consumer<SourceTargetListsVM>(
+      builder: (context, sourceTargetListsVMConsumer, child) {
+        return DragTarget<String>(
+          // enables receiving dragged list items
+          onWillAccept: (data) => true,
+          onAccept: (data) {
+            if (!sourceTargetListsVMListenFalse.targetList.contains(data)) {
+              sourceTargetListsVMListenFalse.addToTargetList(data);
+            }
+          },
+          builder: (context, candidateData, rejectedData) {
+            return ListView.builder(
+              itemCount: sourceTargetListsVMListenFalse.targetList.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(sourceTargetListsVMListenFalse.targetList[index]),
+                  trailing: IconButton(
+                    onPressed: () {
+                      sourceTargetListsVMConsumer.removeFromTargetListAt(index);
+                    },
+                    icon: const Icon(Icons.delete),
+                  ),
+                );
+              },
             );
           },
         );
@@ -158,11 +162,17 @@ class SourceTargetListsVM extends ChangeNotifier {
   final List<String> _targetList;
   List<String> get targetList => _targetList;
 
-  SourceTargetListsVM({
-    required List<String> sourceList,
-    required List<String> targetList,
-  })  : _sourceList = sourceList,
-        _targetList = targetList;
+  SourceTargetListsVM()
+      : _sourceList = [
+          'Item 1',
+          'Item 2',
+          'Item 3',
+        ],
+        _targetList = [
+          'Item A',
+          'Item B',
+          'Item C',
+        ];
 
   void addToTargetList(String item) {
     _targetList.add(item);
