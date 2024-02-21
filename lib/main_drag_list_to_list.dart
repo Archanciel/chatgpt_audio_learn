@@ -132,11 +132,13 @@ class _HomePageState extends State<HomePage> {
           itemCount: list.length,
           itemBuilder: (context, index) {
             return ListTile(
+              // key: ValueKey(list[index]), // Ajout d'une clé unique. Ne fonctionne pas
               title: Text(list[index]),
               trailing: IconButton(
                 onPressed: () {
                   setState(() {
                     list.removeAt(index);
+                    // list = List.from(list); // Ne fonctionne pas
                   });
                 },
                 icon: const Icon(Icons.delete),
@@ -146,5 +148,31 @@ class _HomePageState extends State<HomePage> {
         );
       },
     );
+  }
+}
+
+class SourceTargetListsVM extends ChangeNotifier {
+  final List<String> _sourceList;
+  List<String> get sourceList => _sourceList;
+
+  final List<String> _targetList;
+  List<String> get targetList => _targetList;
+
+  SourceTargetListsVM({
+    required List<String> sourceList,
+    required List<String> targetList,
+  })  : _sourceList = sourceList,
+        _targetList = targetList;
+
+  void addToTargetList(String item) {
+    _targetList.add(item);
+
+    notifyListeners();
+  }
+
+  void removeFromTargetListAt(int index) {
+    _targetList.removeAt(index);
+
+    notifyListeners();
   }
 }
