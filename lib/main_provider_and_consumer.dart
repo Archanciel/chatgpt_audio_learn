@@ -1,5 +1,13 @@
 // https://chat.openai.com/share/52cb40eb-cd63-4720-8cd0-0a3152b9cd29
 
+/// This snippet illustrates the use of the Provider package
+/// to manage state in a Flutter application. Two alternatives
+/// are shown: using the `Consumer` widget and using the
+/// `Provider.of` method with the `listen` parameter set to
+/// true and false. The `listen` parameter is used to control
+/// whether the widget should be rebuilt when the ViewModel
+/// state changes.
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

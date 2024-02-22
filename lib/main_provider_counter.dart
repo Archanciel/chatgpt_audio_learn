@@ -98,7 +98,7 @@ class MyHomePage extends StatelessWidget {
             // Consumer, it is not rebuilt each time the
             // Counter model calls notifyListeners()
             CustomFloatingActionButton(
-              isMinus: false,
+              isMinus: true,
               isInsideConsumer: false,
             ),
           ],
