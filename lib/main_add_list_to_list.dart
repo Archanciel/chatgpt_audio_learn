@@ -142,8 +142,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late SortingOption _selectedSortingOption = SortingOption.audioDownloadDateTime;
+  late SortingOption _selectedSortingOption =
+      SortingOption.audioDownloadDateTime;
   late bool _sortAscending = true;
+  List<SortingOption> _selectedOptions =
+      []; // New list to store selected options
 
   @override
   Widget build(BuildContext context) {
@@ -156,10 +159,7 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Center(
         child: ElevatedButton(
-          onPressed: () => _showSetSortParametersDialog(
-            context,
-            sourceTargetListsVMListenFalse,
-          ),
+          onPressed: () => _showSetSortParametersDialog(),
           child: const Text('Open Lists Dialog'),
         ),
       ),
@@ -196,97 +196,96 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void _showSetSortParametersDialog(
-    BuildContext context,
-    SourceTargetListsVM sourceTargetListsVMListenFalse,
-  ) {
+  void _showSetSortParametersDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Set Sort Parameters'),
-          content: SizedBox(
-            width: double.maxFinite,
-            height: 800,
-            child: DraggableScrollableSheet(
-              initialChildSize: 1,
-              minChildSize: 1,
-              maxChildSize: 1,
-              builder:
-                  (BuildContext context, ScrollController scrollController) {
-                return SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+        return StatefulBuilder(
+          // Use StatefulBuilder to create a local state for the dialog
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('Set Sort Parameters'),
+              content: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  DropdownButton<SortingOption>(
+                    value: _selectedSortingOption,
+                    onChanged: (SortingOption? newValue) {
+                      if (newValue != null &&
+                          !_selectedOptions.contains(newValue)) {
+                        setState(() {
+                          _selectedOptions.add(
+                              newValue); // Add the selected item to the list
+                        });
+                      }
+                    },
+                    items: SortingOption.values
+                        .map<DropdownMenuItem<SortingOption>>(
+                            (SortingOption value) {
+                      return DropdownMenuItem<SortingOption>(
+                        value: value,
+                        child: Text(value.toString()),
+                      );
+                    }).toList(),
+                  ),
+                  // Display selected options as chips
+                  Wrap(
+                    spacing: 8.0, // Gap between chips
+                    children: _selectedOptions
+                        .map((option) => Chip(
+                              label:
+                                  Text(_sortingOptionToString(option, context)),
+                              onDeleted: () {
+                                setState(() {
+                                  _selectedOptions.remove(
+                                      option); // Allow removing an option by tapping on the delete icon of the chip
+                                });
+                              },
+                            ))
+                        .toList(),
+                  ),
+                  Row(
                     children: [
-                      Text(
-                        'sortBy',
-                      ),
-                      DropdownButton<SortingOption>(
-                        key: const Key('sortingOptionDropdownButton'),
-                        value: _selectedSortingOption,
-                        onChanged: (SortingOption? newValue) {
+                      ChoiceChip(
+                        // The Flutter ChoiceChip widget is designed
+                        // to represent a single choice from a set of
+                        // options.
+                        key: const Key('sortAscending'),
+                        label: Text('sortAscending'),
+                        selected: _sortAscending,
+                        onSelected: (bool selected) {
                           setState(() {
-                            _selectedSortingOption = newValue!;
-                            _sortAscending = AudioSortFilterService
-                                .sortingOptionToAscendingMap[newValue]!;
+                            _sortAscending = selected;
                           });
                         },
-                        items: SortingOption.values
-                            .map<DropdownMenuItem<SortingOption>>(
-                                (SortingOption value) {
-                          return DropdownMenuItem<SortingOption>(
-                            value: value,
-                            child: Text(_sortingOptionToString(value, context)),
-                          );
-                        }).toList(),
                       ),
-                      Row(
-                        children: [
-                          ChoiceChip(
-                            // The Flutter ChoiceChip widget is designed
-                            // to represent a single choice from a set of
-                            // options.
-                            key: const Key('sortAscending'),
-                            label: Text('sortAscending'),
-                            selected: _sortAscending,
-                            onSelected: (bool selected) {
-                              setState(() {
-                                _sortAscending = selected;
-                              });
-                            },
-                          ),
-                          ChoiceChip(
-                            // The Flutter ChoiceChip widget is designed
-                            // to represent a single choice from a set of
-                            // options.
-                            key: const Key('sortDescending'),
-                            label: Text('sortDescending'),
-                            selected: !_sortAscending,
-                            onSelected: (bool selected) {
-                              setState(() {
-                                _sortAscending = !selected;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
+                      ChoiceChip(
+                        // The Flutter ChoiceChip widget is designed
+                        // to represent a single choice from a set of
+                        // options.
+                        key: const Key('sortDescending'),
+                        label: Text('sortDescending'),
+                        selected: !_sortAscending,
+                        onSelected: (bool selected) {
+                          setState(() {
+                            _sortAscending = !selected;
+                          });
+                        },
                       ),
                     ],
                   ),
-                );
-              },
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Close'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Close'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
         );
       },
     );
