@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: IconSwitcher());
+    return const MaterialApp(home: IconSwitcher());
   }
 }
 
 class IconSwitcher extends StatefulWidget {
+  const IconSwitcher({super.key});
+
   @override
   _IconSwitcherState createState() => _IconSwitcherState();
 }
@@ -24,7 +28,7 @@ class _IconSwitcherState extends State<IconSwitcher> {
     _icons = [
       IconButton(
         icon: ColorFiltered(
-            colorFilter: ColorFilter.mode(
+            colorFilter: const ColorFilter.mode(
               Colors.blue, // Desired color
               BlendMode.multiply, // Blend mode
             ),
@@ -68,7 +72,7 @@ class _IconSwitcherState extends State<IconSwitcher> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('AnimatedSwitcher Example'),
+        title: const Text('AnimatedSwitcher Example'),
       ),
       body: Center(
         child: Column(
@@ -79,7 +83,7 @@ class _IconSwitcherState extends State<IconSwitcher> {
               switchInCurve: Curves.easeIn,
               switchOutCurve: Curves.easeOut,
               transitionBuilder: (Widget child, Animation<double> animation) {
-                return ScaleTransition(child: child, scale: animation);
+                return ScaleTransition(scale: animation, child: child);
               },
               child: _icons[_iconIndex],
             ),
