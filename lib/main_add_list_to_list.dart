@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -150,18 +152,89 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    SourceTargetListsVM sourceTargetListsVMListenFalse =
-        Provider.of<SourceTargetListsVM>(context, listen: false);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add source list items to target list'),
       ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () => _showSetSortParametersDialog(),
-          child: const Text('Open Lists Dialog'),
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          DropdownButton<SortingOption>(
+            value: _selectedSortingOption,
+            onChanged: (SortingOption? newValue) {
+              if (newValue != null && !_selectedOptions.contains(newValue)) {
+                setState(() {
+                  _selectedOptions
+                      .add(newValue); // Add the selected item to the list
+                });
+              }
+            },
+            items: SortingOption.values
+                .map<DropdownMenuItem<SortingOption>>((SortingOption value) {
+              return DropdownMenuItem<SortingOption>(
+                value: value,
+                child: Text(value.toString()),
+              );
+            }).toList(),
+          ),
+          // Display selected options as chips
+          ListView.builder(
+            shrinkWrap:
+                true, // Use it inside a Column to prevent infinite height error
+            physics:
+                NeverScrollableScrollPhysics(), // Disables scrolling within the ListView
+            itemCount: _selectedOptions.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(
+                    _sortingOptionToString(_selectedOptions[index], context)),
+                trailing: IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    setState(() {
+                      _selectedOptions
+                          .removeAt(index); // Remove the option from the list
+                    });
+                  },
+                ),
+              );
+            },
+          ),
+          Row(
+            children: [
+              ChoiceChip(
+                // The Flutter ChoiceChip widget is designed
+                // to represent a single choice from a set of
+                // options.
+                key: const Key('sortAscending'),
+                label: Text('sortAscending'),
+                selected: _sortAscending,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _sortAscending = selected;
+                  });
+                },
+              ),
+              ChoiceChip(
+                // The Flutter ChoiceChip widget is designed
+                // to represent a single choice from a set of
+                // options.
+                key: const Key('sortDescending'),
+                label: Text('sortDescending'),
+                selected: !_sortAscending,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _sortAscending = !selected;
+                  });
+                },
+              ),
+            ],
+          ),
+          ElevatedButton(
+            onPressed: () => _showSetSortParametersDialog(),
+            child: const Text('Open Lists Dialog'),
+          ),
+        ],
       ),
     );
   }
@@ -205,76 +278,93 @@ class _HomePageState extends State<HomePage> {
           builder: (context, setState) {
             return AlertDialog(
               title: const Text('Set Sort Parameters'),
-              content: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  DropdownButton<SortingOption>(
-                    value: _selectedSortingOption,
-                    onChanged: (SortingOption? newValue) {
-                      if (newValue != null &&
-                          !_selectedOptions.contains(newValue)) {
-                        setState(() {
-                          _selectedOptions.add(
-                              newValue); // Add the selected item to the list
-                        });
-                      }
-                    },
-                    items: SortingOption.values
-                        .map<DropdownMenuItem<SortingOption>>(
-                            (SortingOption value) {
-                      return DropdownMenuItem<SortingOption>(
-                        value: value,
-                        child: Text(value.toString()),
-                      );
-                    }).toList(),
-                  ),
-                  // Display selected options as chips
-                  Wrap(
-                    spacing: 8.0, // Gap between chips
-                    children: _selectedOptions
-                        .map((option) => Chip(
-                              label:
-                                  Text(_sortingOptionToString(option, context)),
-                              onDeleted: () {
-                                setState(() {
-                                  _selectedOptions.remove(
-                                      option); // Allow removing an option by tapping on the delete icon of the chip
-                                });
-                              },
-                            ))
-                        .toList(),
-                  ),
-                  Row(
-                    children: [
-                      ChoiceChip(
-                        // The Flutter ChoiceChip widget is designed
-                        // to represent a single choice from a set of
-                        // options.
-                        key: const Key('sortAscending'),
-                        label: Text('sortAscending'),
-                        selected: _sortAscending,
-                        onSelected: (bool selected) {
+              content: SizedBox(
+                // Required to solve the error RenderBox was
+                // not laid out: RenderPhysicalShape#ee087 relayoutBoundary=up2
+                // 'package:flutter/src/rendering/box.dart':
+                //
+                // Enclodsing ListView inside a SizedBox widget
+                // does not solve the error since the ListView is
+                // in a column contained in a Dialog widget.
+                width: double.maxFinite,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    DropdownButton<SortingOption>(
+                      value: _selectedSortingOption,
+                      onChanged: (SortingOption? newValue) {
+                        if (newValue != null &&
+                            !_selectedOptions.contains(newValue)) {
                           setState(() {
-                            _sortAscending = selected;
+                            _selectedOptions.add(
+                                newValue); // Add the selected item to the list
                           });
-                        },
-                      ),
-                      ChoiceChip(
-                        // The Flutter ChoiceChip widget is designed
-                        // to represent a single choice from a set of
-                        // options.
-                        key: const Key('sortDescending'),
-                        label: Text('sortDescending'),
-                        selected: !_sortAscending,
-                        onSelected: (bool selected) {
-                          setState(() {
-                            _sortAscending = !selected;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                ],
+                        }
+                      },
+                      items: SortingOption.values
+                          .map<DropdownMenuItem<SortingOption>>(
+                              (SortingOption value) {
+                        return DropdownMenuItem<SortingOption>(
+                          value: value,
+                          child: Text(value.toString()),
+                        );
+                      }).toList(),
+                    ),
+                    // Display selected options as chips
+                    ListView.builder(
+                      shrinkWrap:
+                          true, // Use it inside a Column to prevent infinite height error
+                      physics:
+                          NeverScrollableScrollPhysics(), // Disables scrolling within the ListView
+                      itemCount: _selectedOptions.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Text(_sortingOptionToString(
+                              _selectedOptions[index], context)),
+                          trailing: IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () {
+                              setState(() {
+                                _selectedOptions.removeAt(
+                                    index); // Remove the option from the list
+                              });
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                    Row(
+                      children: [
+                        ChoiceChip(
+                          // The Flutter ChoiceChip widget is designed
+                          // to represent a single choice from a set of
+                          // options.
+                          key: const Key('sortAscending'),
+                          label: Text('sortAscending'),
+                          selected: _sortAscending,
+                          onSelected: (bool selected) {
+                            setState(() {
+                              _sortAscending = selected;
+                            });
+                          },
+                        ),
+                        ChoiceChip(
+                          // The Flutter ChoiceChip widget is designed
+                          // to represent a single choice from a set of
+                          // options.
+                          key: const Key('sortDescending'),
+                          label: Text('sortDescending'),
+                          selected: !_sortAscending,
+                          onSelected: (bool selected) {
+                            setState(() {
+                              _sortAscending = !selected;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
               actions: <Widget>[
                 TextButton(
@@ -284,75 +374,6 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
               ],
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Widget _buildDraggableList(
-    SourceTargetListsVM sourceTargetListsVM,
-    bool isListOne,
-  ) {
-    return ListView.builder(
-      itemCount: sourceTargetListsVM.sourceList.length,
-      itemBuilder: (context, index) {
-        return Draggable<String>(
-          // enables dragging list items
-          data: sourceTargetListsVM.sourceList[index],
-          feedback: Material(
-            elevation: 4.0,
-            child: Container(
-              width: 100,
-              height: 56,
-              color: Colors.blue,
-              child: Center(
-                child: Text(
-                  sourceTargetListsVM.sourceList[index],
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-            ),
-          ),
-          childWhenDragging: Container(),
-          onDragCompleted: () {},
-          child: ListTile(
-            title: Text(sourceTargetListsVM.sourceList[index]),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildDragTargetList(
-    SourceTargetListsVM sourceTargetListsVMListenFalse,
-    bool isListOne,
-  ) {
-    return Consumer<SourceTargetListsVM>(
-      builder: (context, sourceTargetListsVMConsumer, child) {
-        return DragTarget<String>(
-          // enables receiving dragged list items
-          onWillAccept: (data) => true,
-          onAccept: (data) {
-            if (!sourceTargetListsVMListenFalse.targetList.contains(data)) {
-              sourceTargetListsVMListenFalse.addToTargetList(data);
-            }
-          },
-          builder: (context, candidateData, rejectedData) {
-            return ListView.builder(
-              itemCount: sourceTargetListsVMListenFalse.targetList.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(sourceTargetListsVMListenFalse.targetList[index]),
-                  trailing: IconButton(
-                    onPressed: () {
-                      sourceTargetListsVMConsumer.removeFromTargetListAt(index);
-                    },
-                    icon: const Icon(Icons.delete),
-                  ),
-                );
-              },
             );
           },
         );
