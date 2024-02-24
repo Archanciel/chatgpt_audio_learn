@@ -23,7 +23,7 @@ class Audio {
   final String originalVideoTitle;
 
   // Video title which does not contain invalid characters which
-  // would cause the audio file name to genertate an file creation
+  // would cause the audio file name to generate an file creation
   // exception
   final String validVideoTitle;
 
