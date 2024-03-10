@@ -8,7 +8,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Custom CheckBox AlertDialog Example'),
+          title: const Text('Custom CheckBox AlertDialog Example'),
         ),
         body: MyHomePage(),
       ),
@@ -32,9 +32,9 @@ class MyHomePage extends StatelessWidget {
                     CheckBoxAlertDialogWidget(initiallyChecked: true),
               );
             },
-            child: Text('Show AlertDialog checkbox true'),
+            child: const Text('Show AlertDialog checkbox true'),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
               // Change this value to see the effect
@@ -44,7 +44,7 @@ class MyHomePage extends StatelessWidget {
                     CheckBoxAlertDialogWidget(initiallyChecked: false),
               );
             },
-            child: Text('Show AlertDialog checkbox false'),
+            child: const Text('Show AlertDialog checkbox false'),
           ),
         ],
       ),
@@ -75,19 +75,21 @@ class _CheckBoxAlertDialogWidgetState extends State<CheckBoxAlertDialogWidget> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('AlertDialog with Checkbox'),
+      title: const Text('AlertDialog with Checkbox'),
       content: CheckboxListTile(
-        title: Text("Check me"),
+        title: const Text("Check me"),
         value: isChecked,
         onChanged: (bool? value) {
           setState(() {
             isChecked = value!;
           });
         },
+        controlAffinity: ListTileControlAffinity
+            .leading, // Located the checkbox on left of the title,
       ),
       actions: <Widget>[
         TextButton(
-          child: Text('OK'),
+          child: const Text('OK'),
           onPressed: () {
             Navigator.of(context).pop();
           },
