@@ -11,6 +11,10 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  window_size:
+    git:
+      url: https://github.com/google/flutter-desktop-embedding.git
+      path: plugins/window_size  
   intl: ^0.18.0
   audioplayers: ^5.2.0
   path_provider: ^2.0.14
