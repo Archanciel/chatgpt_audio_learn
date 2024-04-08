@@ -21,20 +21,24 @@ class _MyAppState extends State<MyApp> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(option),
-                  IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () {
-                      setState(() {
-                        options.remove(option);
-                        if (selectedValue == option) {
-                          selectedValue =
-                              null; // Reset selected value if the deleted option was selected
-                        }
-                        // Step 3: Shift Focus after deletion
-                        FocusScope.of(context).requestFocus(new FocusNode());
-                      });
-                    },
-                  ),
+                  (option == selectedValue)
+                      ? IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () {
+                            setState(() {
+                              options.remove(option);
+                              if (selectedValue == option) {
+                                selectedValue =
+                                    null; // Reset selected value if the deleted option was selected
+                              }
+                              // Step 3: Shift Focus after deletion
+                              FocusScope.of(context)
+                                  .requestFocus(FocusNode());
+                              // Navigator.pop(context);
+                            });
+                          },
+                        )
+                      : const SizedBox(),
                 ],
               ),
             ))
