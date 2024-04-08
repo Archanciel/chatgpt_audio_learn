@@ -2,54 +2,63 @@ import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DropdownButtonExample(),
-    );
-  }
+  _MyAppState createState() => _MyAppState();
 }
 
-class DropdownButtonExample extends StatefulWidget {
-  @override
-  _DropdownButtonExampleState createState() => _DropdownButtonExampleState();
-}
-
-class _DropdownButtonExampleState extends State<DropdownButtonExample> {
+class _MyAppState extends State<MyApp> {
   String? selectedValue;
+  List<String> options = ["Option 1", "Option 2", "Option 3"];
+  final FocusNode dropdownFocusNode = FocusNode(); // Step 1: Define a FocusNode
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('DropdownButton Example')),
-      body: Center(
-        child: _buildSortFilterParametersDropdownButton(),
-      ),
-    );
-  }
+    List<DropdownMenuItem<String>> dropdownItems = options
+        .map((option) => DropdownMenuItem(
+              value: option,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(option),
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () {
+                      setState(() {
+                        options.remove(option);
+                        if (selectedValue == option) {
+                          selectedValue =
+                              null; // Reset selected value if the deleted option was selected
+                        }
+                        // Step 3: Shift Focus after deletion
+                        FocusScope.of(context).requestFocus(new FocusNode());
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ))
+        .toList();
 
-  Row _buildSortFilterParametersDropdownButton() {
-    List<DropdownMenuItem<String>> dropdownItems = [
-      const DropdownMenuItem(value: "Option 1", child: Text("Option 1")),
-      const DropdownMenuItem(value: "Option 2", child: Text("Option 2")),
-      // Add more items here
-    ];
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        DropdownButton<String>(
-          value: selectedValue,
-          items: dropdownItems,
-          onChanged: (value) {
-            setState(() {
-              selectedValue = value;
-            });
-          },
-          hint: const Text('Select an Option'),
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Dynamic DropdownButton Example'),
         ),
-      ],
+        body: Center(
+          child: DropdownButton<String>(
+            value: selectedValue,
+            focusNode: dropdownFocusNode, // Step 2: Attach the FocusNode
+            hint: const Text("Select Option"),
+            onChanged: (value) {
+              setState(() {
+                selectedValue = value;
+              });
+            },
+            items: dropdownItems,
+          ),
+        ),
+      ),
     );
   }
 }
