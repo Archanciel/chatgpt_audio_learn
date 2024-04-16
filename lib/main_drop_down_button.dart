@@ -32,8 +32,7 @@ class _MyAppState extends State<MyApp> {
                                     null; // Reset selected value if the deleted option was selected
                               }
                               // Step 3: Shift Focus after deletion
-                              FocusScope.of(context)
-                                  .requestFocus(FocusNode());
+                              FocusScope.of(context).requestFocus(FocusNode());
                               // Navigator.pop(context);
                             });
                           },
