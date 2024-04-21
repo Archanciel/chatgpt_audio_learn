@@ -43,6 +43,13 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: _isEnabled ? _toggleEnabled : null,
             ),
             IconButton(
+              key: const Key('notTestableToggleButton'),
+              icon: const Icon(Icons.thumb_down),
+              onPressed: () {
+                _isEnabled ? _toggleEnabled : null;
+              },
+            ),
+            IconButton(
               key: const Key('enableButton'),
               icon: const Icon(Icons.reset_tv),
               onPressed: _toggleEnabled,
