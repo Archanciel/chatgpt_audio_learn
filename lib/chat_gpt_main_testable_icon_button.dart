@@ -21,10 +21,14 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   bool _isEnabled = true;
 
-  void _toggleEnabled() {
+  void _toggleEnabled(int i) {
     setState(() {
       _isEnabled = !_isEnabled;
     });
+  }
+
+  void _otherMethod(int i) {
+    i++;
   }
 
   @override
@@ -40,19 +44,32 @@ class _MyHomePageState extends State<MyHomePage> {
             IconButton(
               key: const Key('toggleButton'),
               icon: const Icon(Icons.thumb_up),
-              onPressed: _isEnabled ? _toggleEnabled : null,
+              onPressed: _isEnabled ? () => _toggleEnabled(1) : null,
+            ),
+            IconButton(
+              key: const Key('toggleButton_more_code'),
+              icon: const Icon(Icons.thumb_up),
+              onPressed: _isEnabled
+                  ? () {
+                      int i = 1;
+                      _otherMethod(i);
+                      setState(() {
+                        _isEnabled = !_isEnabled;
+                      });
+                    }
+                  : null,
             ),
             IconButton(
               key: const Key('notTestableToggleButton'),
               icon: const Icon(Icons.thumb_down),
               onPressed: () {
-                _isEnabled ? _toggleEnabled : null;
+                _isEnabled ? _toggleEnabled(1) : null;
               },
             ),
             IconButton(
               key: const Key('enableButton'),
               icon: const Icon(Icons.reset_tv),
-              onPressed: _toggleEnabled,
+              onPressed: () => _toggleEnabled(1),
             ),
             ElevatedButton(
               onPressed: () => showDialog(
