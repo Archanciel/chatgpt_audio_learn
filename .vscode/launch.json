@@ -18,10 +18,10 @@
       "flutterMode": "profile"
     },
     {
-      "name": "chatgpt_audio_learn (release mode)",
+      "name": "main_flutter_file_manager (release mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "release",
-      "program": "lib/chatgpt_main_draggable.dart"    }
+      "program": "lib/main_flutter_file_manager.dart"    }
   ]
 }

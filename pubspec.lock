@@ -305,6 +305,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
+  file_manager:
+    dependency: "direct main"
+    description:
+      name: file_manager
+      sha256: "72c3ec25614ca7a115995db5ca6a7fe84ab3e9b9280e7ab25ab50b9c892f437e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   fixnum:
     dependency: transitive
     description:
