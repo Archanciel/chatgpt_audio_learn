@@ -36,7 +36,7 @@ void main() {
     // Find the sublist ListTile Text widget
     final Finder sublistListTileText = find.text('key1-value1');
     expect(sublistListTileText, findsOneWidget);
-
+c:\Users\Jean-Pierre\Development\Flutter\audiolearn\lib\tools\chatgpt_audioplayers_6_1_0.dart c:\Users\Jean-Pierre\Development\Flutter\audiolearn\lib\tools\audio_player_view_model.dart
     // Tap the sublist ListTile Text widget
     await tester.tap(sublistListTileText);
 

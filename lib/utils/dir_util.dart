@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import '../constants.dart';
+import '../constants_old.dart';
 
 class DirUtil {
   static String getPlaylistDownloadHomePath({bool isTest = false}) {
