@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'package:path/path.dart' as path;
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:file_picker/file_picker.dart';
 
 class AudioPlayerViewModel extends ChangeNotifier {
-  late AudioPlayer _player;
+  AudioPlayer _player;
   PlayerState? _playerState;
   Duration? _duration;
   Duration? _position;
@@ -16,11 +18,19 @@ class AudioPlayerViewModel extends ChangeNotifier {
   StreamSubscription? _playerCompleteSubscription;
   StreamSubscription? _playerStateChangeSubscription;
 
-  AudioPlayerViewModel() {
-    _player = AudioPlayer();
+  // File path to load on start
+  final String initialFilePath =
+      "D:${path.separator}Users${path.separator}Jean-Pierre${path.separator}OneDrive${path.separator}Musique${path.separator}Organ_Voluntary_in_G_Major,_Op._7,_No._9-_I._Largo_Staccato[1].MP3";
+
+  // The initial position to seek to when the file is loaded
+  final Duration initialSeekPosition =
+      const Duration(seconds: 30); // Set your desired position
+
+  AudioPlayerViewModel() : _player = AudioPlayer() {
     _player.setReleaseMode(ReleaseMode.stop);
 
     _initPlayer();
+    _loadInitialFileAndSeek();
   }
 
   // Getters
@@ -51,6 +61,7 @@ class AudioPlayerViewModel extends ChangeNotifier {
   Future<void> play() async {
     if (_selectedFile != null) {
       await _player.resume();
+      await _player.setPlaybackRate(1.0);
       _playerState = PlayerState.playing;
       notifyListeners();
     }
@@ -95,7 +106,8 @@ class AudioPlayerViewModel extends ChangeNotifier {
       notifyListeners();
     });
 
-    _playerStateChangeSubscription = _player.onPlayerStateChanged.listen((state) {
+    _playerStateChangeSubscription =
+        _player.onPlayerStateChanged.listen((state) {
       _playerState = state;
       notifyListeners();
     });
@@ -109,5 +121,22 @@ class AudioPlayerViewModel extends ChangeNotifier {
     _playerStateChangeSubscription?.cancel();
     _player.dispose();
     super.dispose();
+  }
+
+  // Load the initial file and seek to a specific position on startup
+  Future<void> _loadInitialFileAndSeek() async {
+    _selectedFile = initialFilePath;
+    notifyListeners(); // Notify UI that a file is loaded
+
+    // Load the file but don't play yet
+    await _player.setSource(DeviceFileSource(_selectedFile!));
+
+    // Play briefly to enable seeking, then pause and seek to the desired position
+    await _player.resume(); // Start playback briefly to enable seek
+    await _player.pause(); // Pause immediately
+
+    // Now seek to the desired initial position
+    await _player.seek(initialSeekPosition);
+    notifyListeners(); // Notify listeners after seeking
   }
 }
