@@ -93,8 +93,10 @@ class PlayerView extends StatelessWidget {
               value: (viewModel.position != null &&
                       viewModel.duration != null &&
                       viewModel.position!.inMilliseconds > 0 &&
-                      viewModel.position!.inMilliseconds < viewModel.duration!.inMilliseconds)
-                  ? viewModel.position!.inMilliseconds / viewModel.duration!.inMilliseconds
+                      viewModel.position!.inMilliseconds <
+                          viewModel.duration!.inMilliseconds)
+                  ? viewModel.position!.inMilliseconds /
+                      viewModel.duration!.inMilliseconds
                   : 0.0,
             );
           },
@@ -141,7 +143,9 @@ class PlayerControls extends StatelessWidget {
               color: color,
             ),
             IconButton(
-              onPressed: viewModel.isPlaying || viewModel.isPaused ? viewModel.stop : null,
+              onPressed: viewModel.isPlaying || viewModel.isPaused
+                  ? viewModel.stop
+                  : null,
               iconSize: 48.0,
               icon: const Icon(Icons.stop),
               color: color,
